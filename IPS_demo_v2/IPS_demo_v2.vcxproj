@@ -19,12 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Engine1\Log.h" />
     <ClInclude Include="src\Engine1\Application.h" />
     <ClInclude Include="src\Engine1\Core.h" />
     <ClInclude Include="src\Engine1.h" />
     <ClInclude Include="src\Engine1\EntryPoint.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Engine1\Log.cpp" />
     <ClCompile Include="src\Engine1\Application.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -96,6 +98,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>E1_PLATFORM_WINDOWS;E1_BUILD_DLL;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)IPS_demo_v2\vendor\spdlog\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -121,6 +124,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>E1_PLATFORM_WINDOWS;E1_BUILD_DLL;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)IPS_demo_v2\vendor\spdlog\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

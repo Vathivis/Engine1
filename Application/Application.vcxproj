@@ -85,7 +85,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>E1_PLATFORM_WINDOWS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\vojta\Google Drive\Job\IPS_demo_v2\IPS_demo_v2\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\vojta\Google Drive\Job\IPS_demo_v2\IPS_demo_v2\src;$(SolutionDir)IPS_demo_v2\vendor\spdlog\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -111,7 +111,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>E1_PLATFORM_WINDOWS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\vojta\Google Drive\Job\IPS_demo_v2\IPS_demo_v2\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\vojta\Google Drive\Job\IPS_demo_v2\IPS_demo_v2\src;$(SolutionDir)IPS_demo_v2\vendor\spdlog\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

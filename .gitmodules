@@ -1,0 +1,3 @@
+[submodule "IPS_demo_v2/vendor/spdlog"]
+	path = IPS_demo_v2/vendor/spdlog
+	url = https://github.com/gabime/spdlog
