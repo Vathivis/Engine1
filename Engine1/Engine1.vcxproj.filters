@@ -4,8 +4,12 @@
     <Filter Include="Engine1">
       <UniqueIdentifier>{6CC34CCB-D8A2-CB66-E1BA-563D4D1932C8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine1\Events">
+      <UniqueIdentifier>{D0DD2E3A-BCAB-2240-A53F-936691ACFEA4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\E1pch.h" />
     <ClInclude Include="src\Engine1.h" />
     <ClInclude Include="src\Engine1\Application.h">
       <Filter>Engine1</Filter>
@@ -16,11 +20,24 @@
     <ClInclude Include="src\Engine1\EntryPoint.h">
       <Filter>Engine1</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine1\Events\ApplicationEvent.h">
+      <Filter>Engine1\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine1\Events\Event.h">
+      <Filter>Engine1\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine1\Events\KeyEvent.h">
+      <Filter>Engine1\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine1\Events\MouseEvent.h">
+      <Filter>Engine1\Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\Engine1\Log.h">
       <Filter>Engine1</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\E1pch.cpp" />
     <ClCompile Include="src\Engine1\Application.cpp">
       <Filter>Engine1</Filter>
     </ClCompile>

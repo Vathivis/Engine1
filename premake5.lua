@@ -17,12 +17,16 @@ project	"Engine1"
 	targetdir("bin/" .. outputDir .. "/%{prj.name}")
 	objdir("bin-int/" .. outputDir .. "/%{prj.name}")
 
+	pchheader "E1pch.h"
+	pchsource "Engine1/src/E1pch.cpp"
+
 	files {
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp"
 	}
 
 	includedirs {
+		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include"
 	}
 
