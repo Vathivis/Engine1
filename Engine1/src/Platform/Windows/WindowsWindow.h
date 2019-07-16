@@ -10,8 +10,7 @@ namespace Engine1 {
 	private:
 		GLFWwindow* m_window;
 
-		struct WindowData
-		{
+		struct WindowData {
 			std::string title;
 			unsigned int width, height;
 			bool VSync;

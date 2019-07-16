@@ -1,14 +1,16 @@
 ﻿  Application.cpp
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(17,35): warning C4251:  'Engine1::Application::m_window': class 'std::unique_ptr<Engine1::Window,std::default_delete<_Ty>>' needs to have dll-interface to be used by clients of class 'Engine1::Application'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(17,35): warning C4251:         with
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(17,35): warning C4251:         [
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(17,35): warning C4251:             _Ty=Engine1::Window
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(17,35): warning C4251:         ]
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(17): message :  see declaration of 'std::unique_ptr<Engine1::Window,std::default_delete<_Ty>>'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(17): message :         with
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(17): message :         [
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(17): message :             _Ty=Engine1::Window
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(17): message :         ]
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12,35): warning C4251:  'Engine1::Application::m_window': class 'std::unique_ptr<Engine1::Window,std::default_delete<_Ty>>' needs to have dll-interface to be used by clients of class 'Engine1::Application'
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12,35): warning C4251:         with
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12,35): warning C4251:         [
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12,35): warning C4251:             _Ty=Engine1::Window
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12,35): warning C4251:         ]
+  WindowsWindow.cpp
+  Generating Code...
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12): message :  see declaration of 'std::unique_ptr<Engine1::Window,std::default_delete<_Ty>>'
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12): message :         with
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12): message :         [
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12): message :             _Ty=Engine1::Window
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12): message :         ]
      Creating library ..\bin\Debug-windows-x86\Engine1\Engine1.lib and object ..\bin\Debug-windows-x86\Engine1\Engine1.exp
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Engine1.vcxproj -> C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\..\bin\Debug-windows-x86\Engine1\Engine1.dll

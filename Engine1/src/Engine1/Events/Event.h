@@ -70,9 +70,9 @@ namespace Engine1 {
 		{}
 
 		template<typename T>
-		bool Dispatch(EventFn<T> func) {
-			if (m_Event.getEventType() == T::getStaticType()) {
-				m_Event.m_handled = func(*(T*)& m_event);
+		bool dispatch(EventFn<T> func) {
+			if (m_event.getEventType() == T::getStaticType()) {
+				m_event.m_handled = func(*(T*)& m_event);
 				return true;
 			}
 			return false;
