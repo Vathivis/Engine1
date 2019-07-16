@@ -14,6 +14,7 @@ namespace Engine1 {
 		std::unique_ptr<Window> m_window;
 		bool m_running = true;
 		LayerStack m_layerStack;
+		static Application* s_Instance;		//instance aplikace - muze byt pouze jedna v programu
 
 	public:
 		Application();
@@ -25,6 +26,9 @@ namespace Engine1 {
 
 		void pushLayer(Layer* layer);
 		void pushOverlay(Layer* layer);
+
+		static inline Application& get() { return *s_Instance; }
+		inline Window& getWindow() { return *m_window; }
 	
 	private:
 		bool onWindowClose(WindowCloseEvent& e);

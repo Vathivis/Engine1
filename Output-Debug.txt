@@ -1,7 +1,0 @@
-﻿'IPS_demo_v2.exe' (Win32): Loaded 'C:\Users\vojta\Google Drive\Job\IPS_demo_v2\bin\Debug-Win32\IPS_demo_v2\IPS_demo_v2.exe'. Symbols loaded.
-'IPS_demo_v2.exe' (Win32): Loaded 'C:\Windows\SysWOW64\ntdll.dll'. 
-'IPS_demo_v2.exe' (Win32): Loaded 'C:\Windows\SysWOW64\kernel32.dll'. 
-'IPS_demo_v2.exe' (Win32): Loaded 'C:\Windows\SysWOW64\KernelBase.dll'. 
-The thread 0x1fe4 has exited with code -1073741515 (0xc0000135).
-The thread 0x43ac has exited with code -1073741515 (0xc0000135).
-The program '[7880] IPS_demo_v2.exe' has exited with code -1073741515 (0xc0000135) 'A dependent dll was not found'.

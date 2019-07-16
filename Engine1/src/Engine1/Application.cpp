@@ -10,7 +10,12 @@ namespace Engine1 {
 //makro na event bind na usetreni mista
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
+	Application* Application::s_Instance = nullptr;
+
 	Application::Application() {
+		E1_CORE_ASSERT(!s_Instance, "Application already exists");
+		s_Instance = this;
+
 		m_window = std::unique_ptr<Window>(Window::create());
 		m_window->setEventCallback(BIND_EVENT_FN(onEvent));
 	}
@@ -49,11 +54,13 @@ namespace Engine1 {
 	//pridani vrstvy mezi normalni vrstvy
 	void Application::pushLayer(Layer* layer) {
 		m_layerStack.pushLayer(layer);
+		layer->onAttach();
 	}
 
 	//pridani vrstvy mezi overlay vrtvy
 	void Application::pushOverlay(Layer* layer) {
 		m_layerStack.pushOverlay(layer);
+		layer->onAttach();
 	}
 
 	bool Application::onWindowClose(WindowCloseEvent& e) {

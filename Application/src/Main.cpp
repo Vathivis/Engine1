@@ -29,6 +29,7 @@ public:
 
 	IPS() {
 		pushLayer(new ExampleLayer());
+		pushOverlay(new Engine1::ImGuiLayer());
 	}
 
 	~IPS() {
