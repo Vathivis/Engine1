@@ -12,8 +12,10 @@ outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 -- Include directories relative to root folder (solution directory)
 includeDir = {}
 includeDir["GLFW"] = "Engine1/vendor/GLFW/include"
+includeDir["Glad"] = "Engine1/vendor/Glad/include"
 
 include "Engine1/vendor/GLFW"
+include "Engine1/vendor/Glad"
 
 project	"Engine1"
 	location "Engine1"
@@ -34,11 +36,13 @@ project	"Engine1"
 	includedirs {
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
-		"%{includeDir.GLFW}"
+		"%{includeDir.GLFW}",
+		"%{includeDir.Glad}"
 	}
 
 	links { 
 		"GLFW",
+		"Glad",
 		"opengl32.lib"
 	}
 
@@ -49,7 +53,8 @@ project	"Engine1"
 
 		defines {
 			"E1_PLATFORM_WINDOWS",
-			"E1_BUILD_DLL"
+			"E1_BUILD_DLL",
+			"GLFW_INCLUDE_NONE"
 		}
 
 		postbuildcommands {
@@ -58,14 +63,17 @@ project	"Engine1"
 	
 	filter "configurations:Debug"
 		defines "E1_DEBUG"
+		buildoptions "/MDd"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "E1_RELEASE"
+		buildoptions "/MD"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "E1_DIST"
+		buildoptions "/MD"
 		optimize "On"
 
 
@@ -104,12 +112,15 @@ project "Application"
 	
 	filter "configurations:Debug"
 		defines "E1_DEBUG"
+		buildoptions "/MDd"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "E1_RELEASE"
+		buildoptions "/MD"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "E1_DIST"
+		buildoptions "/MD"
 		optimize "On"

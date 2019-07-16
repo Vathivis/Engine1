@@ -1,16 +1,1 @@
-﻿  Main.cpp
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Log.h(15,54): warning C4251:  'Engine1::Log::s_coreLogger': class 'std::shared_ptr<spdlog::logger>' needs to have dll-interface to be used by clients of class 'Engine1::Log'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\vendor\spdlog\include\spdlog\details\registry.h(33): message :  see declaration of 'std::shared_ptr<spdlog::logger>'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Log.h(16,56): warning C4251:  'Engine1::Log::s_clientLogger': class 'std::shared_ptr<spdlog::logger>' needs to have dll-interface to be used by clients of class 'Engine1::Log'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\vendor\spdlog\include\spdlog\details\registry.h(33): message :  see declaration of 'std::shared_ptr<spdlog::logger>'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12,35): warning C4251:  'Engine1::Application::m_window': class 'std::unique_ptr<Engine1::Window,std::default_delete<_Ty>>' needs to have dll-interface to be used by clients of class 'Engine1::Application'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12,35): warning C4251:         with
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12,35): warning C4251:         [
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12,35): warning C4251:             _Ty=Engine1::Window
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12,35): warning C4251:         ]
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12): message :  see declaration of 'std::unique_ptr<Engine1::Window,std::default_delete<_Ty>>'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12): message :         with
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12): message :         [
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12): message :             _Ty=Engine1::Window
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(12): message :         ]
-  Application.vcxproj -> C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Application\..\bin\Debug-windows-x86\Application\Application.exe
+﻿  Application.vcxproj -> C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Application\..\bin\Debug-windows-x86\Application\Application.exe

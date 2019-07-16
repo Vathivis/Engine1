@@ -41,8 +41,9 @@ namespace Engine1 {
 		zakladni trida pro eventy od ktere dedi dalsi typy eventu
 	*/
 	class ENGINE1_API Event {
-		friend class EventDispatcher;
 	public:
+		bool handled = false;
+
 		virtual EventType getEventType() const = 0;
 		virtual const char* getName() const = 0;	//pozdeji pouze debug ne release
 		virtual int getCategoryFlags() const = 0;	//debug
@@ -52,8 +53,6 @@ namespace Engine1 {
 		{
 			return getCategoryFlags() & category;	//0 = zadna kategorie
 		}
-	protected:
-		bool m_handled = false;
 	};
 
 	/*
@@ -65,6 +64,8 @@ namespace Engine1 {
 		template<typename T>
 		using EventFn = std::function<bool(T&)>;
 	public:
+
+
 		EventDispatcher(Event& event)
 			: m_event(event)
 		{}
@@ -72,7 +73,7 @@ namespace Engine1 {
 		template<typename T>
 		bool dispatch(EventFn<T> func) {
 			if (m_event.getEventType() == T::getStaticType()) {
-				m_event.m_handled = func(*(T*)& m_event);
+				m_event.handled = func(*(T*)& m_event);
 				return true;
 			}
 			return false;

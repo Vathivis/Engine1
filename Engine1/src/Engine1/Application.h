@@ -1,8 +1,10 @@
 #pragma once
 
 #include "Core.h"
-#include "Events/Event.h"
+
 #include "Window.h"
+#include "Events/Event.h"
+#include "LayerStack.h"
 #include "Engine1/Events/ApplicationEvent.h"
 
 namespace Engine1 {
@@ -11,6 +13,7 @@ namespace Engine1 {
 	private:
 		std::unique_ptr<Window> m_window;
 		bool m_running = true;
+		LayerStack m_layerStack;
 
 	public:
 		Application();
@@ -19,6 +22,9 @@ namespace Engine1 {
 		void run();
 
 		void onEvent(Event& e);
+
+		void pushLayer(Layer* layer);
+		void pushOverlay(Layer* layer);
 	
 	private:
 		bool onWindowClose(WindowCloseEvent& e);

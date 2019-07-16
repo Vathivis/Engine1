@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine1", "Engine1\Engine1.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFW", "Engine1\vendor\GLFW\GLFW.vcxproj", "{154B857C-0182-860D-AA6E-6C109684020F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Glad", "Engine1\vendor\Glad\Glad.vcxproj", "{BDD6857C-A90D-870D-52FA-6C103E10030F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -32,6 +34,12 @@ Global
 		{154B857C-0182-860D-AA6E-6C109684020F}.Dist|Win32.Build.0 = Dist|Win32
 		{154B857C-0182-860D-AA6E-6C109684020F}.Release|Win32.ActiveCfg = Release|Win32
 		{154B857C-0182-860D-AA6E-6C109684020F}.Release|Win32.Build.0 = Release|Win32
+		{BDD6857C-A90D-870D-52FA-6C103E10030F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BDD6857C-A90D-870D-52FA-6C103E10030F}.Debug|Win32.Build.0 = Debug|Win32
+		{BDD6857C-A90D-870D-52FA-6C103E10030F}.Dist|Win32.ActiveCfg = Dist|Win32
+		{BDD6857C-A90D-870D-52FA-6C103E10030F}.Dist|Win32.Build.0 = Dist|Win32
+		{BDD6857C-A90D-870D-52FA-6C103E10030F}.Release|Win32.ActiveCfg = Release|Win32
+		{BDD6857C-A90D-870D-52FA-6C103E10030F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

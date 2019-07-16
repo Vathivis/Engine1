@@ -3,7 +3,7 @@
 
 #include "Engine1/Log.h"
 
-#include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 namespace Engine1 {
 
@@ -19,8 +19,13 @@ namespace Engine1 {
 
 	void Application::run() {
 		while (m_running) {
+
 			glClearColor(1, 0, 1, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
+
+			for (Layer* layer : m_layerStack)
+				layer->onUpdate();
+
 			m_window->onUpdate();
 		}
 	}
@@ -30,6 +35,25 @@ namespace Engine1 {
 		dispatcher.dispatch<WindowCloseEvent>(BIND_EVENT_FN(onWindowClose));
 
 		E1_CORE_INFO("{0}", e);
+
+		//kontrola vrstev od zadu - pri kliknuti na nejake misto chceme tu nejvyssi vrstvu, protoze to je ta kterou uzivatel vidi
+		//pokud se event zpracuje konec smycky -> spodni vrstvy nejsou ovlivneny
+		for (auto it = m_layerStack.end(); it != m_layerStack.begin(); )
+		{
+			(*--it)->onEvent(e);
+			if (e.handled)
+				break;
+		}
+	}
+
+	//pridani vrstvy mezi normalni vrstvy
+	void Application::pushLayer(Layer* layer) {
+		m_layerStack.pushLayer(layer);
+	}
+
+	//pridani vrstvy mezi overlay vrtvy
+	void Application::pushOverlay(Layer* layer) {
+		m_layerStack.pushOverlay(layer);
 	}
 
 	bool Application::onWindowClose(WindowCloseEvent& e) {
