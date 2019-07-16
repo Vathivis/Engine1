@@ -1,3 +1,6 @@
 [submodule "IPS_demo_v2/vendor/spdlog"]
 	path = IPS_demo_v2/vendor/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "Engine1/vendor/GLFW"]
+	path = Engine1/vendor/GLFW
+	url = https://github.com/TheCherno/GLFW

@@ -35,6 +35,8 @@
     <ClInclude Include="src\Engine1\Log.h">
       <Filter>Engine1</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine1\Window.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\E1pch.cpp" />
@@ -44,5 +46,6 @@
     <ClCompile Include="src\Engine1\Log.cpp">
       <Filter>Engine1</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
   </ItemGroup>
 </Project>

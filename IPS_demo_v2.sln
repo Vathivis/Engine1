@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Application", "Application\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine1", "Engine1\Engine1.vcxproj", "{6CC34CCB-D8A2-CB66-E1BA-563D4D1932C8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFW", "Engine1\vendor\GLFW\GLFW.vcxproj", "{154B857C-0182-860D-AA6E-6C109684020F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -24,6 +26,12 @@ Global
 		{6CC34CCB-D8A2-CB66-E1BA-563D4D1932C8}.Dist|Win32.Build.0 = Dist|Win32
 		{6CC34CCB-D8A2-CB66-E1BA-563D4D1932C8}.Release|Win32.ActiveCfg = Release|Win32
 		{6CC34CCB-D8A2-CB66-E1BA-563D4D1932C8}.Release|Win32.Build.0 = Release|Win32
+		{154B857C-0182-860D-AA6E-6C109684020F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{154B857C-0182-860D-AA6E-6C109684020F}.Debug|Win32.Build.0 = Debug|Win32
+		{154B857C-0182-860D-AA6E-6C109684020F}.Dist|Win32.ActiveCfg = Dist|Win32
+		{154B857C-0182-860D-AA6E-6C109684020F}.Dist|Win32.Build.0 = Dist|Win32
+		{154B857C-0182-860D-AA6E-6C109684020F}.Release|Win32.ActiveCfg = Release|Win32
+		{154B857C-0182-860D-AA6E-6C109684020F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
