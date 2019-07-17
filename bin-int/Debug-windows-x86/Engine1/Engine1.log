@@ -27,11 +27,16 @@ C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14
 C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14,35): warning C4251:         [
 C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14,35): warning C4251:             _Ty=Engine1::Window
 C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14,35): warning C4251:         ]
+  Layer.cpp
 C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14): message :  see declaration of 'std::unique_ptr<Engine1::Window,std::default_delete<_Ty>>'
 C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14): message :         with
 C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14): message :         [
 C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14): message :             _Ty=Engine1::Window
 C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14): message :         ]
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\ImGui\ImGuiLayer.cpp(61,79): warning C4244:  'argument': conversion from 'unsigned int' to 'float', possible loss of data
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\ImGui\ImGuiLayer.cpp(61,50): warning C4244:  'argument': conversion from 'unsigned int' to 'float', possible loss of data
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Layer.h(13,26): warning C4251:  'Engine1::Layer::m_debugName': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Engine1::Layer'
+  WindowsWindow.cpp
+  Generating Code...
+F:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.21.27702\include\xstring(4231): message :  see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
+     Creating library ..\bin\Debug-windows-x86\Engine1\Engine1.lib and object ..\bin\Debug-windows-x86\Engine1\Engine1.exp
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Engine1.vcxproj -> C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\..\bin\Debug-windows-x86\Engine1\Engine1.dll

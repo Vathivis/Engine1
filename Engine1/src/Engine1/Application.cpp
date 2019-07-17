@@ -13,7 +13,7 @@ namespace Engine1 {
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application() {
-		E1_CORE_ASSERT(!s_Instance, "Application already exists");
+		E1_CORE_ASSERT(!s_Instance, "Application already exists");		//kontrola jednotnosti
 		s_Instance = this;
 
 		m_window = std::unique_ptr<Window>(Window::create());

@@ -19,6 +19,8 @@ include "Engine1/vendor/GLFW"
 include "Engine1/vendor/Glad"
 include "Engine1/vendor/imgui"
 
+startproject "Application"
+
 project	"Engine1"
 	location "Engine1"
 	kind "SharedLib"
