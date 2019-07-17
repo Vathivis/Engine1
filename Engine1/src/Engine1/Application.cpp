@@ -34,7 +34,7 @@ namespace Engine1 {
 				layer->onUpdate();
 
 			auto [x, y] = Input::getMousePosition();
-			E1_CORE_TRACE("{0}, {1}", x, y);
+			//E1_CORE_TRACE("{0}, {1}", x, y);
 
 			m_window->onUpdate();
 		}
@@ -45,7 +45,7 @@ namespace Engine1 {
 		EventDispatcher dispatcher(e);
 		dispatcher.dispatch<WindowCloseEvent>(BIND_EVENT_FN(onWindowClose));
 
-		E1_CORE_INFO("{0}", e);
+		//E1_CORE_INFO("{0}", e);
 
 		//kontrola vrstev od zadu - pri kliknuti na nejake misto chceme tu nejvyssi vrstvu, protoze to je ta kterou uzivatel vidi
 		//pokud se event zpracuje konec smycky -> spodni vrstvy nejsou ovlivneny

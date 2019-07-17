@@ -67,6 +67,8 @@
     </ClInclude>
     <ClInclude Include="src\Engine1\Input.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
+    <ClInclude Include="src\Engine1\KeyCodes.h" />
+    <ClInclude Include="src\Engine1\MouseButtonCodes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\E1pch.cpp" />
