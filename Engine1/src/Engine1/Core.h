@@ -11,6 +11,10 @@
 
 #endif
 
+#ifdef E1_DEBUG
+	#define E1_ENABLE_ASSERTS
+#endif
+
 //assert makro pouze v debug modu
 #ifdef E1_ENABLE_ASSERTS
 	#define E1_ASSERT(x, ...) { if(!(x)) { E1_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }

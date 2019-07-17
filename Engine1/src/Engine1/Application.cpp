@@ -1,7 +1,8 @@
 #include "E1pch.h"
-#include "Application.h"
 
+#include "Application.h"
 #include "Engine1/Log.h"
+#include "Input.h"
 
 #include <glad/glad.h>
 
@@ -22,6 +23,7 @@ namespace Engine1 {
 
 	Application::~Application() {}
 
+	//hlavni loop programu -----------------------------------------------------------------------------
 	void Application::run() {
 		while (m_running) {
 
@@ -31,9 +33,13 @@ namespace Engine1 {
 			for (Layer* layer : m_layerStack)
 				layer->onUpdate();
 
+			auto [x, y] = Input::getMousePosition();
+			E1_CORE_TRACE("{0}, {1}", x, y);
+
 			m_window->onUpdate();
 		}
 	}
+	//hlavni loop programu -----------------------------------------------------------------------------
 
 	void Application::onEvent(Event& e) {
 		EventDispatcher dispatcher(e);

@@ -6,6 +6,8 @@ workspace "IPS_demo_v2"
 		"Release",
 		"Dist"
 	}
+	
+	startproject "Application"
 
 outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -19,12 +21,12 @@ include "Engine1/vendor/GLFW"
 include "Engine1/vendor/Glad"
 include "Engine1/vendor/imgui"
 
-startproject "Application"
 
 project	"Engine1"
 	location "Engine1"
 	kind "SharedLib"
 	language "C++"
+	staticruntime "off"
 
 	targetdir("bin/" .. outputDir .. "/%{prj.name}")
 	objdir("bin-int/" .. outputDir .. "/%{prj.name}")
@@ -54,7 +56,6 @@ project	"Engine1"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines {
@@ -64,30 +65,30 @@ project	"Engine1"
 		}
 
 		postbuildcommands {
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputDir .. "/Application")
+			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputDir .. "/Application/\"")
 		}
 	
 	filter "configurations:Debug"
 		defines "E1_DEBUG"
-		buildoptions "/MDd"
+		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "E1_RELEASE"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "E1_DIST"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 
 
 project "Application"
 	location "Application"
 	kind "ConsoleApp"
-
 	language "C++"
+	staticruntime "off"
 
 	targetdir("bin/" .. outputDir .. "/%{prj.name}")
 	objdir("bin-int/" .. outputDir .. "/%{prj.name}")
@@ -108,7 +109,6 @@ project "Application"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines {
@@ -118,15 +118,15 @@ project "Application"
 	
 	filter "configurations:Debug"
 		defines "E1_DEBUG"
-		buildoptions "/MDd"
+		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
 		defines "E1_RELEASE"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
 
 	filter "configurations:Dist"
 		defines "E1_DIST"
-		buildoptions "/MD"
+		runtime "Release"
 		optimize "On"
