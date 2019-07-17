@@ -16,6 +16,7 @@ includeDir = {}
 includeDir["GLFW"] = "Engine1/vendor/GLFW/include"
 includeDir["Glad"] = "Engine1/vendor/Glad/include"
 includeDir["ImGui"] = "Engine1/vendor/imgui"
+includeDir["glm"] = "Engine1/vendor/glm"
 
 include "Engine1/vendor/GLFW"
 include "Engine1/vendor/Glad"
@@ -36,7 +37,9 @@ project	"Engine1"
 
 	files {
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
 
 	includedirs {
@@ -44,7 +47,8 @@ project	"Engine1"
 		"%{prj.name}/vendor/spdlog/include",
 		"%{includeDir.GLFW}",
 		"%{includeDir.Glad}",
-		"%{includeDir.ImGui}"
+		"%{includeDir.ImGui}",
+		"%{includeDir.glm}"
 	}
 
 	links { 
@@ -100,7 +104,8 @@ project "Application"
 
 	includedirs {
 		"Engine1/vendor/spdlog/include",
-		"Engine1/src"
+		"Engine1/src",
+		"%{includeDir.glm}"
 	}
 
 	links {

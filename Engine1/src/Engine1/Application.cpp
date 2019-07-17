@@ -6,6 +6,8 @@
 
 #include <glad/glad.h>
 
+#include "glm/glm.hpp"
+
 namespace Engine1 {
 
 //makro na event bind na usetreni mista
