@@ -1,38 +1,11 @@
-﻿  Application.cpp
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Layer.h(13,26): warning C4251:  'Engine1::Layer::m_debugName': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Engine1::Layer'
-F:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.21.27702\include\xstring(4231): message :  see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16,31): warning C4251:  'Engine1::LayerStack::m_layers': class 'std::vector<Engine1::Layer *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Engine1::LayerStack'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16,31): warning C4251:         with
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16,31): warning C4251:         [
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16,31): warning C4251:             _Ty=Engine1::Layer *
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16,31): warning C4251:         ]
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16): message :  see declaration of 'std::vector<Engine1::Layer *,std::allocator<_Ty>>'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16): message :         with
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16): message :         [
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16): message :             _Ty=Engine1::Layer *
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16): message :         ]
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16,35): warning C4251:  'Engine1::Application::m_window': class 'std::unique_ptr<Engine1::Window,std::default_delete<_Ty>>' needs to have dll-interface to be used by clients of class 'Engine1::Application'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16,35): warning C4251:         with
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16,35): warning C4251:         [
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16,35): warning C4251:             _Ty=Engine1::Window
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16,35): warning C4251:         ]
+﻿  E1pch.cpp
+  Application.cpp
+  ImGuiBuild.cpp
+  ImGuiLayer.cpp
+  Layer.cpp
   LayerStack.cpp
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16): message :  see declaration of 'std::unique_ptr<Engine1::Window,std::default_delete<_Ty>>'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16): message :         with
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16): message :         [
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16): message :             _Ty=Engine1::Window
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16): message :         ]
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Layer.h(13,26): warning C4251:  'Engine1::Layer::m_debugName': class 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>' needs to have dll-interface to be used by clients of class 'Engine1::Layer'
-F:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.21.27702\include\xstring(4231): message :  see declaration of 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16,31): warning C4251:  'Engine1::LayerStack::m_layers': class 'std::vector<Engine1::Layer *,std::allocator<_Ty>>' needs to have dll-interface to be used by clients of class 'Engine1::LayerStack'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16,31): warning C4251:         with
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16,31): warning C4251:         [
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16,31): warning C4251:             _Ty=Engine1::Layer *
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16,31): warning C4251:         ]
+  Log.cpp
+  WindowsInput.cpp
+  WindowsWindow.cpp
   Generating Code...
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16): message :  see declaration of 'std::vector<Engine1::Layer *,std::allocator<_Ty>>'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16): message :         with
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16): message :         [
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16): message :             _Ty=Engine1::Layer *
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16): message :         ]
-  Engine1.vcxproj -> C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\..\bin\Debug-windows-x86\Engine1\Engine1.dll
+  Engine1.vcxproj -> C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\..\bin\Debug-windows-x86\Engine1\Engine1.lib

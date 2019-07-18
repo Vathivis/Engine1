@@ -2,13 +2,16 @@
 
 //makro pro dll
 #ifdef E1_PLATFORM_WINDOWS
+#if E1_DYNAMIC_LINK
 	//makro pouze pro engine, ne cely projekt
 	#ifdef E1_BUILD_DLL
 		#define ENGINE1_API __declspec(dllexport)
 	#else
 		#define ENGINE1_API __declspec(dllimport)
 	#endif
-
+#else
+	#define ENGINE1_API
+#endif
 #endif
 
 #ifdef E1_DEBUG

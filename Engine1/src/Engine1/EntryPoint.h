@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
 
 	Engine1::Log::init();
 	E1_CORE_WARN("Initialized log");
-	E1_INFO("yes");
+	//E1_INFO("yes");
 
 	auto ips = Engine1::CreateApplication();
 	ips->run();
