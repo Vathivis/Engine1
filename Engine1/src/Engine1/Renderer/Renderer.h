@@ -1,3 +1,10 @@
 #pragma once
 
-#include "E1pch.h"
+
+
+namespace Engine1 {
+
+
+
+
+}

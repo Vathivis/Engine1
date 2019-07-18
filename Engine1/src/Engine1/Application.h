@@ -19,6 +19,8 @@ namespace Engine1 {
 		static Application* s_Instance;		//instance aplikace - muze byt pouze jedna v programu
 		ImGuiLayer* m_ImGuiLayer;
 
+		unsigned int m_vertexArray, m_vertexBuffer, m_indexBuffer;
+
 	public:
 		Application();
 		virtual ~Application();
