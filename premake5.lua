@@ -1,13 +1,15 @@
 workspace "IPS_demo_v2"
 	architecture "x86"
+	
 
 	configurations {
 		"Debug",
 		"Release",
 		"Dist"
 	}
-	
+
 	startproject "Application"
+	
 
 outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -105,6 +107,7 @@ project "Application"
 	includedirs {
 		"Engine1/vendor/spdlog/include",
 		"Engine1/src",
+		"Engine1/vendor",
 		"%{includeDir.glm}"
 	}
 

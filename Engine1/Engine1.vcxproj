@@ -166,7 +166,6 @@
     <ClInclude Include="src\Engine1\Log.h" />
     <ClInclude Include="src\Engine1\MouseButtonCodes.h" />
     <ClInclude Include="src\Engine1\Window.h" />
-    <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="vendor\glm\glm\common.hpp" />
@@ -543,11 +542,11 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Engine1\Application.cpp" />
+    <ClCompile Include="src\Engine1\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Engine1\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Engine1\Layer.cpp" />
     <ClCompile Include="src\Engine1\LayerStack.cpp" />
     <ClCompile Include="src\Engine1\Log.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
   </ItemGroup>

@@ -7,6 +7,8 @@
 #include "LayerStack.h"
 #include "Engine1/Events/ApplicationEvent.h"
 
+#include "Engine1/ImGui/ImGuiLayer.h"
+
 namespace Engine1 {
 
 	class ENGINE1_API Application {
@@ -15,6 +17,7 @@ namespace Engine1 {
 		bool m_running = true;
 		LayerStack m_layerStack;
 		static Application* s_Instance;		//instance aplikace - muze byt pouze jedna v programu
+		ImGuiLayer* m_ImGuiLayer;
 
 	public:
 		Application();

@@ -21,6 +21,9 @@ namespace Engine1 {
 
 		m_window = std::unique_ptr<Window>(Window::create());
 		m_window->setEventCallback(BIND_EVENT_FN(onEvent));
+
+		m_ImGuiLayer = new ImGuiLayer();
+		pushOverlay(m_ImGuiLayer);
 	}
 
 	Application::~Application() {}
@@ -35,8 +38,10 @@ namespace Engine1 {
 			for (Layer* layer : m_layerStack)
 				layer->onUpdate();
 
-			auto [x, y] = Input::getMousePosition();
-			//E1_CORE_TRACE("{0}, {1}", x, y);
+			m_ImGuiLayer->Begin();
+			for (Layer* layer : m_layerStack)
+				layer->onImGuiRender();
+			m_ImGuiLayer->End();
 
 			m_window->onUpdate();
 		}
@@ -62,13 +67,11 @@ namespace Engine1 {
 	//pridani vrstvy mezi normalni vrstvy
 	void Application::pushLayer(Layer* layer) {
 		m_layerStack.pushLayer(layer);
-		layer->onAttach();
 	}
 
 	//pridani vrstvy mezi overlay vrtvy
 	void Application::pushOverlay(Layer* layer) {
 		m_layerStack.pushOverlay(layer);
-		layer->onAttach();
 	}
 
 	bool Application::onWindowClose(WindowCloseEvent& e) {

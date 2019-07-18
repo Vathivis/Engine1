@@ -15,23 +15,14 @@ C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16)
 C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16): message :         [
 C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16): message :             _Ty=Engine1::Layer *
 C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(16): message :         ]
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(17,46): warning C4251:  'Engine1::LayerStack::m_layerInsert': class 'std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>' needs to have dll-interface to be used by clients of class 'Engine1::LayerStack'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(17,46): warning C4251:         with
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(17,46): warning C4251:         [
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(17,46): warning C4251:             _Ty=Engine1::Layer *
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\LayerStack.h(17,46): warning C4251:         ]
-F:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.21.27702\include\vector(366): message :  see declaration of 'std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>'
-F:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.21.27702\include\vector(366): message :         with
-F:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.21.27702\include\vector(366): message :         [
-F:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.21.27702\include\vector(366): message :             _Ty=Engine1::Layer *
-F:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.21.27702\include\vector(366): message :         ]
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14,35): warning C4251:  'Engine1::Application::m_window': class 'std::unique_ptr<Engine1::Window,std::default_delete<_Ty>>' needs to have dll-interface to be used by clients of class 'Engine1::Application'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14,35): warning C4251:         with
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14,35): warning C4251:         [
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14,35): warning C4251:             _Ty=Engine1::Window
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14,35): warning C4251:         ]
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14): message :  see declaration of 'std::unique_ptr<Engine1::Window,std::default_delete<_Ty>>'
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14): message :         with
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14): message :         [
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14): message :             _Ty=Engine1::Window
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(14): message :         ]
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16,35): warning C4251:  'Engine1::Application::m_window': class 'std::unique_ptr<Engine1::Window,std::default_delete<_Ty>>' needs to have dll-interface to be used by clients of class 'Engine1::Application'
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16,35): warning C4251:         with
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16,35): warning C4251:         [
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16,35): warning C4251:             _Ty=Engine1::Window
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16,35): warning C4251:         ]
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16): message :  see declaration of 'std::unique_ptr<Engine1::Window,std::default_delete<_Ty>>'
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16): message :         with
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16): message :         [
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16): message :             _Ty=Engine1::Window
+C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\src\Engine1\Application.h(16): message :         ]
+  Application.vcxproj -> C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Application\..\bin\Debug-windows-x86\Application\Application.exe
