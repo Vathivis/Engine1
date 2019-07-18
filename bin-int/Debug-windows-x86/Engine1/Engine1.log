@@ -1,11 +1,2 @@
-﻿  E1pch.cpp
-  Application.cpp
-  ImGuiBuild.cpp
-  ImGuiLayer.cpp
-  Layer.cpp
-  LayerStack.cpp
-  Log.cpp
-  WindowsInput.cpp
-  WindowsWindow.cpp
-  Generating Code...
+﻿  WindowsWindow.cpp
   Engine1.vcxproj -> C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\..\bin\Debug-windows-x86\Engine1\Engine1.lib

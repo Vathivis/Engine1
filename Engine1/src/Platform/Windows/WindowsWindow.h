@@ -2,6 +2,8 @@
 
 #include "Engine1/Window.h"
 
+#include "Engine1/Renderer/GraphicsContext.h"
+
 #include <GLFW/glfw3.h>
 
 namespace Engine1 {
@@ -9,6 +11,7 @@ namespace Engine1 {
 	class WindowsWindow : public Window {
 	private:
 		GLFWwindow* m_window;
+		GraphicsContext* m_context;	
 
 		struct WindowData {
 			std::string title;
