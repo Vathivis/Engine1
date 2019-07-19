@@ -10,6 +10,7 @@
 #include "Engine1/ImGui/ImGuiLayer.h"
 
 #include "Engine1/Renderer/Shader.h"
+#include "Engine1/Renderer/Buffer.h"
 
 namespace Engine1 {
 
@@ -21,8 +22,10 @@ namespace Engine1 {
 		static Application* s_Instance;		//instance aplikace - muze byt pouze jedna v programu
 		ImGuiLayer* m_ImGuiLayer;
 
-		unsigned int m_vertexArray, m_vertexBuffer, m_indexBuffer;
+		unsigned int m_vertexArray;
 		std::unique_ptr<Shader> m_shader;
+		std::unique_ptr<VertexBuffer> m_vertexBuffer;
+		std::unique_ptr<IndexBuffer> m_indexBuffer;
 
 	public:
 		Application();

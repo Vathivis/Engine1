@@ -27,10 +27,7 @@ namespace Engine1 {
 
 		glGenVertexArrays(1, &m_vertexArray);
 		glBindVertexArray(m_vertexArray);
-
-		glGenBuffers(1, &m_vertexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-
+		
 
 		float vertices[3 * 3] = {
 			-0.5f, -0.5f, 0.0f,		//x, y, z souradnice		//levy roh
@@ -38,16 +35,16 @@ namespace Engine1 {
 			 0.0f,  0.5f, 0.0f		//stred
 		};
 
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+		m_vertexBuffer.reset(VertexBuffer::create(vertices, sizeof(vertices)));
+
 
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);		//popisujeme data na indexu 0 pro gpu, stride = pocet bytu mezi vertexy
+	
+		//indexy vertexu -> rika v jakem poradi tyto vertexy vykreslit
 
-		glGenBuffers(1, &m_indexBuffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);		//indexy vertexu -> rika v jakem poradi tyto vertexy vykreslit
-
-		unsigned int indices[3] = { 0, 1, 2 };		//poradi v jakem se kresli vertexy
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+		uint32_t indices[3] = { 0, 1, 2 };		//poradi v jakem se kresli vertexy
+		m_indexBuffer.reset(IndexBuffer::create(indices, sizeof(indices) / sizeof(uint32_t)));
 
 		std::string vertexSrc = R"(
 			#version 330 core
@@ -80,7 +77,10 @@ namespace Engine1 {
 
 	Application::~Application() {}
 
-	//hlavni loop programu -----------------------------------------------------------------------------
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	//hlavni loop programu /////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////
+
 	void Application::run() {
 		while (m_running) {
 
@@ -89,7 +89,7 @@ namespace Engine1 {
 
 			m_shader->bind();
 			glBindVertexArray(m_vertexArray);
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, m_indexBuffer->getCount(), GL_UNSIGNED_INT, nullptr);
 
 
 			for (Layer* layer : m_layerStack)

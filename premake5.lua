@@ -20,9 +20,12 @@ includeDir["Glad"] = "Engine1/vendor/Glad/include"
 includeDir["ImGui"] = "Engine1/vendor/imgui"
 includeDir["glm"] = "Engine1/vendor/glm"
 
-include "Engine1/vendor/GLFW"
-include "Engine1/vendor/Glad"
-include "Engine1/vendor/imgui"
+
+group "Dependencies"
+	include "Engine1/vendor/GLFW"
+	include "Engine1/vendor/Glad"
+	include "Engine1/vendor/imgui"
+group ""
 
 
 project	"Engine1"

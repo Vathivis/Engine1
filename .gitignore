@@ -1,5 +1,6 @@
 .vs/*
-
 *.user
-
-Engine1/vendor/spdlog/
+*.sln
+*.vcxproj
+*.vcxproj.*
+Application/imgui.ini
