@@ -29,7 +29,7 @@ namespace Engine1 {
 
 	public:
 		Application();
-		virtual ~Application();
+		virtual ~Application() = default;
 
 		void run();
 

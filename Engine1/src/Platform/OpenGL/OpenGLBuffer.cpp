@@ -10,11 +10,11 @@ namespace Engine1 {
 	OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size) {
 
 		//OpenGL 4.5+
-		//glCreateBuffers(1, &m_rendererID);
+		glCreateBuffers(1, &m_rendererID);
 
 		//OpenGL 2.0+
-		glGenBuffers(1, &m_rendererID);
-		glBindBuffer(GL_ARRAY_BUFFER, m_rendererID);
+		/*glGenBuffers(1, &m_rendererID);
+		glBindBuffer(GL_ARRAY_BUFFER, m_rendererID);*/
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_rendererID);
 		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);

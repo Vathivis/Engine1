@@ -1,6 +1,12 @@
-.vs/*
+#directories
+.vs/
+/bin/
+/bin-int/
+
+#files
 *.user
 *.sln
 *.vcxproj
 *.vcxproj.*
 Application/imgui.ini
+Engine1/vendor/spdlog/

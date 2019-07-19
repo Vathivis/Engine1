@@ -19,10 +19,6 @@ namespace Engine1 {
 
 	}
 
-	ImGuiLayer::~ImGuiLayer() {
-
-	}
-
 	void ImGuiLayer::onAttach() {
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();

@@ -13,7 +13,7 @@ namespace Engine1 {
 		std::string m_debugName;
 	public:
 		Layer(const std::string& name = "Layer");
-		virtual ~Layer();
+		virtual ~Layer() = default;
 
 		virtual void onAttach() {}
 		virtual void onDetach() {}
