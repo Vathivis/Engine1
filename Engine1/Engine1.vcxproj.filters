@@ -1206,6 +1206,7 @@
     <ClInclude Include="src\Engine1\Renderer\Renderer.h" />
     <ClInclude Include="src\Engine1\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
+    <ClInclude Include="src\Engine1\Renderer\Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\E1pch.cpp">
@@ -1236,5 +1237,6 @@
       <Filter>src\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
+    <ClCompile Include="src\Engine1\Renderer\Shader.cpp" />
   </ItemGroup>
 </Project>

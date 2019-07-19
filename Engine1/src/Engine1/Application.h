@@ -9,6 +9,8 @@
 
 #include "Engine1/ImGui/ImGuiLayer.h"
 
+#include "Engine1/Renderer/Shader.h"
+
 namespace Engine1 {
 
 	class ENGINE1_API Application {
@@ -20,6 +22,7 @@ namespace Engine1 {
 		ImGuiLayer* m_ImGuiLayer;
 
 		unsigned int m_vertexArray, m_vertexBuffer, m_indexBuffer;
+		std::unique_ptr<Shader> m_shader;
 
 	public:
 		Application();
