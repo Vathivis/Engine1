@@ -3,6 +3,8 @@
 
 #include "glad/glad.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace Engine1 {
 
 	Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc) {
@@ -128,6 +130,23 @@ namespace Engine1 {
 
 	void Shader::unbind() const {
 		glUseProgram(0);
+	}
+
+	void Shader::uploadUniform1i(const std::string& name, int value) {
+
+	}
+
+	void Shader::uploadUniform1f(const std::string& name, float value) {
+
+	}
+
+	void Shader::uploadUniform4f(const std::string& name, float v0, float v1, float v2, float v3) {
+
+	}
+
+	void Shader::uploadUniformMat4(const std::string& name, const glm::mat4& matrix) {
+		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
 }

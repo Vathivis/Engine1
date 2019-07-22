@@ -13,6 +13,8 @@
 #include "Engine1/Renderer/Buffer.h"
 #include "Engine1/Renderer/VertexArray.h"
 
+#include "Engine1/Renderer/OrthographicCamera.h"
+
 namespace Engine1 {
 
 	class ENGINE1_API Application {
@@ -26,9 +28,10 @@ namespace Engine1 {
 		std::shared_ptr<Shader> m_shader;
 		std::shared_ptr<VertexArray> m_vertexArray;
 
-		//vertex arrays for stuff
 		std::shared_ptr<Shader> m_blueShader;
 		std::shared_ptr<VertexArray> m_squareVA;
+
+		OrthographicCamera m_camera;
 
 	public:
 		Application();

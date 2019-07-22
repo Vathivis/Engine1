@@ -6,7 +6,6 @@
 
 #include "Engine1/Renderer/Renderer.h"
 
-#include "glm/glm.hpp"
 
 namespace Engine1 {
 
@@ -15,7 +14,7 @@ namespace Engine1 {
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application()
+	Application::Application() : m_camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
 		E1_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
@@ -87,6 +86,8 @@ namespace Engine1 {
 			layout(location = 0) in vec3 a_position;
 			layout(location = 1) in vec4 a_color;
 
+			uniform mat4 u_viewProjection;
+
 			out vec3 v_position;
 			out vec4 v_color;
 
@@ -94,7 +95,7 @@ namespace Engine1 {
 			{
 				v_position = a_position;
 				v_color = a_color;
-				gl_Position = vec4(a_position, 1.0);	
+				gl_Position = u_viewProjection * vec4(a_position, 1.0);	
 			}
 		)";
 
@@ -102,6 +103,8 @@ namespace Engine1 {
 			#version 330 core
 			
 			layout(location = 0) out vec4 color;
+
+			uniform mat4 u_viewProjection;
 
 			in vec3 v_position;
 			in vec4 v_color;
@@ -120,12 +123,14 @@ namespace Engine1 {
 			
 			layout(location = 0) in vec3 a_position;
 
+			uniform mat4 u_viewProjection;
+
 			out vec3 v_position;
 
 			void main()
 			{
 				v_position = a_position;
-				gl_Position = vec4(a_position, 1.0);	
+				gl_Position = u_viewProjection * vec4(a_position, 1.0);	
 			}
 		)";
 
@@ -133,6 +138,8 @@ namespace Engine1 {
 			#version 330 core
 			
 			layout(location = 0) out vec4 color;
+
+			uniform mat4 u_viewProjection;
 
 			in vec3 v_position;
 
@@ -160,13 +167,13 @@ namespace Engine1 {
 			RenderCommand::setClearColor({ 0.2f, 0.2f, 0.2f, 1 });
 			RenderCommand::clear();
 
-			Renderer::beginScene();
+			m_camera.setPosition({ 0.5, 0.5, 0.0 });
+			m_camera.setRotation(45.0f);
 
-			m_blueShader->bind();
-			Renderer::submit(m_squareVA);
+			Renderer::beginScene(m_camera);
 
-			m_shader->bind();
-			Renderer::submit(m_vertexArray);
+			Renderer::submit(m_blueShader, m_squareVA);		//blue square
+			Renderer::submit(m_shader, m_vertexArray);		//colored triangle
 
 			Renderer::endScene();
 
