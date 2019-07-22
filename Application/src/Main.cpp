@@ -2,6 +2,8 @@
 
 #include "imgui/imgui.h"
 
+#include "glm/gtc/matrix_transform.hpp"
+
 class ExampleLayer : public Engine1::Layer {
 private:
 	std::shared_ptr<Engine1::Shader> m_shader;
@@ -14,6 +16,7 @@ private:
 	Engine1::OrthographicCamera m_camera;
 	glm::vec3 m_cameraPosition;
 	float m_cameraRotation = 0.0f;
+
 	float m_cameraMoveSpeed = 2.0f;
 	float m_cameraRotationSpeed = 180.0f;
 
@@ -54,10 +57,10 @@ public:
 		m_squareVA.reset(Engine1::VertexArray::create());
 
 		float squareVertices[4 * 3] = {
-			-0.75f, -0.75f, 0.0f,
-			 0.75f, -0.75f, 0.0f,
-			 0.75f,  0.75f, 0.0f,
-			-0.75f,  0.75f, 0.0f
+			-0.5f, -0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
+			 0.5f,  0.5f, 0.0f,
+			-0.5f,  0.5f, 0.0f
 		};
 
 		std::shared_ptr<Engine1::VertexBuffer> squareVB;
@@ -82,6 +85,7 @@ public:
 			layout(location = 1) in vec4 a_color;
 
 			uniform mat4 u_viewProjection;
+			uniform mat4 u_transform;
 
 			out vec3 v_position;
 			out vec4 v_color;
@@ -90,7 +94,7 @@ public:
 			{
 				v_position = a_position;
 				v_color = a_color;
-				gl_Position = u_viewProjection * vec4(a_position, 1.0);	
+				gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);	
 			}
 		)";
 
@@ -119,13 +123,14 @@ public:
 			layout(location = 0) in vec3 a_position;
 
 			uniform mat4 u_viewProjection;
+			uniform mat4 u_transform;
 
 			out vec3 v_position;
 
 			void main()
 			{
 				v_position = a_position;
-				gl_Position = u_viewProjection * vec4(a_position, 1.0);	
+				gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);	
 			}
 		)";
 
@@ -178,7 +183,16 @@ public:
 
 		Engine1::Renderer::beginScene(m_camera);
 
-		Engine1::Renderer::submit(m_blueShader, m_squareVA);		//blue square
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+		for (int j = 0; j < 20; ++j) {
+			for (int i = 0; i < 20; ++i) {
+				glm::vec3 pos(i * 0.11f, j * 0.11f, 0.0f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+				Engine1::Renderer::submit(m_blueShader, m_squareVA, transform);		//blue square
+			}
+		}
+			
 		Engine1::Renderer::submit(m_shader, m_vertexArray);		//colored triangle
 
 		Engine1::Renderer::endScene();
