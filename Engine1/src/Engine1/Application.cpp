@@ -14,8 +14,7 @@ namespace Engine1 {
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application() : m_camera(-1.6f, 1.6f, -0.9f, 0.9f)
-	{
+	Application::Application() {
 		E1_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
@@ -25,131 +24,7 @@ namespace Engine1 {
 		m_ImGuiLayer = new ImGuiLayer();
 		pushOverlay(m_ImGuiLayer);
 
-		m_vertexArray.reset(VertexArray::create());
-
-		float vertices[3 * 7] = {
-			-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
-			 0.5f, -0.5f, 0.0f, 0.2f, 0.3f, 0.8f, 1.0f,
-			 0.0f,  0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
-		};
-
-		std::shared_ptr<VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(VertexBuffer::create(vertices, sizeof(vertices)));
 		
-		BufferLayout layout = {
-			{ ShaderDataType::Float3, "a_position" },
-			{ ShaderDataType::Float4, "a_color" }
-		};
-
-		vertexBuffer->setLayout(layout);
-		m_vertexArray->addVertexBuffer(vertexBuffer);		//volat az po setLayout
-
-
-		uint32_t indices[3] = { 0, 1, 2 };
-		std::shared_ptr<IndexBuffer> indexBuffer;
-		indexBuffer.reset(IndexBuffer::create(indices, sizeof(indices) / sizeof(uint32_t)));
-		m_vertexArray->setIndexBuffer(indexBuffer);
-
-		//	na render noveho objektu je potreba nejdrive vytvoreni VertexArray, pak definice vertexu
-		//	pote novy VertexBuffer, pak layout tohoto bufferu a setnuti tohoto layoutu pro tento buffer 
-		//	dalsi pridame VertexBuffer do VertexArray, zbyvaji indexy -> definice indexu, pak novy IndexBuffer
-		//	ten setneme pro VertexArray, zbyva uz jen vykreslit - nabindovat prislusny shader a vertex array
-		//	nakonec glDrawElements, kde pocet indexu je VertexArray->getIndexBuffer()->getCount()
-
-		m_squareVA.reset(VertexArray::create());
-
-		float squareVertices[4 * 3] = {
-			-0.75f, -0.75f, 0.0f,
-			 0.75f, -0.75f, 0.0f,
-			 0.75f,  0.75f, 0.0f,
-			-0.75f,  0.75f, 0.0f
-		};
-
-		std::shared_ptr<VertexBuffer> squareVB;
-		squareVB.reset(VertexBuffer::create(squareVertices, sizeof(squareVertices)));
-
-		BufferLayout squareVBLayout = {
-			{ ShaderDataType::Float3, "a_position" }
-		};
-		squareVB->setLayout(squareVBLayout);
-		m_squareVA->addVertexBuffer(squareVB);
-
-		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		std::shared_ptr<IndexBuffer> squareIB;
-		squareIB.reset(IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
-		m_squareVA->setIndexBuffer(squareIB);
-
-
-		std::string vertexSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_position;
-			layout(location = 1) in vec4 a_color;
-
-			uniform mat4 u_viewProjection;
-
-			out vec3 v_position;
-			out vec4 v_color;
-
-			void main()
-			{
-				v_position = a_position;
-				v_color = a_color;
-				gl_Position = u_viewProjection * vec4(a_position, 1.0);	
-			}
-		)";
-
-		std::string fragmentSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-
-			uniform mat4 u_viewProjection;
-
-			in vec3 v_position;
-			in vec4 v_color;
-
-			void main()
-			{
-				color = vec4(v_position * 0.5 + 0.5, 1.0);
-				color = v_color;
-			}
-		)";
-
-		m_shader.reset(new Shader(vertexSrc, fragmentSrc));
-
-		std::string blueShaderVertexSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_position;
-
-			uniform mat4 u_viewProjection;
-
-			out vec3 v_position;
-
-			void main()
-			{
-				v_position = a_position;
-				gl_Position = u_viewProjection * vec4(a_position, 1.0);	
-			}
-		)";
-
-		std::string blueShaderFragmentSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-
-			uniform mat4 u_viewProjection;
-
-			in vec3 v_position;
-
-			void main()
-			{
-				color = vec4(0.2, 0.3, 0.8, 1.0);
-			}
-		)";
-
-		m_blueShader.reset(new Shader(blueShaderVertexSrc, blueShaderFragmentSrc));
 
 	}
 
@@ -160,24 +35,6 @@ namespace Engine1 {
 
 	void Application::run() {
 		while (m_running) {
-
-			//lClearColor(0.2f, 0.2f, 0.2f, 1);
-			//glClear(GL_COLOR_BUFFER_BIT);
-
-			RenderCommand::setClearColor({ 0.2f, 0.2f, 0.2f, 1 });
-			RenderCommand::clear();
-
-			m_camera.setPosition({ 0.5, 0.5, 0.0 });
-			m_camera.setRotation(45.0f);
-
-			Renderer::beginScene(m_camera);
-
-			Renderer::submit(m_blueShader, m_squareVA);		//blue square
-			Renderer::submit(m_shader, m_vertexArray);		//colored triangle
-
-			Renderer::endScene();
-
-
 
 			for (Layer* layer : m_layerStack)
 				layer->onUpdate();
@@ -190,7 +47,7 @@ namespace Engine1 {
 			m_window->onUpdate();
 		}
 	}
-	//hlavni loop programu -----------------------------------------------------------------------------
+	//hlavni loop programu /////////////////////////////////////////////////////////////////////////
 
 	void Application::onEvent(Event& e) {
 		EventDispatcher dispatcher(e);
