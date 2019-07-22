@@ -6,6 +6,8 @@
 
 #include "Engine1/Renderer/Renderer.h"
 
+#include "GLFW/glfw3.h"
+
 
 namespace Engine1 {
 
@@ -20,6 +22,7 @@ namespace Engine1 {
 
 		m_window = std::unique_ptr<Window>(Window::create());
 		m_window->setEventCallback(BIND_EVENT_FN(onEvent));
+		m_window->setVSync(true);
 
 		m_ImGuiLayer = new ImGuiLayer();
 		pushOverlay(m_ImGuiLayer);
@@ -35,9 +38,13 @@ namespace Engine1 {
 
 	void Application::run() {
 		while (m_running) {
+			
+			float time = glfwGetTime();		//Platform::getTime
+			Timestep timestep = time - m_lastFrameTime;
+			m_lastFrameTime = time;
 
 			for (Layer* layer : m_layerStack)
-				layer->onUpdate();
+				layer->onUpdate(timestep);
 
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_layerStack)

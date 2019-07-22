@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine1/Core.h"
+#include "Engine1/Core/Timestep.h"
 #include "Engine1/Events/Event.h"
 
 namespace Engine1 {
@@ -17,7 +18,7 @@ namespace Engine1 {
 
 		virtual void onAttach() {}
 		virtual void onDetach() {}
-		virtual void onUpdate() {}
+		virtual void onUpdate(Timestep ts) {}
 		virtual void onImGuiRender() {}
 		virtual void onEvent(Event& event) {}
 

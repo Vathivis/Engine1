@@ -14,8 +14,8 @@ private:
 	Engine1::OrthographicCamera m_camera;
 	glm::vec3 m_cameraPosition;
 	float m_cameraRotation = 0.0f;
-	float m_cameraMoveSpeed = 0.1f;
-	float m_cameraRotationSpeed = 1.5f;
+	float m_cameraMoveSpeed = 2.0f;
+	float m_cameraRotationSpeed = 180.0f;
 
 public:
 	ExampleLayer() : Layer("Example"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_cameraPosition(0.0f) {
@@ -147,24 +147,26 @@ public:
 		m_blueShader.reset(new Engine1::Shader(blueShaderVertexSrc, blueShaderFragmentSrc));
 	}
 
-	void onUpdate() override {
+	void onUpdate(Engine1::Timestep ts) override {
+
+
 
 		//else if to prevent cancelling each other
 		if (Engine1::Input::isKeyPressed(E1_KEY_D))
-			m_cameraPosition.x += m_cameraMoveSpeed;
+			m_cameraPosition.x += m_cameraMoveSpeed * ts;
 		else if (Engine1::Input::isKeyPressed(E1_KEY_A))
-			m_cameraPosition.x -= m_cameraMoveSpeed;
+			m_cameraPosition.x -= m_cameraMoveSpeed * ts;
 
 		if (Engine1::Input::isKeyPressed(E1_KEY_W))
-			m_cameraPosition.y += m_cameraMoveSpeed;
+			m_cameraPosition.y += m_cameraMoveSpeed * ts;
 		else if (Engine1::Input::isKeyPressed(E1_KEY_S))
-			m_cameraPosition.y -= m_cameraMoveSpeed;
+			m_cameraPosition.y -= m_cameraMoveSpeed * ts;
 
 
 		if (Engine1::Input::isKeyPressed(E1_KEY_E))
-			m_cameraRotation += m_cameraRotationSpeed;
+			m_cameraRotation += m_cameraRotationSpeed * ts;
 		else if (Engine1::Input::isKeyPressed(E1_KEY_Q))
-			m_cameraRotation -= m_cameraRotationSpeed;
+			m_cameraRotation -= m_cameraRotationSpeed * ts;
 
 		
 

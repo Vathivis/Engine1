@@ -6,6 +6,8 @@
 #include "Engine1/Log.h"
 #include "Engine1/Layer.h"
 
+#include "Engine1/Core/Timestep.h"
+
 #include "Engine1/Input.h"
 #include "Engine1/KeyCodes.h"
 #include "Engine1/MouseButtonCodes.h"

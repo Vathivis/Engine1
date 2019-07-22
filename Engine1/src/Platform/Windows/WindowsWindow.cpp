@@ -154,7 +154,7 @@ namespace Engine1 {
 		m_context->swapBuffers();
 	}
 
-	void WindowsWindow::setVSync(bool enabled) {
+	void WindowsWindow::setVSync(bool enabled /*= false*/) {
 		if (enabled)
 			glfwSwapInterval(1);
 		else

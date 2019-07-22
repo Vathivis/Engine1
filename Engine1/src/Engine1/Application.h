@@ -7,6 +7,8 @@
 #include "LayerStack.h"
 #include "Engine1/Events/ApplicationEvent.h"
 
+#include "Engine1/Core/Timestep.h"
+
 #include "Engine1/ImGui/ImGuiLayer.h"
 
 
@@ -19,6 +21,7 @@ namespace Engine1 {
 		LayerStack m_layerStack;
 		static Application* s_Instance;		//instance aplikace - muze byt pouze jedna v programu
 		ImGuiLayer* m_ImGuiLayer;
+		float m_lastFrameTime = 0.0f;
 
 	public:
 		Application();

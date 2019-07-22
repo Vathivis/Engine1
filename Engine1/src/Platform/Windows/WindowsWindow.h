@@ -34,10 +34,10 @@ namespace Engine1 {
 
 		// Window attributes
 		inline void setEventCallback(const EventCallbackFn& callback) override { m_data.eventCallback = callback; }
-		void setVSync(bool enabled) override;
+		void setVSync(bool enabled = false) override;
 		bool isVSync() const override;
 
-		inline virtual void* getNativeWindow() const { return m_window; }
+		inline virtual void* getNativeWindow() const override { return m_window; }
 
 	private:
 		virtual void init(const WindowProps& props);
