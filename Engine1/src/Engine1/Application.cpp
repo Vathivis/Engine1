@@ -4,7 +4,7 @@
 #include "Engine1/Log.h"
 #include "Input.h"
 
-#include <glad/glad.h>
+#include "Engine1/Renderer/Renderer.h"
 
 #include "glm/glm.hpp"
 
@@ -51,6 +51,11 @@ namespace Engine1 {
 		indexBuffer.reset(IndexBuffer::create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_vertexArray->setIndexBuffer(indexBuffer);
 
+		//	na render noveho objektu je potreba nejdrive vytvoreni VertexArray, pak definice vertexu
+		//	pote novy VertexBuffer, pak layout tohoto bufferu a setnuti tohoto layoutu pro tento buffer 
+		//	dalsi pridame VertexBuffer do VertexArray, zbyvaji indexy -> definice indexu, pak novy IndexBuffer
+		//	ten setneme pro VertexArray, zbyva uz jen vykreslit - nabindovat prislusny shader a vertex array
+		//	nakonec glDrawElements, kde pocet indexu je VertexArray->getIndexBuffer()->getCount()
 
 		m_squareVA.reset(VertexArray::create());
 
@@ -149,16 +154,22 @@ namespace Engine1 {
 	void Application::run() {
 		while (m_running) {
 
-			glClearColor(0.2f, 0.2f, 0.2f, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
+			//lClearColor(0.2f, 0.2f, 0.2f, 1);
+			//glClear(GL_COLOR_BUFFER_BIT);
+
+			RenderCommand::setClearColor({ 0.2f, 0.2f, 0.2f, 1 });
+			RenderCommand::clear();
+
+			Renderer::beginScene();
 
 			m_blueShader->bind();
-			m_squareVA->bind();
-			glDrawElements(GL_TRIANGLES, m_squareVA->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::submit(m_squareVA);
 
 			m_shader->bind();
-			m_vertexArray->bind();
-			glDrawElements(GL_TRIANGLES, m_vertexArray->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::submit(m_vertexArray);
+
+			Renderer::endScene();
+
 
 
 			for (Layer* layer : m_layerStack)

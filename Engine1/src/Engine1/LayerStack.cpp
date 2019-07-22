@@ -24,20 +24,22 @@ namespace Engine1 {
 	}
 
 	void LayerStack::popLayer(Layer* layer) {
-		auto it = std::find(m_layers.begin(), m_layers.end(), layer);
+		auto it = std::find(m_layers.begin(), m_layers.end() + m_layerInsertIndex, layer);
 		if (it != m_layers.end())
 		{
-			m_layers.erase(it);
-			m_layerInsertIndex--;
 			layer->onDetach();
+			m_layers.erase(it);
+			m_layerInsertIndex--;	
 		}
 	}
 
 	void LayerStack::popOverlay(Layer* overlay) {
-		auto it = std::find(m_layers.begin(), m_layers.end(), overlay);
-		if (it != m_layers.end())
+		auto it = std::find(m_layers.begin() + m_layerInsertIndex, m_layers.end(), overlay);
+		if (it != m_layers.end()) {
+			overlay->onDetach();
 			m_layers.erase(it);
-		overlay->onDetach();
+		}
+			
 	}
 
 }
