@@ -12,9 +12,9 @@ int main(int argc, char** argv) {
 	E1_CORE_WARN("Initialized log");
 	//E1_INFO("yes");
 
-	auto ips = Engine1::CreateApplication();
-	ips->run();
-	delete ips;
+	auto app = Engine1::CreateApplication();
+	app->run();
+	delete app;
 
 }
 

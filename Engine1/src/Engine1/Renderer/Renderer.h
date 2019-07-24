@@ -4,6 +4,7 @@
 
 #include "OrthographicCamera.h"
 #include "Shader.h"
+#include "Texture.h"
 
 namespace Engine1 {
 
@@ -20,7 +21,7 @@ namespace Engine1 {
 		static void beginScene(OrthographicCamera& camera);
 		static void endScene();
 
-		static void submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray, const glm::mat4& transform = glm::mat4(1.0f));
+		static void submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray, /*const Texture& texture,*/ const glm::mat4& transform = glm::mat4(1.0f));
 
 
 		static inline RendererAPI::API getAPI() { return RendererAPI::getAPI(); }

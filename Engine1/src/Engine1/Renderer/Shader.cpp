@@ -133,7 +133,8 @@ namespace Engine1 {
 	}
 
 	void Shader::uploadUniform1i(const std::string& name, int value) {
-
+		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
+		glUniform1i(location, value);
 	}
 
 	void Shader::uploadUniform1f(const std::string& name, float value) {

@@ -11,8 +11,8 @@
 
 namespace Engine1 {
 
-//makro na event bind na usetreni mista
-#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
+	//makro na event bind na usetreni mista
+	#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
 	Application* Application::s_Instance = nullptr;
 

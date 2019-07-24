@@ -55,6 +55,7 @@ project	"Engine1"
 	includedirs {
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
+		"%{prj.name}/vendor/stb",
 		"%{includeDir.GLFW}",
 		"%{includeDir.Glad}",
 		"%{includeDir.ImGui}",
@@ -111,6 +112,7 @@ project "Application"
 
 	includedirs {
 		"Engine1/vendor/spdlog/include",
+		"Engine1/vendor/stb",
 		"Engine1/src",
 		"Engine1/vendor",
 		"%{includeDir.glm}"
