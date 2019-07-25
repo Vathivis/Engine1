@@ -20,7 +20,11 @@ namespace Engine1 {
 		//shader->uploadUniform1i("u_texture", 0);
 		//texture.bind(0);
 		vertexArray->bind();
-		RenderCommand::DrawIndexed(vertexArray);
+		RenderCommand::drawIndexed(vertexArray);
+	}
+
+	void Renderer::drawLine(const glm::vec2& src, const glm::vec2& dst) {
+		RenderCommand::drawLine(src, dst);
 	}
 
 }

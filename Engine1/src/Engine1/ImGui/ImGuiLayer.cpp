@@ -7,9 +7,7 @@
 
 #include "Engine1/Application.h"
 
-// TEMPORARY
 #include <GLFW/glfw3.h>
-#include <glad/glad.h>
 
 
 

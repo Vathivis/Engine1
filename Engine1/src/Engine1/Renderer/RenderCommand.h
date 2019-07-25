@@ -17,8 +17,12 @@ namespace Engine1 {
 			s_rendererAPI->setClearColor(color);
 		}
 
-		inline static void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) {
+		inline static void drawIndexed(const std::shared_ptr<VertexArray>& vertexArray) {
 			s_rendererAPI->drawIndexed(vertexArray);
+		}
+
+		inline static void drawLine(const glm::vec2& src, const glm::vec2& dst) {
+			s_rendererAPI->drawLine(src, dst);
 		}
 
 	};

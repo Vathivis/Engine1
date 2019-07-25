@@ -22,4 +22,15 @@ namespace Engine1 {
 		glDrawElements(GL_TRIANGLES, vertexArray->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
+	/*void OpenGLRendererAPI::drawLine(const glm::vec2& src, const glm::vec2& dst) {
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_BLEND);
+		glLineWidth(0.2f);
+		glColor3f(0.8f, 0.2f, 0.4f);
+		glBegin(GL_LINES);
+			glVertex3f(src.x, src.y, 0.0f);
+			glVertex3f(dst.x, dst.y, 0.0f);
+		glEnd();
+	}*/
+
 }

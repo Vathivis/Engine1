@@ -4,9 +4,12 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/transform2.hpp"
-#include <glm/gtc/type_ptr.hpp>
+#include "glm/gtc/type_ptr.hpp"
+#include "glm/gtx/fast_square_root.hpp"
+#include "glm/glm.hpp"
 
 #include "Anchor.h"
+#include "../vendor/Glad/include/glad/glad.h"
 
 
 
@@ -30,6 +33,10 @@ private:
 	Engine1::Texture m_anchorTex;
 	std::vector<Anchor> m_anchors;
 
+	bool m_invertLines = false;
+	//bool m_castRays = false;
+	int m_anchorIndex = 0;
+
 	//camera
 	Engine1::OrthographicCamera m_camera;
 	glm::vec3 m_cameraPosition;
@@ -38,6 +45,11 @@ private:
 
 	float m_cameraMoveSpeed = 2.0f;
 	float m_cameraRotationSpeed = 180.0f;
+
+
+	/*bool show_demo_window = true;
+	bool show_another_window = false;
+	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);*/
 
 public:
 	Layer1() : Layer("Layer1"), m_groundPlanTex("resources/textures/pudorys-zdi.png"), m_anchorTex("resources/textures/anchor.png"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_cameraPosition(0.0f) {
@@ -264,6 +276,7 @@ public:
 
 		m_textureSquareShader.reset(new Engine1::Shader(textureSquareShaderVertexSrc, textureSquareShaderFragmentSrc));
 
+		
 	}
 
 	void onUpdate(Engine1::Timestep ts) override {
@@ -293,15 +306,17 @@ public:
 		m_camera.setRotation(m_cameraRotation);
 
 
-
 		auto [x, y] = Engine1::Input::getMousePosition();
-
 		//denormalize camera
 		glm::vec3 camPos = m_camera.getPosition();
-		camPos.x *=  1280 / 3.2;
-		camPos.y *= -720  / 1.8;
+		camPos.x *= 1280 / 3.2;
+		camPos.y *= -720 / 1.8;
 
-		m_mouseScenePos = { x + camPos.x, y + camPos.y};
+		m_mouseScenePos = { x + camPos.x, y + camPos.y };
+
+		
+
+		
 		//E1_WARN("Mouse pos: {0} {1}", m_mouseScenePos.x, m_mouseScenePos.y);
 
 		Engine1::Renderer::beginScene(m_camera);
@@ -327,37 +342,97 @@ public:
 		Engine1::Renderer::submit(m_textureSquareShader, m_backgroundVA, transform2);
 
 		//anchors
-		glm::mat4 anchorScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.33f));		//needs to change with zoom (or not??)
+		//glm::mat4 anchorScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.33f));		//needs to change with zoom (or not??)
 		for (auto& anchor : m_anchors) {
 			glm::vec3 pos(anchor.getPosition().x, anchor.getPosition().y, 0.0f);
-			glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * anchorScale;
+			anchor.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
+			glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * anchor.getScale();
 			m_anchorTex.bind();
 			m_textureSquareShader->uploadUniform1f("u_texture", 0);
 			Engine1::Renderer::submit(m_textureSquareShader, m_anchorVA, transform);
 		}
 
-
-
-		
-		/*glm::vec3 pos3(normalizedMouseX, normalizedMouseY, 0.0f);
-		glm::mat4 transform3 = glm::translate(glm::mat4(1.0f), pos3) * anchorScale;
-		m_anchorTex.bind();
-		m_textureSquareShader->uploadUniform1f("u_texture", 0);
-		Engine1::Renderer::submit(m_textureSquareShader, m_anchorVA, transform3);*/
-
-
+		/*if (m_castRays) {
+			castAnchorRays(m_anchors[m_anchorIndex]);
+			//m_castRays = false;
+		}*/
 
 		Engine1::Renderer::endScene();
 	}
 
 	virtual void onImGuiRender() override {
 
+		
+		static glm::vec2 pos;
+		static float anchorXpos = 0.0f;
+		static float anchorYpos = 0.0f;
+
+		ImGui::Begin("Debug");
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::End();
+		
+		//right click on background
+		if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && ImGui::IsMouseClicked(1)) {
+			ImGui::OpenPopup("backgroundRightClick");
+			pos = m_mouseScenePos;
+		}
+		if (ImGui::BeginPopup("backgroundRightClick")) {
+			if (ImGui::Button("Add Anchor")) {
+				addAnchor(pos);
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+
+		//double click on anchor
+		if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && ImGui::IsMouseDoubleClicked(0)) {
+			pos = m_mouseScenePos;
+			float distance = 0;
+
+			for (int i = 0; i < m_anchors.size(); ++i) {
+				glm::vec2 anchPos = m_anchors[i].getScenePosition();
+				distance = glm::distance(anchPos, pos);		//can change to fastDistance, but less accurate
+				if (distance < m_anchors[i].getRadius()) {
+					ImGui::OpenPopup("anchorClick");
+					anchorXpos = m_anchors[i].getPosition().x;
+					anchorYpos = m_anchors[i].getPosition().y;
+					m_anchorIndex = i;
+					break;
+				}
+			}
+		}
+
+		if (ImGui::BeginPopup("anchorClick")) {
+			if (ImGui::Checkbox("Invert Lines", &m_invertLines)) {}
+
+			//m_castRays = true;
+			
+
+			ImGui::Text("Meters from northern wall: %.3f", 5.0f);
+			
+			
+			/*ImGui::SliderFloat("Left/Right", &anchorXpos, -1.0f, 1.0f);
+			m_anchors[anchorIndex].setPosition({ anchorXpos, anchorYpos, 0.0f });*/
+
+			/*ImGui::Text("Meters from southern wall: %.3f", 5.0f);
+			ImGui::Text("Meters from western wall: %.3f", 5.0f);
+			ImGui::Text("Meters from eastern wall: %.3f", 5.0f);*/
+
+			ImGui::EndPopup();
+
+		}
+
+
+
+		//ImGui::ShowDemoWindow(&show);
 	}
+
 
 	void onEvent(Engine1::Event& event) override {
 		Engine1::EventDispatcher dispatcher(event);
 
 		dispatcher.dispatch<Engine1::KeyPressedEvent>(E1_BIND_EVENT_FN(Layer1::onKeyPressedEvent));
+		//dispatcher.dispatch<Engine1::MouseButtonPressedEvent>(E1_BIND_EVENT_FN(Layer1::onMouseButtonPressedEvent));
 
 	}
 
@@ -377,13 +452,80 @@ public:
 		return false;
 	}
 
+	void addAnchor(const glm::vec2& position) {
+		Anchor anchor({ position.x, position.y, 0.0f });
+		m_anchors.push_back(anchor);
+	}
+
+	/*void castAnchorRays(const Anchor& anchor) {
+		Engine1::Renderer::drawLine({ anchor.getPosition().x, anchor.getPosition().y }, { anchor.getPosition().x, anchor.getPosition().y + 0.5 });
+		Engine1::Renderer::drawLine({ anchor.getPosition().x, anchor.getPosition().y }, { anchor.getPosition().x, anchor.getPosition().y - 0.5 });
+		Engine1::Renderer::drawLine({ anchor.getPosition().x, anchor.getPosition().y }, { anchor.getPosition().x + 0.5, anchor.getPosition().y });
+		Engine1::Renderer::drawLine({ anchor.getPosition().x, anchor.getPosition().y }, { anchor.getPosition().x - 0.5, anchor.getPosition().y });
+	}*/
+
+	//glm::vec4 pixColor = glReadPixels()
 
 };
+
+/*class Overlay1 : public Engine1::Layer {
+private:
+	bool show_demo_window = true;
+	bool show_another_window = false;
+	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+public:
+
+	Overlay1() : ImGuiLayer() {
+		
+	}
+
+	void onUpdate(Engine1::Timestep ts) override {
+
+		//this->Begin();
+		
+		/*static float f = 0.0f;
+		static int counter = 0;
+
+		ImGui::Begin("Hello, world!");
+		ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+		ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+		ImGui::Checkbox("Another Window", &show_another_window);
+
+		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+		ImGui::ColorEdit3("clear color", (float*)& clear_color); // Edit 3 floats representing a color
+
+		if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+			counter++;
+		ImGui::SameLine();
+		ImGui::Text("counter = %d", counter);
+
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::End();
+
+
+		//this->End();
+
+	}
+
+	virtual void onImGuiRender() override {
+
+
+	}
+
+	void onEvent(Engine1::Event& event) override {
+		Engine1::EventDispatcher dispatcher(event);
+
+	}
+
+
+};*/
 
 class Sandbox : public Engine1::Application {
 public:
 	Sandbox() {
 		pushLayer(new Layer1());
+		//pushOverlay(new Overlay1());
 	}
 
 	~Sandbox() {

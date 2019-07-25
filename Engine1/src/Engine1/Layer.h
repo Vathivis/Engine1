@@ -9,7 +9,7 @@ namespace Engine1 {
 	/*
 		virtualni vrstva, slouzi jako zaklad pro realne vrstvy
 	*/
-	class ENGINE1_API Layer {
+	class Layer {
 	protected:
 		std::string m_debugName;
 	public:
