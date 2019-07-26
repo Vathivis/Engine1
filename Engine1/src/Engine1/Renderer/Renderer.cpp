@@ -23,9 +23,9 @@ namespace Engine1 {
 		RenderCommand::drawIndexed(vertexArray);
 	}
 
-	void Renderer::drawLine(const glm::vec2& src, const glm::vec2& dst) {
+	/*void Renderer::drawLine(const glm::vec2& src, const glm::vec2& dst) {
 		RenderCommand::drawLine(src, dst);
-	}
+	}*/
 
 }
 

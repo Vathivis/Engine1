@@ -9,7 +9,7 @@
 #include "glm/glm.hpp"
 
 #include "Anchor.h"
-#include "../vendor/Glad/include/glad/glad.h"
+#include "glad/glad.h"
 
 
 
@@ -366,9 +366,12 @@ public:
 		static glm::vec2 pos;
 		static float anchorXpos = 0.0f;
 		static float anchorYpos = 0.0f;
+		static float north, south, west, east;
 
 		ImGui::Begin("Debug");
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::Text("Number of anchors: %d", m_anchors.size());
+		ImGui::Text("Mouse position: %f %f", m_mouseScenePos.x, m_mouseScenePos.y);
 		ImGui::End();
 		
 		//right click on background
@@ -389,6 +392,11 @@ public:
 			pos = m_mouseScenePos;
 			float distance = 0;
 
+			north = getAnchorWallDistance(m_anchors[m_anchorIndex], 0);
+			south = getAnchorWallDistance(m_anchors[m_anchorIndex], 1);
+			west = getAnchorWallDistance(m_anchors[m_anchorIndex], 2);
+			east = getAnchorWallDistance(m_anchors[m_anchorIndex], 3);
+
 			for (int i = 0; i < m_anchors.size(); ++i) {
 				glm::vec2 anchPos = m_anchors[i].getScenePosition();
 				distance = glm::distance(anchPos, pos);		//can change to fastDistance, but less accurate
@@ -407,16 +415,18 @@ public:
 
 			//m_castRays = true;
 			
+			
 
-			ImGui::Text("Meters from northern wall: %.3f", 5.0f);
+			ImGui::Text("Meters from northern wall: %.3f", north);
+			ImGui::Text("Meters from southern wall: %.3f", south);
+			ImGui::Text("Meters from western wall: %.3f", west);
+			ImGui::Text("Meters from eastern wall: %.3f", east);
 			
 			
 			/*ImGui::SliderFloat("Left/Right", &anchorXpos, -1.0f, 1.0f);
 			m_anchors[anchorIndex].setPosition({ anchorXpos, anchorYpos, 0.0f });*/
 
-			/*ImGui::Text("Meters from southern wall: %.3f", 5.0f);
-			ImGui::Text("Meters from western wall: %.3f", 5.0f);
-			ImGui::Text("Meters from eastern wall: %.3f", 5.0f);*/
+			
 
 			ImGui::EndPopup();
 
@@ -457,14 +467,48 @@ public:
 		m_anchors.push_back(anchor);
 	}
 
-	/*void castAnchorRays(const Anchor& anchor) {
-		Engine1::Renderer::drawLine({ anchor.getPosition().x, anchor.getPosition().y }, { anchor.getPosition().x, anchor.getPosition().y + 0.5 });
-		Engine1::Renderer::drawLine({ anchor.getPosition().x, anchor.getPosition().y }, { anchor.getPosition().x, anchor.getPosition().y - 0.5 });
-		Engine1::Renderer::drawLine({ anchor.getPosition().x, anchor.getPosition().y }, { anchor.getPosition().x + 0.5, anchor.getPosition().y });
-		Engine1::Renderer::drawLine({ anchor.getPosition().x, anchor.getPosition().y }, { anchor.getPosition().x - 0.5, anchor.getPosition().y });
-	}*/
+	//0 = north, 1 = south, 2 = west, 3 = east
+	float getAnchorWallDistance(const Anchor& anchor, int direction = 0) {
+		unsigned char pick_col[3];
 
-	//glm::vec4 pixColor = glReadPixels()
+		if (direction == 0) {
+			for (int i = 0; i < 1000; ++i) {
+				glReadPixels(anchor.getScenePosition().x, anchor.getScenePosition().y - i, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pick_col);
+				if (!(pick_col[0] > 225 && pick_col[1] > 225 && pick_col[2] > 225) && pick_col[2] < 220) {
+					return (float)i;
+				}
+			}
+		}
+		else if (direction == 1) {
+			for (int i = 0; i < 1000; ++i) {
+				glReadPixels(anchor.getScenePosition().x, anchor.getScenePosition().y + i, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pick_col);
+				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 220) {
+					return (float)i;
+				}
+			}
+		}
+		else if (direction == 2) {
+			for (int i = 0; i < 1000; ++i) {
+				glReadPixels(anchor.getScenePosition().x - i, anchor.getScenePosition().y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pick_col);
+				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 220) {
+					return (float)i;
+				}
+			}
+		}
+		else if (direction == 3) {
+			for (int i = 0; i < 1000; ++i) {
+				glReadPixels(anchor.getScenePosition().x + i, anchor.getScenePosition().y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pick_col);
+				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 220) {
+					return (float)i;
+				}
+			}
+		}
+		
+
+		return -1.0f;
+	}
+
+	
 
 };
 

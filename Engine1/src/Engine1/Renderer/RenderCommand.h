@@ -21,9 +21,9 @@ namespace Engine1 {
 			s_rendererAPI->drawIndexed(vertexArray);
 		}
 
-		inline static void drawLine(const glm::vec2& src, const glm::vec2& dst) {
+		/*inline static void drawLine(const glm::vec2& src, const glm::vec2& dst) {
 			s_rendererAPI->drawLine(src, dst);
-		}
+		}*/
 
 	};
 

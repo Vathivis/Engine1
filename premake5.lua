@@ -110,16 +110,19 @@ project "Application"
 		"%{prj.name}/src/**.cpp"
 	}
 
+	--glad is temporary
 	includedirs {
 		"Engine1/vendor/spdlog/include",
 		"Engine1/vendor/stb",
 		"Engine1/src",
 		"Engine1/vendor",
+		"%{includeDir.Glad}",
 		"%{includeDir.glm}"
 	}
 
 	links {
-		"Engine1"
+		"Engine1",
+		"Glad"
 	}
 
 	filter "system:windows"
