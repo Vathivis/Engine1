@@ -367,11 +367,16 @@ public:
 		static float anchorXpos = 0.0f;
 		static float anchorYpos = 0.0f;
 		static float north, south, west, east;
+		static glm::vec4 anchorWalls;
+		unsigned char mouseCol[3];
+		auto [xx, yy] = Engine1::Input::getMousePosition();
 
 		ImGui::Begin("Debug");
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::Text("Number of anchors: %d", m_anchors.size());
 		ImGui::Text("Mouse position: %f %f", m_mouseScenePos.x, m_mouseScenePos.y);
+		glReadPixels(xx, 720 - yy, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, mouseCol);		//change 720
+		ImGui::Text("Color on mouse pos: %u %u %u", mouseCol[0], mouseCol[1], mouseCol[2]);
 		ImGui::End();
 		
 		//right click on background
@@ -392,10 +397,7 @@ public:
 			pos = m_mouseScenePos;
 			float distance = 0;
 
-			north = getAnchorWallDistance(m_anchors[m_anchorIndex], 0);
-			south = getAnchorWallDistance(m_anchors[m_anchorIndex], 1);
-			west = getAnchorWallDistance(m_anchors[m_anchorIndex], 2);
-			east = getAnchorWallDistance(m_anchors[m_anchorIndex], 3);
+			
 
 			for (int i = 0; i < m_anchors.size(); ++i) {
 				glm::vec2 anchPos = m_anchors[i].getScenePosition();
@@ -408,6 +410,8 @@ public:
 					break;
 				}
 			}
+
+			anchorWalls = getAnchorAllWallDistance(m_anchors[m_anchorIndex]);
 		}
 
 		if (ImGui::BeginPopup("anchorClick")) {
@@ -417,10 +421,10 @@ public:
 			
 			
 
-			ImGui::Text("Meters from northern wall: %.3f", north);
-			ImGui::Text("Meters from southern wall: %.3f", south);
-			ImGui::Text("Meters from western wall: %.3f", west);
-			ImGui::Text("Meters from eastern wall: %.3f", east);
+			ImGui::Text("Meters from northern wall: %.3f", anchorWalls.x);
+			ImGui::Text("Meters from southern wall: %.3f", anchorWalls.y);
+			ImGui::Text("Meters from western wall: %.3f", anchorWalls.z);
+			ImGui::Text("Meters from eastern wall: %.3f", anchorWalls.w);
 			
 			
 			/*ImGui::SliderFloat("Left/Right", &anchorXpos, -1.0f, 1.0f);
@@ -469,11 +473,12 @@ public:
 
 	//0 = north, 1 = south, 2 = west, 3 = east
 	float getAnchorWallDistance(const Anchor& anchor, int direction = 0) {
-		unsigned char pick_col[3];
+		unsigned char pick_col[4];
 
+		//change 720 to window height
 		if (direction == 0) {
 			for (int i = 0; i < 1000; ++i) {
-				glReadPixels(anchor.getScenePosition().x, anchor.getScenePosition().y - i, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pick_col);
+				glReadPixels(anchor.getScenePosition().x, 720 - anchor.getScenePosition().y + i, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
 				if (!(pick_col[0] > 225 && pick_col[1] > 225 && pick_col[2] > 225) && pick_col[2] < 220) {
 					return (float)i;
 				}
@@ -481,7 +486,7 @@ public:
 		}
 		else if (direction == 1) {
 			for (int i = 0; i < 1000; ++i) {
-				glReadPixels(anchor.getScenePosition().x, anchor.getScenePosition().y + i, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pick_col);
+				glReadPixels(anchor.getScenePosition().x, 720 - anchor.getScenePosition().y - i, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
 				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 220) {
 					return (float)i;
 				}
@@ -489,7 +494,7 @@ public:
 		}
 		else if (direction == 2) {
 			for (int i = 0; i < 1000; ++i) {
-				glReadPixels(anchor.getScenePosition().x - i, anchor.getScenePosition().y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pick_col);
+				glReadPixels(anchor.getScenePosition().x - i, 720 - anchor.getScenePosition().y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
 				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 220) {
 					return (float)i;
 				}
@@ -497,7 +502,7 @@ public:
 		}
 		else if (direction == 3) {
 			for (int i = 0; i < 1000; ++i) {
-				glReadPixels(anchor.getScenePosition().x + i, anchor.getScenePosition().y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pick_col);
+				glReadPixels(anchor.getScenePosition().x + i, 720 - anchor.getScenePosition().y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
 				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 220) {
 					return (float)i;
 				}
@@ -508,6 +513,15 @@ public:
 		return -1.0f;
 	}
 
+	glm::vec4 getAnchorAllWallDistance(const Anchor& anchor) {
+		glm::vec4 res;
+		res.x = getAnchorWallDistance(anchor, 0);
+		res.y = getAnchorWallDistance(anchor, 1);
+		res.z = getAnchorWallDistance(anchor, 2);
+		res.w = getAnchorWallDistance(anchor, 3);
+
+		return res;
+	}
 	
 
 };
