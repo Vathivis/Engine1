@@ -9,22 +9,23 @@
 #include "glm/glm.hpp"
 
 #include "Anchor.h"
+//TEMPORARY
 #include "glad/glad.h"
 
 
 
 class Layer1 : public Engine1::Layer {
 private:
-	std::shared_ptr<Engine1::Shader> m_shader;
-	std::shared_ptr<Engine1::VertexArray> m_vertexArray;
+	//std::shared_ptr<Engine1::Shader> m_shader;
+	//std::shared_ptr<Engine1::VertexArray> m_vertexArray;
 
-	std::shared_ptr<Engine1::Shader> m_blueShader;
-	std::shared_ptr<Engine1::VertexArray> m_squareVA;
+	//std::shared_ptr<Engine1::Shader> m_blueShader;
+	//std::shared_ptr<Engine1::VertexArray> m_squareVA;
 
 	std::shared_ptr<Engine1::Shader> m_textureSquareShader;
 
+	//background/groundplan
 	std::shared_ptr<Engine1::VertexArray> m_backgroundVA;
-	
 	Engine1::Texture m_groundPlanTex;
 	
 	
@@ -34,8 +35,14 @@ private:
 	std::vector<Anchor> m_anchors;
 
 	bool m_invertLines = false;
-	//bool m_castRays = false;
 	int m_anchorIndex = 0;
+
+	//scale
+	std::shared_ptr<Engine1::VertexArray> m_scaleVA;
+	Engine1::Texture m_scaleTex;
+
+	bool m_showScale = false;
+	glm::mat4 m_scaleScale;
 
 	//camera
 	Engine1::OrthographicCamera m_camera;
@@ -47,14 +54,10 @@ private:
 	float m_cameraRotationSpeed = 180.0f;
 
 
-	/*bool show_demo_window = true;
-	bool show_another_window = false;
-	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);*/
-
 public:
-	Layer1() : Layer("Layer1"), m_groundPlanTex("resources/textures/pudorys-zdi.png"), m_anchorTex("resources/textures/anchor.png"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_cameraPosition(0.0f) {
+	Layer1() : Layer("Layer1"), m_groundPlanTex("resources/textures/pudorys-zdi.png"), m_anchorTex("resources/textures/anchor.png"), m_scaleTex("resources/textures/meritko.png"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_cameraPosition(0.0f) {
 	
-		m_vertexArray.reset(Engine1::VertexArray::create());
+		/*m_vertexArray.reset(Engine1::VertexArray::create());
 
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
@@ -78,15 +81,17 @@ public:
 		uint32_t indices[3] = { 0, 1, 2 };
 		std::shared_ptr<Engine1::IndexBuffer> indexBuffer;
 		indexBuffer.reset(Engine1::IndexBuffer::create(indices, sizeof(indices) / sizeof(uint32_t)));
-		m_vertexArray->setIndexBuffer(indexBuffer);
+		m_vertexArray->setIndexBuffer(indexBuffer);*/
 
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//	na render noveho objektu je potreba nejdrive vytvoreni VertexArray, pak definice vertexu
 		//	pote novy VertexBuffer, pak layout tohoto bufferu a setnuti tohoto layoutu pro tento buffer 
 		//	dalsi pridame VertexBuffer do VertexArray, zbyvaji indexy -> definice indexu, pak novy IndexBuffer
 		//	ten setneme pro VertexArray, zbyva uz jen vykreslit - nabindovat prislusny shader a vertex array
 		//	nakonec glDrawElements, kde pocet indexu je VertexArray->getIndexBuffer()->getCount()
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		m_squareVA.reset(Engine1::VertexArray::create());
+		/*m_squareVA.reset(Engine1::VertexArray::create());
 
 		float squareVertices[4 * 3] = {
 			-0.5f, -0.5f, 0.0f, 
@@ -107,10 +112,10 @@ public:
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 		std::shared_ptr<Engine1::IndexBuffer> squareIB;
 		squareIB.reset(Engine1::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
-		m_squareVA->setIndexBuffer(squareIB);
+		m_squareVA->setIndexBuffer(squareIB);*/
 
 
-		//background texture
+		//background texture/////////////////////////////////////////////////////////////////////////////////////////////////
 		m_backgroundVA.reset(Engine1::VertexArray::create());
 
 		float groundW = m_groundPlanTex.getWidth();
@@ -142,7 +147,7 @@ public:
 		m_backgroundVA->setIndexBuffer(backgroundIB);
 
 	
-		//anchor
+		//anchor/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		m_anchorVA.reset(Engine1::VertexArray::create());
 		float anchorVertices[] = {
 			-0.1f, -0.1f, 0.0f, 0.0f, 0.0f,	//left bot
@@ -166,9 +171,40 @@ public:
 		anchorIB.reset(Engine1::IndexBuffer::create(anchorIndices, sizeof(anchorIndices) / sizeof(uint32_t)));
 		m_anchorVA->setIndexBuffer(anchorIB);
 
+		//scale/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		m_scaleVA.reset(Engine1::VertexArray::create());
 
+		float scaleW = m_scaleTex.getWidth();
+		float scaleH = m_scaleTex.getHeight();
 
-		std::string vertexSrc = R"(
+		scaleW = (scaleW / 1000);
+		scaleH = (scaleH / 1000);
+
+		float scaleVertices[] = {
+			-scaleW, -scaleH, 0.0f, 0.0f, 0.0f,	//left bot
+			 scaleW, -scaleH, 0.0f, 1.0f, 0.0f,	//right bot
+			 scaleW,  scaleH, 0.0f, 1.0f, 1.0f,	//right top
+			-scaleW,  scaleH, 0.0f, 0.0f, 1.0f	//left top
+		};
+
+		Engine1::BufferLayout scaleVBLayout = {
+			{ Engine1::ShaderDataType::Float3, "a_position" },
+			{ Engine1::ShaderDataType::Float2, "a_texPos" }
+		};
+
+		std::shared_ptr<Engine1::VertexBuffer> scaleVB;
+		scaleVB.reset(Engine1::VertexBuffer::create(scaleVertices, sizeof(scaleVertices)));
+		scaleVB->setLayout(scaleVBLayout);
+		m_scaleVA->addVertexBuffer(scaleVB);
+
+		uint32_t scaleIndices[6] = { 0, 1, 2, 2, 3, 0 };
+		std::shared_ptr<Engine1::IndexBuffer> scaleIB;
+		scaleIB.reset(Engine1::IndexBuffer::create(scaleIndices, sizeof(scaleIndices) / sizeof(uint32_t)));
+		m_scaleVA->setIndexBuffer(scaleIB);
+
+		m_scaleScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+
+		/*std::string vertexSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) in vec3 a_position;
@@ -205,9 +241,9 @@ public:
 			}
 		)";
 
-		m_shader.reset(new Engine1::Shader(vertexSrc, fragmentSrc));
+		m_shader.reset(new Engine1::Shader(vertexSrc, fragmentSrc));*/
 
-		std::string blueShaderVertexSrc = R"(
+		/*std::string blueShaderVertexSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) in vec3 a_position;
@@ -238,7 +274,7 @@ public:
 			}
 		)";
 
-		m_blueShader.reset(new Engine1::Shader(blueShaderVertexSrc, blueShaderFragmentSrc));
+		m_blueShader.reset(new Engine1::Shader(blueShaderVertexSrc, blueShaderFragmentSrc));*/
 
 		std::string textureSquareShaderVertexSrc = R"(
 			#version 330 core
@@ -331,10 +367,10 @@ public:
 			}
 		}*/
 			
-		Engine1::Renderer::submit(m_shader, m_vertexArray);		//colored triangle
+		//Engine1::Renderer::submit(m_shader, m_vertexArray);		//colored triangle
 
 
-		//bacground
+		//background
 		glm::vec3 pos2(0.0f, 0.0f, 0.0f);
 		glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), pos2);
 		m_groundPlanTex.bind();
@@ -352,14 +388,20 @@ public:
 			Engine1::Renderer::submit(m_textureSquareShader, m_anchorVA, transform);
 		}
 
-		/*if (m_castRays) {
-			castAnchorRays(m_anchors[m_anchorIndex]);
-			//m_castRays = false;
-		}*/
+		//scale
+		
+		if (m_showScale) {
+			glm::vec3 scalePos(-1.0f, 0.8f, 0.0f);
+			glm::mat4 scaleTransform = glm::translate(glm::mat4(1.0f), scalePos) * m_scaleScale;
+			m_scaleTex.bind();
+			m_textureSquareShader->uploadUniform1f("u_texture", 0);
+			Engine1::Renderer::submit(m_textureSquareShader, m_scaleVA, scaleTransform);
+		}
 
 		Engine1::Renderer::endScene();
 	}
 
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	virtual void onImGuiRender() override {
 
 		
@@ -368,15 +410,16 @@ public:
 		static float anchorYpos = 0.0f;
 		static float north, south, west, east;
 		static glm::vec4 anchorWalls;
-		unsigned char mouseCol[3];
+		unsigned char mouseCol[4];
 		auto [xx, yy] = Engine1::Input::getMousePosition();
 
 		ImGui::Begin("Debug");
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::Text("Number of anchors: %d", m_anchors.size());
 		ImGui::Text("Mouse position: %f %f", m_mouseScenePos.x, m_mouseScenePos.y);
-		glReadPixels(xx, 720 - yy, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, mouseCol);		//change 720
-		ImGui::Text("Color on mouse pos: %u %u %u", mouseCol[0], mouseCol[1], mouseCol[2]);
+		glReadPixels(xx, 720 - yy, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, mouseCol);		//change 720
+		ImGui::Text("Color on mouse pos: R:%u G:%u B:%u A:%u", mouseCol[0], mouseCol[1], mouseCol[2], mouseCol[3]);
+		if (ImGui::Checkbox("Show Scale", &m_showScale)) {}
 		ImGui::End();
 		
 		//right click on background
@@ -407,11 +450,12 @@ public:
 					anchorXpos = m_anchors[i].getPosition().x;
 					anchorYpos = m_anchors[i].getPosition().y;
 					m_anchorIndex = i;
+					anchorWalls = getAnchorAllWallDistance(m_anchors[m_anchorIndex]);
 					break;
 				}
 			}
 
-			anchorWalls = getAnchorAllWallDistance(m_anchors[m_anchorIndex]);
+			
 		}
 
 		if (ImGui::BeginPopup("anchorClick")) {
@@ -475,7 +519,7 @@ public:
 	float getAnchorWallDistance(const Anchor& anchor, int direction = 0) {
 		unsigned char pick_col[4];
 
-		//change 720 to window height
+		//change 720 to window height, change sceneposition to window position, change readpixels to be integrated in Engine1
 		if (direction == 0) {
 			for (int i = 0; i < 1000; ++i) {
 				glReadPixels(anchor.getScenePosition().x, 720 - anchor.getScenePosition().y + i, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
