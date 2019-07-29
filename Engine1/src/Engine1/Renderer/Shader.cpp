@@ -142,7 +142,13 @@ namespace Engine1 {
 	}
 
 	void Shader::uploadUniform4f(const std::string& name, float v0, float v1, float v2, float v3) {
+		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
+		glUniform4f(location, v0, v1, v2, v3);
+	}
 
+	void Shader::uploadUniform4f(const std::string& name, glm::vec4 values) {
+		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
+		glUniform4f(location, values.x, values.y, values.z, values.w);
 	}
 
 	void Shader::uploadUniformMat4(const std::string& name, const glm::mat4& matrix) {

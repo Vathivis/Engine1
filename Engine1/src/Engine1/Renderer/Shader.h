@@ -22,6 +22,7 @@ namespace Engine1 {
 		void uploadUniform1i(const std::string& name, int value);
 		void uploadUniform1f(const std::string& name, float value);
 		void uploadUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
+		void uploadUniform4f(const std::string& name, glm::vec4 values);
 		void uploadUniformMat4(const std::string& name, const glm::mat4& matrix);
 
 	};

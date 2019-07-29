@@ -10,3 +10,6 @@
 *.vcxproj.*
 Application/imgui.ini
 Engine1/vendor/spdlog/
+*.docx
+*.png
+*.jpg

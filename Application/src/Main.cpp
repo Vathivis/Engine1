@@ -19,8 +19,8 @@ private:
 	//std::shared_ptr<Engine1::Shader> m_shader;
 	//std::shared_ptr<Engine1::VertexArray> m_vertexArray;
 
-	//std::shared_ptr<Engine1::Shader> m_blueShader;
-	//std::shared_ptr<Engine1::VertexArray> m_squareVA;
+	std::shared_ptr<Engine1::Shader> m_flatColorShader;
+	std::shared_ptr<Engine1::VertexArray> m_squareVA;
 
 	std::shared_ptr<Engine1::Shader> m_textureSquareShader;
 
@@ -91,7 +91,7 @@ public:
 		//	nakonec glDrawElements, kde pocet indexu je VertexArray->getIndexBuffer()->getCount()
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		/*m_squareVA.reset(Engine1::VertexArray::create());
+		m_squareVA.reset(Engine1::VertexArray::create());
 
 		float squareVertices[4 * 3] = {
 			-0.5f, -0.5f, 0.0f, 
@@ -112,7 +112,7 @@ public:
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 		std::shared_ptr<Engine1::IndexBuffer> squareIB;
 		squareIB.reset(Engine1::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
-		m_squareVA->setIndexBuffer(squareIB);*/
+		m_squareVA->setIndexBuffer(squareIB);
 
 
 		//background texture/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -243,7 +243,7 @@ public:
 
 		m_shader.reset(new Engine1::Shader(vertexSrc, fragmentSrc));*/
 
-		/*std::string blueShaderVertexSrc = R"(
+		std::string flatColorShaderVertexSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) in vec3 a_position;
@@ -260,21 +260,20 @@ public:
 			}
 		)";
 
-		std::string blueShaderFragmentSrc = R"(
+		std::string flatColorShaderFragmentSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) out vec4 color;
 
-			uniform mat4 u_viewProjection;
-
+			uniform vec4 u_color;
 
 			void main()
 			{
-				color = vec4(0.2, 0.3, 0.8, 1.0);
+				color = u_color;
 			}
 		)";
 
-		m_blueShader.reset(new Engine1::Shader(blueShaderVertexSrc, blueShaderFragmentSrc));*/
+		m_flatColorShader.reset(new Engine1::Shader(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
 
 		std::string textureSquareShaderVertexSrc = R"(
 			#version 330 core
@@ -357,15 +356,24 @@ public:
 
 		Engine1::Renderer::beginScene(m_camera);
 
-		/*glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+		glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);
+		glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
 
 		for (int j = 0; j < 20; ++j) {
 			for (int i = 0; i < 20; ++i) {
 				glm::vec3 pos(i * 0.11f, j * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-				Engine1::Renderer::submit(m_blueShader, m_squareVA, transform);		//blue square
+
+				if (i % 2 == 0)
+					m_flatColorShader->uploadUniform4f("u_color", redColor);
+				else
+					m_flatColorShader->uploadUniform4f("u_color", blueColor);
+				
+				Engine1::Renderer::submit(m_flatColorShader, m_squareVA, transform);		//blue square
 			}
-		}*/
+		}
 			
 		//Engine1::Renderer::submit(m_shader, m_vertexArray);		//colored triangle
 
@@ -505,6 +513,7 @@ public:
 
 		if (event.getKeyCode() == E1_KEY_C) {
 			m_cameraPosition = { 0.0f, 0.0f, 0.0f };
+			m_cameraRotation = 0.0f;
 		}
 
 		return false;
