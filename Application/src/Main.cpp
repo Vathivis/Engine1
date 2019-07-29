@@ -9,6 +9,7 @@
 #include "glm/glm.hpp"
 
 #include "Anchor.h"
+#include "Scale.h"
 //TEMPORARY
 #include "glad/glad.h"
 
@@ -40,9 +41,9 @@ private:
 	//scale
 	std::shared_ptr<Engine1::VertexArray> m_scaleVA;
 	Engine1::Texture m_scaleTex;
+	std::unique_ptr<Scale> m_scale;
 
 	bool m_showScale = false;
-	glm::mat4 m_scaleScale;
 
 	//camera
 	Engine1::OrthographicCamera m_camera;
@@ -57,6 +58,9 @@ private:
 public:
 	Layer1() : Layer("Layer1"), m_groundPlanTex("resources/textures/pudorys-zdi.png"), m_anchorTex("resources/textures/anchor.png"), m_scaleTex("resources/textures/meritko.png"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_cameraPosition(0.0f) {
 	
+		
+		//m_scale->setPosition({ -1.3f, 0.8f, 0.0f });
+
 		/*m_vertexArray.reset(Engine1::VertexArray::create());
 
 		float vertices[3 * 7] = {
@@ -91,7 +95,7 @@ public:
 		//	nakonec glDrawElements, kde pocet indexu je VertexArray->getIndexBuffer()->getCount()
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		m_squareVA.reset(Engine1::VertexArray::create());
+		/*m_squareVA.reset(Engine1::VertexArray::create());
 
 		float squareVertices[4 * 3] = {
 			-0.5f, -0.5f, 0.0f, 
@@ -112,7 +116,7 @@ public:
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 		std::shared_ptr<Engine1::IndexBuffer> squareIB;
 		squareIB.reset(Engine1::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
-		m_squareVA->setIndexBuffer(squareIB);
+		m_squareVA->setIndexBuffer(squareIB);*/
 
 
 		//background texture/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -121,8 +125,8 @@ public:
 		float groundW = m_groundPlanTex.getWidth();
 		float groundH = m_groundPlanTex.getHeight();
 
-		groundW = (groundW / 1000) ;
-		groundH = (groundH / 1000) ;
+		groundW = groundW / 1280 * 1.6;
+		groundH = groundH / 720 * 0.9;
 
 		float backgroundVertices[] = {
 			-groundW, -groundH, 0.0f, 0.0f, 0.0f,	//left bot
@@ -177,8 +181,11 @@ public:
 		float scaleW = m_scaleTex.getWidth();
 		float scaleH = m_scaleTex.getHeight();
 
-		scaleW = (scaleW / 1000);
-		scaleH = (scaleH / 1000);
+		m_scale = std::make_unique<Scale>(Scale(scaleW, scaleH, { 480.0f, 80.0f, 0.0f }));
+
+		scaleW = scaleW / 1280 * 1.6;
+		scaleH = scaleH / 720 * 0.9;
+
 
 		float scaleVertices[] = {
 			-scaleW, -scaleH, 0.0f, 0.0f, 0.0f,	//left bot
@@ -202,7 +209,6 @@ public:
 		scaleIB.reset(Engine1::IndexBuffer::create(scaleIndices, sizeof(scaleIndices) / sizeof(uint32_t)));
 		m_scaleVA->setIndexBuffer(scaleIB);
 
-		m_scaleScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
 
 		/*std::string vertexSrc = R"(
 			#version 330 core
@@ -356,7 +362,7 @@ public:
 
 		Engine1::Renderer::beginScene(m_camera);
 
-		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+		/*glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
 		glm::vec4 redColor(0.8f, 0.2f, 0.3f, 1.0f);
 		glm::vec4 blueColor(0.2f, 0.3f, 0.8f, 1.0f);
@@ -373,7 +379,7 @@ public:
 				
 				Engine1::Renderer::submit(m_flatColorShader, m_squareVA, transform);		//blue square
 			}
-		}
+		}*/
 			
 		//Engine1::Renderer::submit(m_shader, m_vertexArray);		//colored triangle
 
@@ -382,15 +388,15 @@ public:
 		glm::vec3 pos2(0.0f, 0.0f, 0.0f);
 		glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), pos2);
 		m_groundPlanTex.bind();
-		m_textureSquareShader->uploadUniform1f("u_texture", 0);
+		m_textureSquareShader->uploadUniform1f("u_texture", 0);		//weird on intel gpu
 		Engine1::Renderer::submit(m_textureSquareShader, m_backgroundVA, transform2);
 
 		//anchors
 		//glm::mat4 anchorScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.33f));		//needs to change with zoom (or not??)
 		for (auto& anchor : m_anchors) {
-			glm::vec3 pos(anchor.getPosition().x, anchor.getPosition().y, 0.0f);
+			//glm::vec3 pos(anchor.getPosition().x, anchor.getPosition().y, 0.0f);
 			anchor.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
-			glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * anchor.getScale();
+			glm::mat4 transform = glm::translate(glm::mat4(1.0f), anchor.getPosition()) * anchor.getScale();
 			m_anchorTex.bind();
 			m_textureSquareShader->uploadUniform1f("u_texture", 0);
 			Engine1::Renderer::submit(m_textureSquareShader, m_anchorVA, transform);
@@ -398,9 +404,9 @@ public:
 
 		//scale
 		
-		if (m_showScale) {
-			glm::vec3 scalePos(-1.0f, 0.8f, 0.0f);
-			glm::mat4 scaleTransform = glm::translate(glm::mat4(1.0f), scalePos) * m_scaleScale;
+		if (m_showScale) {	
+			m_scale->setScale(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
+			glm::mat4 scaleTransform = glm::translate(glm::mat4(1.0f), m_scale->getPosition());// *m_scale->getScale();
 			m_scaleTex.bind();
 			m_textureSquareShader->uploadUniform1f("u_texture", 0);
 			Engine1::Renderer::submit(m_textureSquareShader, m_scaleVA, scaleTransform);
@@ -412,7 +418,7 @@ public:
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	virtual void onImGuiRender() override {
 
-		
+		static float f1 = m_scale->getWidth();
 		static glm::vec2 pos;
 		static float anchorXpos = 0.0f;
 		static float anchorYpos = 0.0f;
@@ -424,10 +430,13 @@ public:
 		ImGui::Begin("Debug");
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::Text("Number of anchors: %d", m_anchors.size());
-		ImGui::Text("Mouse position: %f %f", m_mouseScenePos.x, m_mouseScenePos.y);
+		ImGui::Text("Mouse scene position: %f %f", m_mouseScenePos.x, m_mouseScenePos.y);
+		ImGui::Text("Mouse screen position: %f %f", xx, yy);
+		ImGui::Text("Camera position: %f %f", m_camera.getPosition().x * 1280 / 3.2, m_camera.getPosition().y * -720 / 1.8);
 		glReadPixels(xx, 720 - yy, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, mouseCol);		//change 720
 		ImGui::Text("Color on mouse pos: R:%u G:%u B:%u A:%u", mouseCol[0], mouseCol[1], mouseCol[2], mouseCol[3]);
 		if (ImGui::Checkbox("Show Scale", &m_showScale)) {}
+		ImGui::Text("Scale width: %f  height: %f", m_scale->getWidth(), m_scale->getHeight());
 		ImGui::End();
 		
 		//right click on background
@@ -443,27 +452,43 @@ public:
 			ImGui::EndPopup();
 		}
 
-		//double click on anchor
+		//double click on anchor or scale
 		if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && ImGui::IsMouseDoubleClicked(0)) {
 			pos = m_mouseScenePos;
 			float distance = 0;
-
 			
-
-			for (int i = 0; i < m_anchors.size(); ++i) {
-				glm::vec2 anchPos = m_anchors[i].getScenePosition();
-				distance = glm::distance(anchPos, pos);		//can change to fastDistance, but less accurate
-				if (distance < m_anchors[i].getRadius()) {
-					ImGui::OpenPopup("anchorClick");
-					anchorXpos = m_anchors[i].getPosition().x;
-					anchorYpos = m_anchors[i].getPosition().y;
-					m_anchorIndex = i;
-					anchorWalls = getAnchorAllWallDistance(m_anchors[m_anchorIndex]);
-					break;
+			if (m_showScale && pos.x >= m_scale->getScenePosition().x - m_scale->getWidth() / 2 && pos.x <= m_scale->getScenePosition().x + m_scale->getWidth() / 2
+				&& pos.y >= m_scale->getScenePosition().y - m_scale->getHeight() / 2 && pos.y <= m_scale->getScenePosition().y + m_scale->getHeight() / 2) {
+				ImGui::OpenPopup("scaleClick");
+			}
+			else {
+				for (int i = 0; i < m_anchors.size(); ++i) {
+					glm::vec2 anchPos = m_anchors[i].getScenePosition();
+					distance = glm::distance(anchPos, pos);		//can change to fastDistance, but less accurate
+					if (distance < m_anchors[i].getRadius()) {
+						ImGui::OpenPopup("anchorClick");
+						anchorXpos = m_anchors[i].getPosition().x;
+						anchorYpos = m_anchors[i].getPosition().y;
+						m_anchorIndex = i;
+						anchorWalls = getAnchorAllWallDistance(m_anchors[m_anchorIndex]);
+						break;
+					}
 				}
 			}
+		}
+
+		
+		if (ImGui::BeginPopup("scaleClick")) {
+			ImGui::Text("Width: %f", m_scale->getWidth());
+			ImGui::Text("Height: %f", m_scale->getHeight());
 
 			
+			ImGui::DragFloat("set width", &f1, 0.05f);
+
+
+			m_scale->setWidth(f1);
+
+			ImGui::EndPopup();
 		}
 
 		if (ImGui::BeginPopup("anchorClick")) {
@@ -505,10 +530,7 @@ public:
 	bool onKeyPressedEvent(Engine1::KeyPressedEvent& event) {
 
 		if (event.getKeyCode() == E1_KEY_SPACE) {
-			float normalizedMouseX = -1.6f + 3.2f * m_mouseScenePos.x / 1280;
-			float normalizedMouseY = 0.9f - 1.8f * m_mouseScenePos.y / 720;
-			Anchor anchor({ normalizedMouseX, normalizedMouseY, 0.0f });
-			m_anchors.push_back(anchor);
+			addAnchor(m_mouseScenePos);
 		}
 
 		if (event.getKeyCode() == E1_KEY_C) {
@@ -527,11 +549,14 @@ public:
 	//0 = north, 1 = south, 2 = west, 3 = east
 	float getAnchorWallDistance(const Anchor& anchor, int direction = 0) {
 		unsigned char pick_col[4];
+		glm::vec3 camPos = m_camera.getPosition();
+		camPos.x *= 1280 / 3.2;
+		camPos.y *= 720 / 1.8;
 
 		//change 720 to window height, change sceneposition to window position, change readpixels to be integrated in Engine1
 		if (direction == 0) {
 			for (int i = 0; i < 1000; ++i) {
-				glReadPixels(anchor.getScenePosition().x, 720 - anchor.getScenePosition().y + i, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
+				glReadPixels(anchor.getScenePosition().x - camPos.x, 720 - anchor.getScenePosition().y + i - camPos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
 				if (!(pick_col[0] > 225 && pick_col[1] > 225 && pick_col[2] > 225) && pick_col[2] < 220) {
 					return (float)i;
 				}
@@ -539,7 +564,7 @@ public:
 		}
 		else if (direction == 1) {
 			for (int i = 0; i < 1000; ++i) {
-				glReadPixels(anchor.getScenePosition().x, 720 - anchor.getScenePosition().y - i, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
+				glReadPixels(anchor.getScenePosition().x - camPos.x, 720 - anchor.getScenePosition().y - i - camPos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
 				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 220) {
 					return (float)i;
 				}
@@ -547,7 +572,7 @@ public:
 		}
 		else if (direction == 2) {
 			for (int i = 0; i < 1000; ++i) {
-				glReadPixels(anchor.getScenePosition().x - i, 720 - anchor.getScenePosition().y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
+				glReadPixels(anchor.getScenePosition().x - i - camPos.x, 720 - anchor.getScenePosition().y - camPos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
 				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 220) {
 					return (float)i;
 				}
@@ -555,7 +580,7 @@ public:
 		}
 		else if (direction == 3) {
 			for (int i = 0; i < 1000; ++i) {
-				glReadPixels(anchor.getScenePosition().x + i, 720 - anchor.getScenePosition().y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
+				glReadPixels(anchor.getScenePosition().x + i - camPos.x, 720 - anchor.getScenePosition().y - camPos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
 				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 220) {
 					return (float)i;
 				}
