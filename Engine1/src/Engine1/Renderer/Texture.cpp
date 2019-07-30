@@ -4,7 +4,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "Engine1/Renderer/stb_image.h"
 
-//temporary
+//TEMPORARY opengl
 #include "glad/glad.h"
 
 namespace Engine1 {

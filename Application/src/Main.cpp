@@ -12,7 +12,7 @@
 #include "Scale.h"
 #include "Node.h"
 
-//TEMPORARY
+//TEMPORARY opengl
 #include "glad/glad.h"
 
 
@@ -66,7 +66,12 @@ private:
 
 
 public:
-	Layer1() : Layer("Layer1"), m_groundPlanTex("resources/textures/pudorys-zdi.png"), m_anchorTex("resources/textures/anchor.png"), m_scaleTex("resources/textures/meritko.png"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_cameraPosition(0.0f) {
+	Layer1() : Layer("Layer1"),
+		m_groundPlanTex("resources/textures/pudorys-zdi.png"),
+		m_anchorTex("resources/textures/anchor.png"),
+		m_nodeTex("resources/textures/node.png"),
+		m_scaleTex("resources/textures/meritko.png"),
+		m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_cameraPosition(0.0f) {
 	
 		
 		//m_scale->setPosition({ -1.3f, 0.8f, 0.0f });
@@ -184,6 +189,32 @@ public:
 		std::shared_ptr<Engine1::IndexBuffer> anchorIB;
 		anchorIB.reset(Engine1::IndexBuffer::create(anchorIndices, sizeof(anchorIndices) / sizeof(uint32_t)));
 		m_anchorVA->setIndexBuffer(anchorIB);
+
+		//node//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		m_nodeVA.reset(Engine1::VertexArray::create());
+		float nodeVertices[] = {
+			-0.1f, -0.1f, 0.0f, 0.0f, 0.0f,	//left bot
+			 0.1f, -0.1f, 0.0f, 1.0f, 0.0f,	//right bot
+			 0.1f,  0.1f, 0.0f, 1.0f, 1.0f,	//right top
+			-0.1f,  0.1f, 0.0f, 0.0f, 1.0f	//left top
+		};
+
+		Engine1::BufferLayout nodeVBLayout = {
+			{ Engine1::ShaderDataType::Float3, "a_position" },
+			{ Engine1::ShaderDataType::Float2, "a_texPos" }
+		};
+
+		std::shared_ptr<Engine1::VertexBuffer> nodeVB;
+		nodeVB.reset(Engine1::VertexBuffer::create(nodeVertices, sizeof(nodeVertices)));
+		nodeVB->setLayout(nodeVBLayout);
+		m_nodeVA->addVertexBuffer(nodeVB);
+
+		uint32_t nodeIndices[6] = { 0, 1, 2, 2, 3, 0 };
+		std::shared_ptr<Engine1::IndexBuffer> nodeIB;
+		nodeIB.reset(Engine1::IndexBuffer::create(nodeIndices, sizeof(nodeIndices) / sizeof(uint32_t)));
+		m_nodeVA->setIndexBuffer(nodeIB);
+
+
 
 		//scale/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		m_scaleVA.reset(Engine1::VertexArray::create());
@@ -406,14 +437,23 @@ public:
 		for (auto& anchor : m_anchors) {
 			//glm::vec3 pos(anchor.getPosition().x, anchor.getPosition().y, 0.0f);
 			anchor.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
-			glm::mat4 transform = glm::translate(glm::mat4(1.0f), anchor.getPosition()) * anchor.getScale();
+			glm::mat4 anchorTransform = glm::translate(glm::mat4(1.0f), anchor.getPosition()) * anchor.getScale();
 			m_anchorTex.bind();
 			m_textureSquareShader->uploadUniform1f("u_texture", 0);
-			Engine1::Renderer::submit(m_textureSquareShader, m_anchorVA, transform);
+			Engine1::Renderer::submit(m_textureSquareShader, m_anchorVA, anchorTransform);
 		}
 
-		//scale
-		
+		//nodes
+		for (auto& node : m_nodes) {
+			//glm::vec3 pos(anchor.getPosition().x, anchor.getPosition().y, 0.0f);
+			node.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
+			glm::mat4 nodeTransform = glm::translate(glm::mat4(1.0f), node.getPosition()) * node.getScale();
+			m_nodeTex.bind();
+			m_textureSquareShader->uploadUniform1f("u_texture", 0);
+			Engine1::Renderer::submit(m_textureSquareShader, m_nodeVA, nodeTransform);
+		}
+
+		//scale	
 		if (m_showScale) {	
 			m_scale->setScale(glm::vec3(m_scale->getCurrentWidth() / m_scale->getWidth(), 1.0f, 1.0f));
 			glm::mat4 scaleTransform = glm::translate(glm::mat4(1.0f), m_scale->getPosition()) * m_scale->getScale();
@@ -475,8 +515,6 @@ public:
 			}
 
 		}	
-
-
 		
 
 		//mouse hold
@@ -626,7 +664,7 @@ public:
 	bool onKeyPressedEvent(Engine1::KeyPressedEvent& event) {
 
 		if (event.getKeyCode() == E1_KEY_SPACE) {
-			addAnchor(m_mouseScenePos);
+			addNode(m_mouseScenePos);
 		}
 
 		if (event.getKeyCode() == E1_KEY_C) {
@@ -642,6 +680,11 @@ public:
 		m_anchors.push_back(anchor);
 	}
 
+	void addNode(const glm::vec2& position) {
+		Node node({ position.x, position.y, 0.0f });
+		m_nodes.push_back(node);
+	}
+
 	//0 = north, 1 = south, 2 = west, 3 = east
 	float getAnchorWallDistance(const Anchor& anchor, int direction = 0) {
 		unsigned char pick_col[4];
@@ -649,11 +692,16 @@ public:
 		camPos.x *= 1280 / 3.2;
 		camPos.y *= 720 / 1.8;
 
-		//change 720 to window height, change sceneposition to window position, change readpixels to be integrated in Engine1
+		//TODO: 720 to window height
+		//TODO: change readpixels to be integrated in Engine1
+		//TODO: rework this, proper object detection
+		//FIX: currently can't read spot a wall, when the wall is not on screen
+		//checking for node color is perhaps not necessary, because anchors will be added first,
+		//then they do not need to check distances anymore
 		if (direction == 0) {
 			for (int i = 0; i < 1000; ++i) {
 				glReadPixels(anchor.getScenePosition().x - camPos.x, 720 - anchor.getScenePosition().y + i - camPos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
-				if (!(pick_col[0] > 225 && pick_col[1] > 225 && pick_col[2] > 225) && pick_col[2] < 220) {
+				if (!(pick_col[0] > 225 && pick_col[1] > 225 && pick_col[2] > 225) && pick_col[2] < 230 && pick_col[0] < 230) {
 					return (float)i;
 				}
 			}
@@ -661,7 +709,7 @@ public:
 		else if (direction == 1) {
 			for (int i = 0; i < 1000; ++i) {
 				glReadPixels(anchor.getScenePosition().x - camPos.x, 720 - anchor.getScenePosition().y - i - camPos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
-				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 220) {
+				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 230 && pick_col[0] < 230) {
 					return (float)i;
 				}
 			}
@@ -669,7 +717,7 @@ public:
 		else if (direction == 2) {
 			for (int i = 0; i < 1000; ++i) {
 				glReadPixels(anchor.getScenePosition().x - i - camPos.x, 720 - anchor.getScenePosition().y - camPos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
-				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 220) {
+				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 230 && pick_col[0] < 230) {
 					return (float)i;
 				}
 			}
@@ -677,7 +725,7 @@ public:
 		else if (direction == 3) {
 			for (int i = 0; i < 1000; ++i) {
 				glReadPixels(anchor.getScenePosition().x + i - camPos.x, 720 - anchor.getScenePosition().y - camPos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
-				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 220) {
+				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 230 && pick_col[0] < 230) {
 					return (float)i;
 				}
 			}

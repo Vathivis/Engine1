@@ -20,7 +20,7 @@ public:
 
 	//setters
 	void setPosition(const glm::vec3& position);
-
+	inline void setScale(const glm::mat4& scale) { m_scale = scale; }
 
 };
 
