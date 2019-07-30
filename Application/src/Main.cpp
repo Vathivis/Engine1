@@ -10,6 +10,8 @@
 
 #include "Anchor.h"
 #include "Scale.h"
+#include "Node.h"
+
 //TEMPORARY
 #include "glad/glad.h"
 
@@ -37,6 +39,11 @@ private:
 
 	bool m_invertLines = false;
 	int m_anchorIndex = 0;
+
+	//nodes
+	std::shared_ptr<Engine1::VertexArray> m_nodeVA;
+	Engine1::Texture m_nodeTex;
+	std::vector<Node> m_nodes;
 
 	//scale
 	std::shared_ptr<Engine1::VertexArray> m_scaleVA;
@@ -478,7 +485,6 @@ public:
 			float distance = 0;
 			pos = m_mouseScenePos;
 
-			std::cout << "yes" << std::endl;
 			//the position of the scale
 			if (m_showScale && m_mouseScenePos.x >= m_scale->getScenePosition().x - m_scale->getWidth() / 2 && m_mouseScenePos.x <= m_scale->getScenePosition().x + m_scale->getWidth() / 2
 				&& m_mouseScenePos.y >= m_scale->getScenePosition().y - m_scale->getHeight() / 2 && m_mouseScenePos.y <= m_scale->getScenePosition().y + m_scale->getHeight() / 2) {
@@ -496,7 +502,7 @@ public:
 					}
 				}
 
-				if (found2) {
+				if (found2 && !m_anchors[m_anchorIndex].getLock()) {
 					m_anchors[m_anchorIndex].setPosition({ m_mouseScenePos.x, m_mouseScenePos.y, 0.0f });
 				}
 
@@ -510,8 +516,6 @@ public:
 		}
 		else
 			found2 = false;
-
-
 
 
 		//double click on anchor or scale
@@ -589,6 +593,13 @@ public:
 
 		if (ImGui::BeginPopup("anchorRightClick")) {
 
+			//lock position
+			bool lock = m_anchors[m_anchorIndex].getLock();
+			if (ImGui::Checkbox("Lock", &lock)) {
+				m_anchors[m_anchorIndex].setLock(lock);
+			}
+
+			//delete anchor
 			if (ImGui::Button("Delete anchor")) {
 				m_anchors.erase(m_anchors.begin() + m_anchorIndex);
 				ImGui::CloseCurrentPopup();
