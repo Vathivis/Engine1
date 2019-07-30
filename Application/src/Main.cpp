@@ -44,6 +44,7 @@ private:
 	std::unique_ptr<Scale> m_scale;
 
 	bool m_showScale = false;
+	
 
 	//camera
 	Engine1::OrthographicCamera m_camera;
@@ -53,6 +54,8 @@ private:
 
 	float m_cameraMoveSpeed = 2.0f;
 	float m_cameraRotationSpeed = 180.0f;
+
+	bool show = true;
 
 
 public:
@@ -405,8 +408,8 @@ public:
 		//scale
 		
 		if (m_showScale) {	
-			m_scale->setScale(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
-			glm::mat4 scaleTransform = glm::translate(glm::mat4(1.0f), m_scale->getPosition());// *m_scale->getScale();
+			m_scale->setScale(glm::vec3(m_scale->getCurrentWidth() / m_scale->getWidth(), 1.0f, 1.0f));
+			glm::mat4 scaleTransform = glm::translate(glm::mat4(1.0f), m_scale->getPosition()) * m_scale->getScale();
 			m_scaleTex.bind();
 			m_textureSquareShader->uploadUniform1f("u_texture", 0);
 			Engine1::Renderer::submit(m_textureSquareShader, m_scaleVA, scaleTransform);
@@ -419,6 +422,7 @@ public:
 	virtual void onImGuiRender() override {
 
 		static float f1 = m_scale->getWidth();
+		//static float f2 = m_scale->getScenePosition().x;
 		static glm::vec2 pos;
 		static float anchorXpos = 0.0f;
 		static float anchorYpos = 0.0f;
@@ -437,20 +441,78 @@ public:
 		ImGui::Text("Color on mouse pos: R:%u G:%u B:%u A:%u", mouseCol[0], mouseCol[1], mouseCol[2], mouseCol[3]);
 		if (ImGui::Checkbox("Show Scale", &m_showScale)) {}
 		ImGui::Text("Scale width: %f  height: %f", m_scale->getWidth(), m_scale->getHeight());
+		ImGui::Text("Meter in pixels: %f", m_scale->getMeter());
 		ImGui::End();
-		
-		//right click on background
+
+		//right click
+		static bool found = false;
 		if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && ImGui::IsMouseClicked(1)) {
-			ImGui::OpenPopup("backgroundRightClick");
 			pos = m_mouseScenePos;
-		}
-		if (ImGui::BeginPopup("backgroundRightClick")) {
-			if (ImGui::Button("Add Anchor")) {
-				addAnchor(pos);
-				ImGui::CloseCurrentPopup();
+
+			//right click on anchor
+			float distance = 0;
+			for (int i = 0; i < m_anchors.size(); ++i) {
+				glm::vec2 anchPos = m_anchors[i].getScenePosition();
+				distance = glm::distance(anchPos, pos);		//can change to fastDistance, but less accurate
+				if (distance < m_anchors[i].getRadius()) {
+					ImGui::OpenPopup("anchorRightClick");
+					m_anchorIndex = i;
+					found = true;
+					break;
+				}
 			}
-			ImGui::EndPopup();
+
+			//right click on background
+			if (!found) {
+				ImGui::OpenPopup("backgroundRightClick");
+			}
+
+		}	
+
+
+		
+
+		//mouse hold
+		static bool found2 = false;
+		if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && ImGui::IsMouseDragging(0)) {
+			float distance = 0;
+			pos = m_mouseScenePos;
+
+			std::cout << "yes" << std::endl;
+			//the position of the scale
+			if (m_showScale && m_mouseScenePos.x >= m_scale->getScenePosition().x - m_scale->getWidth() / 2 && m_mouseScenePos.x <= m_scale->getScenePosition().x + m_scale->getWidth() / 2
+				&& m_mouseScenePos.y >= m_scale->getScenePosition().y - m_scale->getHeight() / 2 && m_mouseScenePos.y <= m_scale->getScenePosition().y + m_scale->getHeight() / 2) {
+
+				m_scale->setPosition({ m_mouseScenePos.x, m_mouseScenePos.y, 0.0f });
+			}
+			else {
+				for (int i = 0; i < m_anchors.size(); ++i) {
+					glm::vec2 anchPos = m_anchors[i].getScenePosition();
+					distance = glm::distance(anchPos, pos);		//can change to fastDistance, but less accurate
+					if (distance < m_anchors[i].getRadius()) {
+						m_anchorIndex = i;
+						found2 = true;
+						break;
+					}
+				}
+
+				if (found2) {
+					m_anchors[m_anchorIndex].setPosition({ m_mouseScenePos.x, m_mouseScenePos.y, 0.0f });
+				}
+
+
+
+			}
+
+
+
+
 		}
+		else
+			found2 = false;
+
+
+
 
 		//double click on anchor or scale
 		if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && ImGui::IsMouseDoubleClicked(0)) {
@@ -479,14 +541,21 @@ public:
 
 		
 		if (ImGui::BeginPopup("scaleClick")) {
-			ImGui::Text("Width: %f", m_scale->getWidth());
-			ImGui::Text("Height: %f", m_scale->getHeight());
+			ImGui::Text("Width: %f", m_scale->getCurrentWidth());
+			ImGui::Text("Height: %f", m_scale->getCurrentHeight());
 
-			
-			ImGui::DragFloat("set width", &f1, 0.05f);
+			//static float f0 = 0.001f;
+			ImGui::InputFloat("", &f1, 0.1f, 1.0f, "%.2f");
+			ImGui::SameLine();
+			ImGui::Text("set width");
+			if (ImGui::IsItemActive() || ImGui::IsItemHovered())
+				ImGui::SetTooltip("Hold CONTROL to increase by 1");
+			//ImGui::DragFloat("set width", &f1, 0.05f);
 
+			//ImGui::SliderFloat("float", &f2, m_scale->getScenePosition().x - 20.0f, m_scale->getScenePosition().x + 20.0f);
 
 			m_scale->setWidth(f1);
+			//m_scale->setPosition({ f2, m_scale->getScenePosition().y, 0.0f });
 
 			ImGui::EndPopup();
 		}
@@ -502,20 +571,36 @@ public:
 			ImGui::Text("Meters from southern wall: %.3f", anchorWalls.y);
 			ImGui::Text("Meters from western wall: %.3f", anchorWalls.z);
 			ImGui::Text("Meters from eastern wall: %.3f", anchorWalls.w);
-			
-			
-			/*ImGui::SliderFloat("Left/Right", &anchorXpos, -1.0f, 1.0f);
-			m_anchors[anchorIndex].setPosition({ anchorXpos, anchorYpos, 0.0f });*/
+
 
 			
 
 			ImGui::EndPopup();
+		}
 
+
+		if (ImGui::BeginPopup("backgroundRightClick")) {
+			if (ImGui::Button("Add Anchor")) {
+				addAnchor(pos);
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+
+		if (ImGui::BeginPopup("anchorRightClick")) {
+
+			if (ImGui::Button("Delete anchor")) {
+				m_anchors.erase(m_anchors.begin() + m_anchorIndex);
+				ImGui::CloseCurrentPopup();
+			}
+
+			found = false;
+			ImGui::EndPopup();
 		}
 
 
 
-		//ImGui::ShowDemoWindow(&show);
+		ImGui::ShowDemoWindow(&show);
 	}
 
 

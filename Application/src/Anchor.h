@@ -21,7 +21,7 @@ public:
 	inline float getRadius() const { return m_radius; }
 
 	//setters
-	inline void setPosition(const glm::vec3& position) { m_position = position; }
+	void setPosition(const glm::vec3& position);
 	inline void setScale(const glm::mat4& scale) { m_scale = scale; recalculateRadius(); }
 
 	void recalculateRadius();
