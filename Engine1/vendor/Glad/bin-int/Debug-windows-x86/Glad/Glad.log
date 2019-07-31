@@ -1,6 +1,7 @@
-﻿  cl : Command line warning D9002 : ignoring unknown option '-std=c11'
+﻿  {{xgTaskID=00000014}}
+  cl : Command line warning D9002 : ignoring unknown option '-std=c11'
   cl : Command line warning D9002 : ignoring unknown option '-lgdi32'
-  glad.c
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\shared\minwindef.h(130,1): warning C4005:  'APIENTRY': macro redefinition
-C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\vendor\Glad\include\glad\glad.h(32): message :  see previous definition of 'APIENTRY'
+  {{xgTaskID=00000000}}
+{{xgTaskID=00000014}}glad.cC:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': macro redefinitionC:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\vendor\Glad\include\glad\glad.h(32): message :  see previous definition of 'APIENTRY'{{xgTaskID=00000000}}
+  {{xgTaskID=0000001A}}{{xgTaskID=00000000}}
   Glad.vcxproj -> C:\Users\vojta\Google Drive\Job\IPS_demo_v2\Engine1\vendor\Glad\bin\Debug-windows-x86\Glad\Glad.lib

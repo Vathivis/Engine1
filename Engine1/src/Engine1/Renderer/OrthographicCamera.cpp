@@ -19,8 +19,6 @@ namespace Engine1 {
 			return;
 		else {
 			m_currentZoom -= m_zoomFactor;
-			if (m_currentZoom <= 0.81)
-				return;
 		}
 
 		m_projectionM = glm::ortho(m_left * m_currentZoom, m_right * m_currentZoom, m_bottom * m_currentZoom, m_top * m_currentZoom, -1.0f, 1.0f);
@@ -32,8 +30,6 @@ namespace Engine1 {
 			return;
 		else {
 			m_currentZoom += m_zoomFactor;
-			if (m_currentZoom >= 1.5)
-				return;
 		}
 
 		m_projectionM = glm::ortho(m_left * m_currentZoom, m_right * m_currentZoom, m_bottom * m_currentZoom, m_top * m_currentZoom, -1.0f, 1.0f);
@@ -49,5 +45,9 @@ namespace Engine1 {
 		m_viewProjectionM = m_projectionM * m_viewM;		//order matters
 	}
 
+	void OrthographicCamera::recalculateProjectionMatrix() {
+		m_projectionM = glm::ortho(m_left * m_currentZoom, m_right * m_currentZoom, m_bottom * m_currentZoom, m_top * m_currentZoom, -1.0f, 1.0f);
+		m_viewProjectionM = m_projectionM * m_viewM;
+	}
 
 }

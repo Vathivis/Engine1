@@ -388,11 +388,26 @@ public:
 		m_camera.setRotation(m_cameraRotation);
 
 
+		//recalculation of mouse scene position based on camera position and zoom
+		//TODO: replace 1280, 720 with widnows dimensions
 		auto [x, y] = Engine1::Input::getMousePosition();
+
+		x = x * 2 * m_camera.getRight() / 1280 - m_camera.getRight();
+		float tmp = m_camera.getRight() / m_camera.getCurrentZoom();
+		x = (x + tmp) * 1280 / (tmp * 2);
+
+		y = y * 2 * m_camera.getTop() / 720 - m_camera.getTop();
+		tmp = m_camera.getTop() / m_camera.getCurrentZoom();
+		y = (y + tmp) * 720 / (tmp * 2);
+
+		/*int tmp = 3.2 / 1280;		//1 pixel pri zoom 1.0
+		int tmp2 = 3.0 / 1280;*/		//1 pixel pri zoom 1.1
+
+
 		//denormalize camera
 		glm::vec3 camPos = m_camera.getPosition();
-		camPos.x *= 1280 / 3.2;
-		camPos.y *= -720 / 1.8;
+		camPos.x *= 1280 / (m_camera.getRight() * 2);	//m_camera.getCurrentZoom()
+		camPos.y *= -720 / (m_camera.getTop() * 2);
 
 		m_mouseScenePos = { x + camPos.x, y + camPos.y };
 
@@ -484,6 +499,7 @@ public:
 		ImGui::Text("Mouse scene position: %f %f", m_mouseScenePos.x, m_mouseScenePos.y);
 		ImGui::Text("Mouse screen position: %f %f", xx, yy);
 		ImGui::Text("Camera position: %f %f", m_camera.getPosition().x * 1280 / 3.2, m_camera.getPosition().y * -720 / 1.8);
+		ImGui::Text("Camera zoom: %f", m_camera.getCurrentZoom());
 		glReadPixels(xx, 720 - yy, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, mouseCol);		//TODO: change 720
 		ImGui::Text("Color on mouse pos: R:%u G:%u B:%u A:%u", mouseCol[0], mouseCol[1], mouseCol[2], mouseCol[3]);
 		if (ImGui::Checkbox("Show Scale", &m_showScale)) {}
@@ -670,6 +686,7 @@ public:
 		if (event.getKeyCode() == E1_KEY_C) {
 			m_cameraPosition = { 0.0f, 0.0f, 0.0f };
 			m_cameraRotation = 0.0f;
+			m_camera.setZoom(1.0f);
 		}
 
 		return false;

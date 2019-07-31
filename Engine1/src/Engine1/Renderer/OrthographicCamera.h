@@ -31,6 +31,7 @@ namespace Engine1 {
 		//setters
 		void setPosition(const glm::vec3& position) { m_position = position; recalculateViewMatrix(); }
 		void setRotation(float rotation) { m_rotation = rotation; recalculateViewMatrix(); }
+		void setZoom(float zoom) { m_currentZoom = zoom; recalculateProjectionMatrix(); }
 
 		//getters
 		const glm::vec3& getPosition() const { return m_position; }
@@ -38,11 +39,17 @@ namespace Engine1 {
 		const glm::mat4& getProjectionMatrix() const { return m_projectionM; }
 		const glm::mat4& getViewMatrix() const { return m_viewM; }
 		const glm::mat4& getViewProjectionMatrix() const { return m_viewProjectionM; }
+		float getCurrentZoom() const { return m_currentZoom; }
+		float getLeft() const { return m_left; }
+		float getRight() const { return m_right; }
+		float getBottom() const { return m_bottom; }
+		float getTop() const { return m_top; }
 
 	private:
 
 		//call whenever we set something - setters
 		void recalculateViewMatrix();
+		void recalculateProjectionMatrix();
 	};
 
 }
