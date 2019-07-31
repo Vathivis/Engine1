@@ -484,7 +484,7 @@ public:
 		ImGui::Text("Mouse scene position: %f %f", m_mouseScenePos.x, m_mouseScenePos.y);
 		ImGui::Text("Mouse screen position: %f %f", xx, yy);
 		ImGui::Text("Camera position: %f %f", m_camera.getPosition().x * 1280 / 3.2, m_camera.getPosition().y * -720 / 1.8);
-		glReadPixels(xx, 720 - yy, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, mouseCol);		//change 720
+		glReadPixels(xx, 720 - yy, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, mouseCol);		//TODO: change 720
 		ImGui::Text("Color on mouse pos: R:%u G:%u B:%u A:%u", mouseCol[0], mouseCol[1], mouseCol[2], mouseCol[3]);
 		if (ImGui::Checkbox("Show Scale", &m_showScale)) {}
 		ImGui::Text("Scale width: %f  height: %f", m_scale->getWidth(), m_scale->getHeight());
@@ -607,12 +607,12 @@ public:
 
 			//m_castRays = true;
 			
-			
+			float meter = m_scale->getMeter();
 
-			ImGui::Text("Meters from northern wall: %.3f", anchorWalls.x);
-			ImGui::Text("Meters from southern wall: %.3f", anchorWalls.y);
-			ImGui::Text("Meters from western wall: %.3f", anchorWalls.z);
-			ImGui::Text("Meters from eastern wall: %.3f", anchorWalls.w);
+			ImGui::Text("Meters from northern wall: %.3f", anchorWalls.x / meter);
+			ImGui::Text("Meters from southern wall: %.3f", anchorWalls.y / meter);
+			ImGui::Text("Meters from western wall: %.3f", anchorWalls.z / meter);
+			ImGui::Text("Meters from eastern wall: %.3f", anchorWalls.w / meter);
 
 
 			
