@@ -7,7 +7,7 @@ namespace Engine1 {
 	/*
 		zakladni trida pro praci s mysi
 	*/
-	class ENGINE1_API MouseMovedEvent : public Event {
+	class MouseMovedEvent : public Event {
 	private:
 		float m_mouseX, m_mouseY;
 
@@ -32,7 +32,7 @@ namespace Engine1 {
 	/*
 		trida pro mouse scroll
 	*/
-	class ENGINE1_API MouseScrolledEvent : public Event {
+	class MouseScrolledEvent : public Event {
 	private:
 		float m_xOffset, m_yOffset;
 
@@ -40,6 +40,7 @@ namespace Engine1 {
 		MouseScrolledEvent(float xOffset, float yOffset) : m_xOffset(xOffset), m_yOffset(yOffset) {}
 
 		inline float getXOffset() const { return m_xOffset; }
+		//-1 scroll down, 1 scroll up
 		inline float getYOffset() const { return m_yOffset; }
 
 		std::string toString() const override

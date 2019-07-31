@@ -13,9 +13,20 @@ namespace Engine1 {
 		glm::vec3 m_position = { 0.0f, 0.0f, 0.0f };
 		float m_rotation = 0.0f;
 
+		//zoom
+		float m_zoomFactor = 0.1f;
+		float m_currentZoom = 1.0f;
+		float m_left, m_right, m_bottom, m_top;
+
+		//float comparison
+		float m_epsilon = 0.000001f;
+
 	public:
 
 		OrthographicCamera(float left, float right, float bottom, float top);
+
+		void zoomIn();
+		void zoomOut();
 
 		//setters
 		void setPosition(const glm::vec3& position) { m_position = position; recalculateViewMatrix(); }

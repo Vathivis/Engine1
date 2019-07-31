@@ -657,7 +657,7 @@ public:
 		Engine1::EventDispatcher dispatcher(event);
 
 		dispatcher.dispatch<Engine1::KeyPressedEvent>(E1_BIND_EVENT_FN(Layer1::onKeyPressedEvent));
-		//dispatcher.dispatch<Engine1::MouseButtonPressedEvent>(E1_BIND_EVENT_FN(Layer1::onMouseButtonPressedEvent));
+		dispatcher.dispatch<Engine1::MouseScrolledEvent>(E1_BIND_EVENT_FN(Layer1::onMouseScrolledEvent));
 
 	}
 
@@ -670,6 +670,19 @@ public:
 		if (event.getKeyCode() == E1_KEY_C) {
 			m_cameraPosition = { 0.0f, 0.0f, 0.0f };
 			m_cameraRotation = 0.0f;
+		}
+
+		return false;
+	}
+
+	bool onMouseScrolledEvent(Engine1::MouseScrolledEvent& event) {
+
+		if (event.getYOffset() == -1) {
+			m_camera.zoomOut();
+		}
+
+		if (event.getYOffset() == 1) {
+			m_camera.zoomIn();
 		}
 
 		return false;
