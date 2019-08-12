@@ -3,6 +3,8 @@
 #include "glm/glm.hpp"
 #include "glm/gtx/transform2.hpp"
 
+
+//TODO: scale should not be a texture, but an opengl drawing to avoid texture disstortion when scaling the scale
 class Scale {
 private:
 	glm::vec3 m_position;

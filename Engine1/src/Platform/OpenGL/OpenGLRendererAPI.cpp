@@ -13,7 +13,7 @@ namespace Engine1 {
 		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
-	void OpenGLRendererAPI::drawIndexed(const std::shared_ptr<VertexArray>& vertexArray) {
+	void OpenGLRendererAPI::drawIndexed(const ref<VertexArray>& vertexArray) {
 		glEnable(GL_TEXTURE_2D);
 		//zapnuti transparence textur
 		glEnable(GL_BLEND);

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 //makro pro dll
 #ifdef E1_PLATFORM_WINDOWS
 #if E1_DYNAMIC_LINK
@@ -31,3 +33,16 @@
 
 //std::bind makro na usetreni mista
 #define E1_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
+
+namespace Engine1 {
+
+	template<typename T>
+	//scope = unique pointer
+	using scope = std::unique_ptr<T>;
+
+	template<typename T>
+	//ref = shared pointer
+	using ref = std::shared_ptr<T>;
+
+
+}

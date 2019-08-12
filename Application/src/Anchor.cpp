@@ -4,6 +4,7 @@
 #include "glm/gtc/type_ptr.hpp"
 
 
+
 Anchor::Anchor(const glm::vec3& position) {
 
 	m_scenePosition = position;
@@ -31,6 +32,4 @@ void Anchor::recalculateRadius() {
 
 }
 
-/*void Anchor::castRays() {
-	Engine1::Renderer::drawLine({ m_position.x, m_position.y }, { m_position.x + 0.2, m_position.y + 0.2 });
-}*/
+
