@@ -115,7 +115,7 @@ public:
 		//	nakonec glDrawElements, kde pocet indexu je VertexArray->getIndexBuffer()->getCount()
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		m_squareVA.reset(Engine1::VertexArray::create());
+		/*m_squareVA.reset(Engine1::VertexArray::create());
 
 		float squareVertices[4 * 3] = {
 			-0.5f, -0.5f, 0.0f, 
@@ -136,7 +136,7 @@ public:
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 		Engine1::ref<Engine1::IndexBuffer> squareIB;
 		squareIB.reset(Engine1::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
-		m_squareVA->setIndexBuffer(squareIB);
+		m_squareVA->setIndexBuffer(squareIB);*/
 
 
 		//background texture/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -416,14 +416,18 @@ public:
 
 		m_mouseScenePos = { x + camPos.x, y + camPos.y };
 
-		//screen position from scene position
-
+		//screen position from scene position - perhaps rework and simplify, kind of dodgy so far
 		glm::vec2 tmpPos = m_mouseScenePos;
-		tmpPos.x -= camPos.x;
 
-		tmpPos.x = 3.52f * tmpPos.x / 1280;
-		tmp = 1.6 * 1.1;
-		tmpPos.x = (tmpPos.x + tmp) * 1280 / (2 * tmp);
+		tmpPos.x -= camPos.x;
+		tmpPos.x = m_camera.getRight() * m_camera.getCurrentZoom() * 2 * tmpPos.x / 1280;
+		tmp = m_camera.getRight() * m_camera.getCurrentZoom() * m_camera.getCurrentZoom();
+		tmpPos.x = (tmpPos.x + tmp) * 1280 / (2 * tmp) - 640 / m_camera.getCurrentZoom();
+
+		tmpPos.y -= camPos.y;
+		tmpPos.y = m_camera.getTop() * m_camera.getCurrentZoom() * 2 * tmpPos.y / 720;
+		tmp = m_camera.getTop() * m_camera.getCurrentZoom() * m_camera.getCurrentZoom();
+		tmpPos.y = (tmpPos.y + tmp) * 720 / (2 * tmp) - 360 / m_camera.getCurrentZoom();
 		
 
 		m_mouseScreenPos = { tmpPos.x, tmpPos.y - camPos.y };
@@ -433,7 +437,7 @@ public:
 
 		Engine1::Renderer::beginScene(m_camera);
 
-		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+		/*glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
 
 		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_flatColorShader)->bind();
@@ -446,47 +450,47 @@ public:
 				
 				Engine1::Renderer::submit(m_flatColorShader, m_squareVA, transform);		//blue square
 			}
-		}
+		}*/
 			
 		//Engine1::Renderer::submit(m_shader, m_vertexArray);		//colored triangle
 
 
 		//background
-		/*glm::vec3 pos2(0.0f, 0.0f, 0.0f);
+		glm::vec3 pos2(0.0f, 0.0f, 0.0f);
 		glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), pos2);
 		m_groundPlanTex.bind();
-		m_textureSquareShader->uploadUniform1f("u_texture", 0);		//weird on intel gpu
-		Engine1::Renderer::submit(m_textureSquareShader, m_backgroundVA, transform2);*/
+		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);		//weird on intel gpu
+		Engine1::Renderer::submit(m_textureSquareShader, m_backgroundVA, transform2);
 
 		//anchors
 		//glm::mat4 anchorScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.33f));		//needs to change with zoom (or not??)
-		/*for (auto& anchor : m_anchors) {
+		for (auto& anchor : m_anchors) {
 			//glm::vec3 pos(anchor.getPosition().x, anchor.getPosition().y, 0.0f);
 			anchor.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
 			glm::mat4 anchorTransform = glm::translate(glm::mat4(1.0f), anchor.getPosition()) * anchor.getScale();
 			m_anchorTex.bind();
-			m_textureSquareShader->uploadUniform1f("u_texture", 0);
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);
 			Engine1::Renderer::submit(m_textureSquareShader, m_anchorVA, anchorTransform);
-		}*/
+		}
 
 		//nodes
-		/*for (auto& node : m_nodes) {
+		for (auto& node : m_nodes) {
 			//glm::vec3 pos(anchor.getPosition().x, anchor.getPosition().y, 0.0f);
 			node.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
 			glm::mat4 nodeTransform = glm::translate(glm::mat4(1.0f), node.getPosition()) * node.getScale();
 			m_nodeTex.bind();
-			m_textureSquareShader->uploadUniform1f("u_texture", 0);
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);
 			Engine1::Renderer::submit(m_textureSquareShader, m_nodeVA, nodeTransform);
-		}*/
+		}
 
 		//scale	
-		/*if (m_showScale) {	
+		if (m_showScale) {	
 			m_scale->setScale(glm::vec3(m_scale->getCurrentWidth() / m_scale->getWidth(), 1.0f, 1.0f));
 			glm::mat4 scaleTransform = glm::translate(glm::mat4(1.0f), m_scale->getPosition()) * m_scale->getScale();
 			m_scaleTex.bind();
-			m_textureSquareShader->uploadUniform1f("u_texture", 0);
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);
 			Engine1::Renderer::submit(m_textureSquareShader, m_scaleVA, scaleTransform);
-		}*/
+		}
 
 		Engine1::Renderer::endScene();
 	}
@@ -505,9 +509,10 @@ public:
 		auto [xx, yy] = Engine1::Input::getMousePosition();
 
 		ImGui::Begin("Debug");
-		ImGui::ColorPicker3("Square Color", glm::value_ptr(m_squareColor));
+		//ImGui::ColorPicker3("Square Color", glm::value_ptr(m_squareColor));
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::Text("Number of anchors: %d", m_anchors.size());
+		ImGui::Text("Number of nodes: %d", m_nodes.size());
 		ImGui::Text("Mouse scene position: %f %f", m_mouseScenePos.x, m_mouseScenePos.y);
 		ImGui::Text("Mouse screen position: %f %f", xx, yy);
 		ImGui::Text("Mouse screen pos from scene pos: %.3f %.3f", m_mouseScreenPos.x, m_mouseScreenPos.y);

@@ -18,7 +18,6 @@ project "Glad"
 
     
 	filter "system:windows"
-        buildoptions { "-std=c11", "-lgdi32" }
         systemversion "latest"
 
     filter "configurations:Debug"
