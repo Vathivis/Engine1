@@ -416,7 +416,9 @@ public:
 
 		m_mouseScenePos = { x + camPos.x, y + camPos.y };
 
-		//screen position from scene position - perhaps rework and simplify, kind of dodgy so far
+		//screen position from scene position
+		//TODO: perhaps rework and simplify, kind of dodgy so far
+		//TODO: 13.8. integrate this into code - when zooming actual hitbox of objects is in a different place
 		glm::vec2 tmpPos = m_mouseScenePos;
 
 		tmpPos.x -= camPos.x;
