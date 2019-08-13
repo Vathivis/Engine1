@@ -393,7 +393,7 @@ public:
 		m_camera.setRotation(m_cameraRotation);
 
 
-		//recalculation of mouse scene position based on camera position and zoom
+		//recalculation of mouse scene position based on camera position and zoom////////////////////////////////////
 		//TODO: replace 1280, 720 with widnows dimensions
 		auto [x, y] = Engine1::Input::getMousePosition();
 
@@ -405,18 +405,16 @@ public:
 		tmp = m_camera.getTop() / m_camera.getCurrentZoom();
 		y = (y + tmp) * 720 / (tmp * 2);
 
-		/*int tmp = 3.2 / 1280 - 1.6;		//1 pixel pri zoom 1.0
-		int tmp2 = 3.52 / 1280;*/		//1 pixel pri zoom 1.1
 
 
-		//denormalize camera
+		//denormalize camera/////////////////////////////////////////////////////////////////////
 		glm::vec3 camPos = m_camera.getPosition();
 		camPos.x *= 1280 / (m_camera.getRight() * 2);
 		camPos.y *= -720 / (m_camera.getTop() * 2);
 
 		m_mouseScenePos = { x + camPos.x, y + camPos.y };
 
-		//screen position from scene position
+		//screen position from scene position//////////////////////////////////////////////////////////////
 		//TODO: perhaps rework and simplify, kind of dodgy so far
 		//TODO: 13.8. integrate this into code - when zooming actual hitbox of objects is in a different place
 		glm::vec2 tmpPos = m_mouseScenePos;
@@ -432,7 +430,8 @@ public:
 		tmpPos.y = (tmpPos.y + tmp) * 720 / (2 * tmp) - 360 / m_camera.getCurrentZoom();
 		
 
-		m_mouseScreenPos = { tmpPos.x, tmpPos.y - camPos.y };
+		m_mouseScreenPos = { tmpPos.x, tmpPos.y };
+
 
 		
 		//E1_WARN("Mouse pos: {0} {1}", m_mouseScenePos.x, m_mouseScenePos.y);
@@ -771,33 +770,37 @@ public:
 		//checking for node color is perhaps not necessary, because anchors will be added first,
 		//then they do not need to check distances anymore
 		if (direction == 0) {
+			glm::vec2 pos = getScreenPosFromScenePos(anchor.getScenePosition());
 			for (int i = 0; i < 1000; ++i) {
 				//TODO: optimize
-				glReadPixels(anchor.getScenePosition().x - camPos.x, 720 - anchor.getScenePosition().y + i - camPos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
+				glReadPixels(pos.x, 720 - pos.y + i, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
 				if (!(pick_col[0] > 225 && pick_col[1] > 225 && pick_col[2] > 225) && pick_col[2] < 230 && pick_col[0] < 230) {
 					return (float)i;
 				}
 			}
 		}
 		else if (direction == 1) {
+			glm::vec2 pos = getScreenPosFromScenePos(anchor.getScenePosition());
 			for (int i = 0; i < 1000; ++i) {
-				glReadPixels(anchor.getScenePosition().x - camPos.x, 720 - anchor.getScenePosition().y - i - camPos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
+				glReadPixels(pos.x, 720 - pos.y - i, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
 				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 230 && pick_col[0] < 230) {
 					return (float)i;
 				}
 			}
 		}
 		else if (direction == 2) {
+			glm::vec2 pos = getScreenPosFromScenePos(anchor.getScenePosition());
 			for (int i = 0; i < 1000; ++i) {
-				glReadPixels(anchor.getScenePosition().x - i - camPos.x, 720 - anchor.getScenePosition().y - camPos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
+				glReadPixels(pos.x - i, 720 - pos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
 				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 230 && pick_col[0] < 230) {
 					return (float)i;
 				}
 			}
 		}
 		else if (direction == 3) {
+			glm::vec2 pos = getScreenPosFromScenePos(anchor.getScenePosition());
 			for (int i = 0; i < 1000; ++i) {
-				glReadPixels(x + i - camPos.x, 720 - anchor.getScenePosition().y - camPos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
+				glReadPixels(pos.x + i, 720 - pos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
 				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 230 && pick_col[0] < 230) {
 					return (float)i;
 				}
@@ -816,6 +819,25 @@ public:
 		res.w = getAnchorWallDistance(anchor, 3);
 
 		return res;
+	}
+
+	glm::vec2 getScreenPosFromScenePos(const glm::vec2& scenePos) {
+		glm::vec2 tmpPos = scenePos;
+		glm::vec2 camPos = m_camera.getPosition();
+		camPos.x *= 1280 / (m_camera.getRight() * 2);
+		camPos.y *= -720 / (m_camera.getTop() * 2);
+
+		tmpPos.x -= camPos.x;
+		tmpPos.x = m_camera.getRight() * m_camera.getCurrentZoom() * 2 * tmpPos.x / 1280;
+		float tmp = m_camera.getRight() * m_camera.getCurrentZoom() * m_camera.getCurrentZoom();
+		tmpPos.x = (tmpPos.x + tmp) * 1280 / (2 * tmp) - 640 / m_camera.getCurrentZoom();
+
+		tmpPos.y -= camPos.y;
+		tmpPos.y = m_camera.getTop() * m_camera.getCurrentZoom() * 2 * tmpPos.y / 720;
+		tmp = m_camera.getTop() * m_camera.getCurrentZoom() * m_camera.getCurrentZoom();
+		tmpPos.y = (tmpPos.y + tmp) * 720 / (2 * tmp) - 360 / m_camera.getCurrentZoom();
+
+		return tmpPos;
 	}
 	
 
