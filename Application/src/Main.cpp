@@ -416,7 +416,6 @@ public:
 
 		//screen position from scene position//////////////////////////////////////////////////////////////
 		//TODO: perhaps rework and simplify, kind of dodgy so far
-		//TODO: 13.8. integrate this into code - when zooming actual hitbox of objects is in a different place
 		glm::vec2 tmpPos = m_mouseScenePos;
 
 		tmpPos.x -= camPos.x;
@@ -433,8 +432,6 @@ public:
 		m_mouseScreenPos = { tmpPos.x, tmpPos.y };
 
 
-		
-		//E1_WARN("Mouse pos: {0} {1}", m_mouseScenePos.x, m_mouseScenePos.y);
 
 		Engine1::Renderer::beginScene(m_camera);
 
@@ -646,10 +643,11 @@ public:
 			//TODO: meter needs to be scaled with zoom
 			float meter = m_scale->getMeter();
 
-			ImGui::Text("Meters from northern wall: %.3f", anchorWalls.x /*/ meter*/);
-			ImGui::Text("Meters from southern wall: %.3f", anchorWalls.y /*/ meter*/);
-			ImGui::Text("Meters from western wall: %.3f", anchorWalls.z /*/ meter*/);
-			ImGui::Text("Meters from eastern wall: %.3f", anchorWalls.w /*/ meter*/);
+			//prepocitat anchorwalls pri zoomu
+			ImGui::Text("Meters from northern wall: %.3f", anchorWalls.x / (meter / m_camera.getCurrentZoom()));
+			ImGui::Text("Meters from southern wall: %.3f", anchorWalls.y / (meter / m_camera.getCurrentZoom()));
+			ImGui::Text("Meters from western wall: %.3f", anchorWalls.z / (meter / m_camera.getCurrentZoom()));
+			ImGui::Text("Meters from eastern wall: %.3f", anchorWalls.w / (meter / m_camera.getCurrentZoom()));
 
 
 			
@@ -739,29 +737,7 @@ public:
 	//directions: 0 = north, 1 = south, 2 = west, 3 = east
 	float getAnchorWallDistance(const Anchor& anchor, int direction = 0) {
 		unsigned char pick_col[4];
-		glm::vec3 camPos = m_camera.getPosition();
-		glm::vec3 camPos2 = m_camera.getPosition();
-		camPos.x *= 1280 / 3.2;
-		camPos.y *= 720 / 1.8;
 
-		/*camPos.x *= 1280 / (m_camera.getRight() * m_camera.getCurrentZoom() * 2);*/
-
-		float x = anchor.getScenePosition().x;
-		x = x * 2 * m_camera.getRight() / 1280 - m_camera.getRight();
-		float tmp = m_camera.getRight() / m_camera.getCurrentZoom();
-		x = (x + tmp) * 1280 / (tmp * 2);
-
-		//float tmp = m_camera.getRight() * m_camera.getCurrentZoom();
-		camPos2.x = (camPos2.x / (m_camera.getRight() * 2)) * tmp * 2 - 1.6f;
-		camPos2.x = (camPos2.x + tmp) * 1280 / (tmp * 2);
-
-		/*tmp = m_camera.getTop() / m_camera.getCurrentZoom();
-		camPos2.y = (camPos2.y + tmp) * 720 / (tmp * 2) - 360;*/
-
-		//camPos.x = camPos.x * 2 * m_camera.getRight() / 1280 - m_camera.getRight();
-
-
-		/*camPos.y *= 720 / (m_camera.getTop() * m_camera.getCurrentZoom() * 2);*/
 
 		//TODO: 720 to window height
 		//TODO: change readpixels to be integrated in Engine1
@@ -769,10 +745,10 @@ public:
 		//FIX: currently can't spot a wall, when the wall is not on screen
 		//checking for node color is perhaps not necessary, because anchors will be added first,
 		//then they do not need to check distances anymore
+		//TODO: optimize
 		if (direction == 0) {
 			glm::vec2 pos = getScreenPosFromScenePos(anchor.getScenePosition());
 			for (int i = 0; i < 1000; ++i) {
-				//TODO: optimize
 				glReadPixels(pos.x, 720 - pos.y + i, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
 				if (!(pick_col[0] > 225 && pick_col[1] > 225 && pick_col[2] > 225) && pick_col[2] < 230 && pick_col[0] < 230) {
 					return (float)i;
