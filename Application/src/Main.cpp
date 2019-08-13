@@ -107,13 +107,13 @@ public:
 		indexBuffer.reset(Engine1::IndexBuffer::create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_vertexArray->setIndexBuffer(indexBuffer);*/
 
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//	na render noveho objektu je potreba nejdrive vytvoreni VertexArray, pak definice vertexu
-		//	pote novy VertexBuffer, pak layout tohoto bufferu a setnuti tohoto layoutu pro tento buffer 
-		//	dalsi pridame VertexBuffer do VertexArray, zbyvaji indexy -> definice indexu, pak novy IndexBuffer
-		//	ten setneme pro VertexArray, zbyva uz jen vykreslit - nabindovat prislusny shader a vertex array
-		//	nakonec glDrawElements, kde pocet indexu je VertexArray->getIndexBuffer()->getCount()
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//	na render noveho objektu je potreba nejdrive vytvoreni VertexArray, pak definice vertexu			   //
+		//	pote novy VertexBuffer, pak layout tohoto bufferu a setnuti tohoto layoutu pro tento buffer			   //
+		//	dalsi pridame VertexBuffer do VertexArray, zbyvaji indexy -> definice indexu, pak novy IndexBuffer	   //
+		//	ten setneme pro VertexArray, zbyva uz jen vykreslit - nabindovat prislusny shader a vertex array	   //
+		//	nakonec glDrawElements, kde pocet indexu je VertexArray->getIndexBuffer()->getCount()				   //
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		/*m_squareVA.reset(Engine1::VertexArray::create());
 
@@ -145,8 +145,8 @@ public:
 		float groundW = m_groundPlanTex.getWidth();
 		float groundH = m_groundPlanTex.getHeight();
 
-		groundW = groundW / 1280 * 1.6;
-		groundH = groundH / 720 * 0.9;
+		groundW = groundW / 1280 * 1.6f;
+		groundH = groundH / 720 * 0.9f;
 
 		float backgroundVertices[] = {
 			-groundW, -groundH, 0.0f, 0.0f, 0.0f,	//left bot
@@ -229,8 +229,8 @@ public:
 
 		m_scale = std::make_unique<Scale>(Scale(scaleW, scaleH, { 480.0f, 80.0f, 0.0f }));
 
-		scaleW = scaleW / 1280 * 1.6;
-		scaleH = scaleH / 720 * 0.9;
+		scaleW = scaleW / 1280 * 1.6f;
+		scaleH = scaleH / 720 * 0.9f;
 
 
 		float scaleVertices[] = {
@@ -514,7 +514,7 @@ public:
 		ImGui::Text("Mouse scene position: %f %f", m_mouseScenePos.x, m_mouseScenePos.y);
 		ImGui::Text("Mouse screen position: %f %f", xx, yy);
 		ImGui::Text("Mouse screen pos from scene pos: %.3f %.3f", m_mouseScreenPos.x, m_mouseScreenPos.y);
-		ImGui::Text("Camera position: %f %f", m_camera.getPosition().x * 1280 / 3.2, m_camera.getPosition().y * -720 / 1.8);
+		ImGui::Text("Camera position: %f %f", (float)m_camera.getPosition().x * 1280 / 3.2, (float)m_camera.getPosition().y * -720 / 1.8);
 		ImGui::Text("Camera zoom: %f", m_camera.getCurrentZoom());
 		glReadPixels(xx, 720 - yy, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, mouseCol);		//TODO: change 720
 		ImGui::Text("Color on mouse pos: R:%u G:%u B:%u A:%u", mouseCol[0], mouseCol[1], mouseCol[2], mouseCol[3]);
@@ -530,7 +530,7 @@ public:
 
 			//right click on anchor
 			float distance = 0;
-			for (int i = 0; i < m_anchors.size(); ++i) {
+			for (unsigned int i = 0; i < m_anchors.size(); ++i) {
 				glm::vec2 anchPos = m_anchors[i].getScenePosition();
 				distance = glm::distance(anchPos, pos);		//can change to fastDistance, but less accurate
 				if (distance < m_anchors[i].getRadius()) {
@@ -563,7 +563,7 @@ public:
 				m_scale->setPosition({ m_mouseScenePos.x, m_mouseScenePos.y, 0.0f });
 			}
 			else {
-				for (int i = 0; i < m_anchors.size(); ++i) {
+				for (unsigned int i = 0; i < m_anchors.size(); ++i) {
 					glm::vec2 anchPos = m_anchors[i].getScenePosition();
 					distance = glm::distance(anchPos, pos);		//can change to fastDistance, but less accurate
 					if (distance < m_anchors[i].getRadius()) {
@@ -640,14 +640,13 @@ public:
 			ImGui::Text("Position: %f %f", m_anchors[m_anchorIndex].getPosition().x, m_anchors[m_anchorIndex].getPosition().y);
 			ImGui::Text("Scene position: %f %f", m_anchors[m_anchorIndex].getScenePosition().x, m_anchors[m_anchorIndex].getScenePosition().y);
 			
-			//TODO: meter needs to be scaled with zoom
-			float meter = m_scale->getMeter();
+			float meter = m_scale->getMeter() / m_camera.getCurrentZoom();
 
-			//prepocitat anchorwalls pri zoomu
-			ImGui::Text("Meters from northern wall: %.3f", anchorWalls.x / (meter / m_camera.getCurrentZoom()));
-			ImGui::Text("Meters from southern wall: %.3f", anchorWalls.y / (meter / m_camera.getCurrentZoom()));
-			ImGui::Text("Meters from western wall: %.3f", anchorWalls.z / (meter / m_camera.getCurrentZoom()));
-			ImGui::Text("Meters from eastern wall: %.3f", anchorWalls.w / (meter / m_camera.getCurrentZoom()));
+			//TODO: prepocitat anchorwalls pri zoomu
+			ImGui::Text("Meters from northern wall: %.3f", anchorWalls.x / meter);
+			ImGui::Text("Meters from southern wall: %.3f", anchorWalls.y / meter);
+			ImGui::Text("Meters from western wall: %.3f", anchorWalls.z / meter);
+			ImGui::Text("Meters from eastern wall: %.3f", anchorWalls.w / meter);
 
 
 			

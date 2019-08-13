@@ -15,7 +15,7 @@ namespace Engine1 {
 		// Send the vertex shader source code to GL
 		// Note that std::string's .c_str is NULL character terminated.
 		const GLchar* source = vertexSrc.c_str();
-		glShaderSource(vertexShader, 1, &source, 0);
+		glShaderSource(vertexShader, 1, &source, nullptr);
 
 		// Compile the vertex shader
 		glCompileShader(vertexShader);
@@ -48,7 +48,7 @@ namespace Engine1 {
 		// Send the fragment shader source code to GL
 		// Note that std::string's .c_str is NULL character terminated.
 		source = fragmentSrc.c_str();
-		glShaderSource(fragmentShader, 1, &source, 0);
+		glShaderSource(fragmentShader, 1, &source, nullptr);
 
 		// Compile the fragment shader
 		glCompileShader(fragmentShader);
