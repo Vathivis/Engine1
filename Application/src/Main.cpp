@@ -15,8 +15,87 @@
 #include "Node.h"
 
 
+
 //TEMPORARY opengl
 #include "glad/glad.h"
+
+//lokalize node from distances
+glm::vec4 calculateFromZ(const glm::vec3& anch1pos, const glm::vec3& anch2pos, const glm::vec3& anch3pos, const glm::mat2& matrix, float v1, float k1d, float k2d, float z) {
+
+	float k1 = k1d - 2 * (anch2pos.z - anch1pos.z) * z;
+	float k2 = k2d - 2 * (anch3pos.z - anch1pos.z) * z;
+
+	const float* source = (const float*)glm::value_ptr(matrix);
+	float det = glm::determinant(matrix);
+
+	float x = (source[3] * k1 - source[1] * k2) / det;
+	float y = (-source[2] * k1 + source[0] * k2) / det;
+
+	float tmp = pow((anch1pos.x - x), 2) + pow((anch1pos.y - y), 2) + pow((anch1pos.z - z), 2) - pow(v1, 2);
+
+	glm::vec4 result({ x, y, z, tmp });
+
+	return result;
+}
+
+//glm::vec3 localizeNode(const Anchor& anchor1, const Anchor& anchor2, const Anchor& anchor3, const Node& node) {
+
+glm::vec3 localizeNode() {
+	glm::vec3 anch1Pos;
+	glm::vec3 anch2Pos;
+	glm::vec3 anch3Pos;
+	glm::vec3 nodePos;
+	
+	anch1Pos = { -19, 66, 0 };
+	anch2Pos = { 420, 66, 0 };
+	anch3Pos = { -19, 340, 0 };
+	nodePos = { 178, 213, 0 };
+
+
+	// vzdalenosti objektu od majaku vcetne sumu
+	float v1 = sqrt(pow((nodePos.x - anch1Pos.x), 2) + pow((nodePos.y - anch1Pos.y), 2) + pow((nodePos.z - anch1Pos.z), 2)) + 0.25 * rand() / RAND_MAX - 0.125;
+	float v2 = sqrt(pow((nodePos.x - anch2Pos.x), 2) + pow((nodePos.y - anch2Pos.y), 2) + pow((nodePos.z - anch2Pos.z), 2)) - 0.25 * rand() / RAND_MAX - 0.125;
+	float v3 = sqrt(pow((nodePos.x - anch3Pos.x), 2) + pow((nodePos.y - anch3Pos.y), 2) + pow((nodePos.z - anch3Pos.z), 2)) + 0.25 * rand() / RAND_MAX - 0.125;
+
+
+	//triangulace
+	float tmpMat[4] = { 2 * (anch2Pos.x - anch1Pos.x), 2 * (anch2Pos.y - anch1Pos.y), 2 * (anch3Pos.x - anch1Pos.x), 2 * (anch3Pos.y - anch1Pos.y) };
+	glm::mat2 matrix = glm::make_mat2(tmpMat);
+
+	
+
+	float k1d = pow(v1, 2) - pow(v2, 2) + pow(anch2Pos.x, 2) - pow(anch1Pos.x, 2) + pow(anch2Pos.y, 2) - pow(anch1Pos.y, 2) + pow(anch2Pos.z, 2) - pow(anch1Pos.z, 2);
+	float k2d = pow(v1, 2) - pow(v3, 2) + pow(anch3Pos.x, 2) - pow(anch1Pos.x, 2) + pow(anch3Pos.y, 2) - pow(anch1Pos.y, 2) + pow(anch3Pos.z, 2) - pow(anch1Pos.z, 2);
+
+	// metoda puleni intervalu
+
+	//odhad intervalu pro z - osovou soradnici
+	float zmin = 0;
+	float zmax = 3;
+
+	float valmin = calculateFromZ(anch1Pos, anch2Pos, anch3Pos, matrix, v1, k1d, k2d, zmin).w;
+	float valmax = calculateFromZ(anch1Pos, anch2Pos, anch3Pos, matrix, v1, k1d, k2d, zmax).w;
+
+	//podminka ukonceni
+	glm::vec3 pos;
+	while (zmax - zmin > 0.005) {
+
+		float zstr = (zmin + zmax) / 2;
+		float valstr = calculateFromZ(anch1Pos, anch2Pos, anch3Pos, matrix, v1, k1d, k2d, zstr).w;
+		pos = calculateFromZ(anch1Pos, anch2Pos, anch3Pos, matrix, v1, k1d, k2d, zstr);
+
+		if (valstr * valmin > 0) {
+			zmin = zstr;
+			valmin = valstr;
+		}
+		else {
+			zmax = zstr;
+			valmax = valstr;
+		}
+	}
+
+	return pos;
+}
 
 
 
@@ -69,6 +148,8 @@ private:
 
 	bool show = true;
 
+
+	std::vector<long long> test;
 
 public:
 	Layer1() : Layer("Layer1"),
@@ -368,6 +449,8 @@ public:
 
 	void onUpdate(Engine1::Timestep ts) override {
 
+		
+
 		//else if to prevent cancelling each other
 		if (Engine1::Input::isKeyPressed(E1_KEY_D))
 			m_cameraPosition.x += m_cameraMoveSpeed * ts;
@@ -431,7 +514,9 @@ public:
 
 		m_mouseScreenPos = { tmpPos.x, tmpPos.y };
 
+		glm::vec3 tmploc;
 
+		tmploc = localizeNode();
 
 		Engine1::Renderer::beginScene(m_camera);
 
@@ -491,6 +576,8 @@ public:
 		}
 
 		Engine1::Renderer::endScene();
+
+		
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -817,59 +904,6 @@ public:
 	
 
 };
-
-/*class Overlay1 : public Engine1::Layer {
-private:
-	bool show_demo_window = true;
-	bool show_another_window = false;
-	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
-public:
-
-	Overlay1() : ImGuiLayer() {
-		
-	}
-
-	void onUpdate(Engine1::Timestep ts) override {
-
-		//this->Begin();
-		
-		/*static float f = 0.0f;
-		static int counter = 0;
-
-		ImGui::Begin("Hello, world!");
-		ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-		ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-		ImGui::Checkbox("Another Window", &show_another_window);
-
-		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-		ImGui::ColorEdit3("clear color", (float*)& clear_color); // Edit 3 floats representing a color
-
-		if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-			counter++;
-		ImGui::SameLine();
-		ImGui::Text("counter = %d", counter);
-
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		ImGui::End();
-
-
-		//this->End();
-
-	}
-
-	virtual void onImGuiRender() override {
-
-
-	}
-
-	void onEvent(Engine1::Event& event) override {
-		Engine1::EventDispatcher dispatcher(event);
-
-	}
-
-
-};*/
 
 class Sandbox : public Engine1::Application {
 public:

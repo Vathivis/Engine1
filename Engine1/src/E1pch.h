@@ -6,6 +6,8 @@
 #include <functional>
 #include <algorithm>
 #include <limits>
+#include <chrono>
+#include <numeric>
 
 //data struktury
 #include <string>
