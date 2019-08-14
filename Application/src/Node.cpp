@@ -17,3 +17,4 @@ void Node::setPosition(const glm::vec3& position) {
 	m_position.x = -1.6f + 3.2f * position.x / 1280;
 	m_position.y = 0.9f - 1.8f * position.y / 720;
 }
+

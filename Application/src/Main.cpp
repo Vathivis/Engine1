@@ -128,6 +128,8 @@ private:
 	Engine1::Texture m_nodeTex;
 	std::vector<Node> m_nodes;
 
+	int m_nodeIndex = 0;
+
 	//scale
 	Engine1::ref<Engine1::VertexArray> m_scaleVA;
 	Engine1::Texture m_scaleTex;
@@ -149,7 +151,7 @@ private:
 	bool show = true;
 
 
-	std::vector<long long> test;
+	std::vector<long long> SpeedTest;
 
 public:
 	Layer1() : Layer("Layer1"),
@@ -638,6 +640,7 @@ public:
 
 		//mouse hold
 		static bool found2 = false;
+		static bool found3 = false;
 		if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && ImGui::IsMouseDragging(0)) {
 			float distance = 0;
 			pos = m_mouseScenePos;
@@ -650,13 +653,29 @@ public:
 				m_scale->setPosition({ m_mouseScenePos.x, m_mouseScenePos.y, 0.0f });
 			}
 			else {
-				for (unsigned int i = 0; i < m_anchors.size(); ++i) {
-					glm::vec2 anchPos = m_anchors[i].getScenePosition();
-					distance = glm::distance(anchPos, pos);		//can change to fastDistance, but less accurate
-					if (distance < m_anchors[i].getRadius()) {
-						m_anchorIndex = i;
-						found2 = true;
-						break;
+				//anchor moving
+				if (!found2 && !found3) {
+					for (unsigned int i = 0; i < m_anchors.size(); ++i) {
+						glm::vec2 anchPos = m_anchors[i].getScenePosition();
+						distance = glm::distance(anchPos, pos);		//can change to fastDistance, but less accurate
+						if (distance < m_anchors[i].getRadius()) {
+							m_anchorIndex = i;
+							found2 = true;
+							break;
+						}
+					}
+				}
+
+				//node moving - ONLY FOR TESTING
+				if (!found2 && !found3) {
+					for (unsigned int i = 0; i < m_nodes.size(); ++i) {
+						glm::vec2 nodePos = m_nodes[i].getScenePosition();
+						distance = glm::distance(nodePos, pos);	
+						if (distance < m_nodes[i].getRadius()) {
+							m_nodeIndex = i;
+							found3 = true;
+							break;
+						}
 					}
 				}
 
@@ -664,16 +683,19 @@ public:
 					m_anchors[m_anchorIndex].setPosition({ m_mouseScenePos.x, m_mouseScenePos.y, 0.0f });
 				}
 
-
-
+				if (found3) {
+					m_nodes[m_nodeIndex].setPosition({ m_mouseScenePos.x, m_mouseScenePos.y, 0.0f });
+				}
 			}
 
 
 
 
 		}
-		else
+		else {
 			found2 = false;
+			found3 = false;
+		}
 
 
 		//double click on anchor or scale
@@ -726,7 +748,8 @@ public:
 			if (ImGui::Checkbox("Invert Lines", &m_invertLines)) {}
 			ImGui::Text("Position: %f %f", m_anchors[m_anchorIndex].getPosition().x, m_anchors[m_anchorIndex].getPosition().y);
 			ImGui::Text("Scene position: %f %f", m_anchors[m_anchorIndex].getScenePosition().x, m_anchors[m_anchorIndex].getScenePosition().y);
-			
+			ImGui::Text("Anchor ID: %d", m_anchorIndex);
+
 			float meter = m_scale->getMeter() / m_camera.getCurrentZoom();
 
 			//TODO: prepocitat anchorwalls pri zoomu

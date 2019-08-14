@@ -1,16 +1,19 @@
 #pragma once
 
-//#include "Engine1/Renderer/OrthographicCamera.h"
+
 
 #include "glm/glm.hpp"
 
+//TODO: radius is most likely wrong, also in node
+//TODO: id system
 class Anchor {
 private:
 	glm::vec3 m_position;
 	glm::vec3 m_scenePosition;
-	float m_radius;
 	glm::mat4 m_scale;
 
+	float m_radius;
+	int m_id;
 	bool m_locked = false;
 
 public:
@@ -31,5 +34,5 @@ public:
 	inline void setLock(bool lock) { m_locked = lock; }
 
 	void recalculateRadius();
-	//void castRays();
+
 };
