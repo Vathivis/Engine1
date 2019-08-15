@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef E1_PLATFORM_WINDOWS
+	#include <winsock2.h>
+	#define _WINSOCKAPI_
+	#include "windows.h"
+#endif
+
 #include <iostream>
 #include <memory>
 #include <utility>
@@ -22,9 +28,7 @@
 #include "Engine1/KeyCodes.h"
 #include "Engine1/MouseButtonCodes.h"
 
-#ifdef E1_PLATFORM_WINDOWS
-	#include <Windows.h>
-#endif
+
 
 
 

@@ -27,6 +27,7 @@
 static void* get_proc(const char *namez);
 
 #if defined(_WIN32) || defined(__CYGWIN__)
+#define _WINSOCKAPI_
 #include <windows.h>
 static HMODULE libGL;
 

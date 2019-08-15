@@ -13,6 +13,8 @@
 #include "Anchor.h"
 #include "Scale.h"
 #include "Node.h"
+#include "Network/UDPServer.h"
+#include "Network/UDPClient.h"
 
 
 
@@ -149,6 +151,10 @@ private:
 	float m_cameraRotationSpeed = 180.0f;
 
 	bool show = true;
+
+	//Networking
+	UDPServer m_server;
+
 
 
 	std::vector<long long> SpeedTest;
