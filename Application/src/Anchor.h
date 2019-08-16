@@ -32,6 +32,7 @@ public:
 	void setPosition(const glm::vec3& position);
 	inline void setScale(const glm::mat4& scale) { m_scale = scale; recalculateRadius(); }
 	inline void setLock(bool lock) { m_locked = lock; }
+	inline void setID(int id) { m_id = id; }
 
 	void recalculateRadius();
 

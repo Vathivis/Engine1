@@ -45,11 +45,11 @@ void UDPServer::onUpdate() {
 		if (!m_msgPending) {
 			mu.lock();
 			ZeroMemory(m_buffer, 1024);
-			m_buffer[0] = '+';
+			//m_buffer[0] = '+';
 			int bytesIn = recvfrom(m_in, m_buffer, 1024, 0, (sockaddr*)& m_client, &m_clientLength);
 			mu.unlock();
 			if (bytesIn == SOCKET_ERROR) {
-				E1_ERROR("Error recieving from client {0}", WSAGetLastError());
+				//E1_ERROR("Error recieving from client {0}", WSAGetLastError());
 				//return;
 				continue;
 			}

@@ -153,9 +153,9 @@ private:
 	bool show = true;
 
 	//Networking
-	UDPServer m_server; //= new UDPServer();
+	//UDPServer m_server;
 	UDPClient m_client;
-	int i = 0;
+	//int i = 0;
 
 
 	std::vector<long long> SpeedTest;
@@ -169,8 +169,8 @@ public:
 		m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_cameraPosition(0.0f) {
 	
 		
-		std::thread t1(&UDPServer::onUpdate, &m_server);
-		t1.detach();
+		/*std::thread t1(&UDPServer::onUpdate, &m_server);
+		t1.detach();*/
 
 		std::thread t2(&UDPClient::send, &m_client, "yes");
 		t2.detach();
@@ -571,11 +571,11 @@ public:
 		}
 
 		//network info about nodes
-		if (m_server.getState()) {
+		/*if (m_server.getState()) {
 			std::string msg = m_server.getBuffer();
 			std::cout << "message: " << msg << std::endl;
 			m_server.setState(false);
-		}
+		}*/
 
 
 		//std::string s = "yeet" + std::to_string(i);
@@ -705,12 +705,17 @@ public:
 					}
 				}
 
+				//anchor
 				if (found2 && !m_anchors[m_anchorIndex].getLock()) {
 					m_anchors[m_anchorIndex].setPosition({ m_mouseScenePos.x, m_mouseScenePos.y, 0.0f });
 				}
 
+				//node
 				if (found3) {
 					m_nodes[m_nodeIndex].setPosition({ m_mouseScenePos.x, m_mouseScenePos.y, 0.0f });
+
+					//send location in packet format - FOR TESTING
+					m_client.send("129010101");
 				}
 			}
 
