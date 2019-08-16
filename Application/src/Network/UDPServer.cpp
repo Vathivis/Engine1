@@ -7,6 +7,8 @@
 #pragma comment (lib, "ws2_32.lib")
 
 
+std::mutex mu, mu2;
+
 UDPServer::UDPServer() {
 
 	//TODO: can be done only once, probably doesnt matter with server, but it does with client || or maybe not actually???
@@ -25,21 +27,47 @@ UDPServer::UDPServer() {
 	m_clientLength = sizeof(m_client);
 	ZeroMemory(&m_client, m_clientLength);
 
+	u_long mode = 1;
+	ioctlsocket(m_in, FIONBIO, &mode);
+
+}
+
+void UDPServer::setState(bool state) {
+	mu.lock();
+	m_msgPending = state;
+	mu.unlock();
 }
 
 void UDPServer::onUpdate() {
 
-	ZeroMemory(m_buffer, 1024);
+	while (true) {
 
-	int bytesIn = recvfrom(m_in, m_buffer, 1024, 0, (sockaddr*)& m_client, &m_clientLength);
-	if (bytesIn == SOCKET_ERROR) {
-		E1_ERROR("Error recieving from client {0}", WSAGetLastError());
+		if (!m_msgPending) {
+			mu.lock();
+			ZeroMemory(m_buffer, 1024);
+			m_buffer[0] = '+';
+			int bytesIn = recvfrom(m_in, m_buffer, 1024, 0, (sockaddr*)& m_client, &m_clientLength);
+			mu.unlock();
+			if (bytesIn == SOCKET_ERROR) {
+				E1_ERROR("Error recieving from client {0}", WSAGetLastError());
+				//return;
+				continue;
+			}
+
+
+			ZeroMemory(&m_clientIP, 256);
+
+			inet_ntop(AF_INET, &m_client.sin_addr, m_clientIP, 256);
+			E1_INFO("message recieved from {0} : {1}", m_clientIP, m_buffer);
+
+			mu2.lock();
+			m_msgPending = true;
+			mu2.unlock();
+		}
+		//else
+			//E1_WARN("Message Pending");
+
 	}
-	
-	ZeroMemory(&m_clientIP, 256);
-
-	inet_ntop(AF_INET, &m_client.sin_addr, m_clientIP, 256);
-	E1_INFO("message recieved from {0} : {1}", m_clientIP, m_buffer);
 
 }
 

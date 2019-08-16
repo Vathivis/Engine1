@@ -19,12 +19,16 @@ UDPClient::UDPClient() {
 
 void UDPClient::send(const std::string& message) {
 
+	std::string message2;
 	int sendOk;
-	sendOk = sendto(m_out, message.c_str(), message.size() + 1, 0, (sockaddr*)& m_server, sizeof(m_server));
+	while (true) {
+		message2 = std::to_string(i);
+		sendOk = sendto(m_out, message2.c_str(), message2.size() + 1, 0, (sockaddr*)& m_server, sizeof(m_server));
+		++i;
 
-
-	if (sendOk == SOCKET_ERROR) {
-		E1_ERROR("message not sent ", WSAGetLastError());
+		if (sendOk == SOCKET_ERROR) {
+			E1_ERROR("message not sent ", WSAGetLastError());
+		}
 	}
 
 }

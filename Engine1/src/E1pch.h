@@ -14,6 +14,8 @@
 #include <limits>
 #include <chrono>
 #include <numeric>
+#include <thread>
+#include <future>
 
 //data struktury
 #include <string>

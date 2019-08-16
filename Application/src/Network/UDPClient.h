@@ -10,6 +10,9 @@ private:
 	SOCKET m_out;
 	sockaddr_in m_server;
 
+
+	int i = 0;
+
 public:
 
 	UDPClient();

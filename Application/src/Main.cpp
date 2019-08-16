@@ -153,8 +153,9 @@ private:
 	bool show = true;
 
 	//Networking
-	UDPServer m_server;
-
+	UDPServer m_server; //= new UDPServer();
+	UDPClient m_client;
+	int i = 0;
 
 
 	std::vector<long long> SpeedTest;
@@ -168,6 +169,12 @@ public:
 		m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_cameraPosition(0.0f) {
 	
 		
+		std::thread t1(&UDPServer::onUpdate, &m_server);
+		t1.detach();
+
+		std::thread t2(&UDPClient::send, &m_client, "yes");
+		t2.detach();
+
 		//m_scale->setPosition({ -1.3f, 0.8f, 0.0f });
 
 		/*m_vertexArray.reset(Engine1::VertexArray::create());
@@ -457,7 +464,6 @@ public:
 
 	void onUpdate(Engine1::Timestep ts) override {
 
-		
 
 		//else if to prevent cancelling each other
 		if (Engine1::Input::isKeyPressed(E1_KEY_D))
@@ -564,6 +570,18 @@ public:
 			Engine1::Renderer::submit(m_textureSquareShader, m_anchorVA, anchorTransform);
 		}
 
+		//network info about nodes
+		if (m_server.getState()) {
+			std::string msg = m_server.getBuffer();
+			std::cout << "message: " << msg << std::endl;
+			m_server.setState(false);
+		}
+
+
+		//std::string s = "yeet" + std::to_string(i);
+		//m_client.send(s);
+		//++i;
+
 		//nodes
 		for (auto& node : m_nodes) {
 			//glm::vec3 pos(anchor.getPosition().x, anchor.getPosition().y, 0.0f);
@@ -586,8 +604,10 @@ public:
 		Engine1::Renderer::endScene();
 
 		
+		
 	}
 
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	virtual void onImGuiRender() override {
 
