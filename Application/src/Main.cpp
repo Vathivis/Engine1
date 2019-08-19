@@ -106,7 +106,7 @@ private:
 	//Engine1::ref<Engine1::Shader> m_shader;
 	//Engine1::ref<Engine1::VertexArray> m_vertexArray;
 
-	Engine1::ref<Engine1::Shader> m_flatColorShader;
+	Engine1::ref<Engine1::Shader> m_flatColorShader, m_textureShader;
 	Engine1::ref<Engine1::VertexArray> m_squareVA;
 	glm::vec3 m_squareColor = { 0.2f, 0.3f, 0.8f };
 
@@ -153,7 +153,7 @@ private:
 	bool show = true;
 
 	//Networking
-	//UDPServer m_server;
+	UDPServer m_server;
 	UDPClient m_client;
 	//int i = 0;
 
@@ -169,11 +169,11 @@ public:
 		m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_cameraPosition(0.0f) {
 	
 		
-		/*std::thread t1(&UDPServer::onUpdate, &m_server);
-		t1.detach();*/
+		std::thread t1(&UDPServer::onUpdate, &m_server);
+		t1.detach();
 
-		std::thread t2(&UDPClient::send, &m_client, "yes");
-		t2.detach();
+		/*std::thread t2(&UDPClient::send, &m_client, "yes");
+		t2.detach();*/
 
 		//m_scale->setPosition({ -1.3f, 0.8f, 0.0f });
 
@@ -211,20 +211,21 @@ public:
 		//	nakonec glDrawElements, kde pocet indexu je VertexArray->getIndexBuffer()->getCount()				   //
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		/*m_squareVA.reset(Engine1::VertexArray::create());
+		m_squareVA.reset(Engine1::VertexArray::create());
 
-		float squareVertices[4 * 3] = {
-			-0.5f, -0.5f, 0.0f, 
-			 0.5f, -0.5f, 0.0f, 
-			 0.5f,  0.5f, 0.0f,	
-			-0.5f,  0.5f, 0.0f 
+		float squareVertices[4 * 5] = {
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f,	1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
 		Engine1::ref<Engine1::VertexBuffer> squareVB;
 		squareVB.reset(Engine1::VertexBuffer::create(squareVertices, sizeof(squareVertices)));
 
 		Engine1::BufferLayout squareVBLayout = {
-			{ Engine1::ShaderDataType::Float3, "a_position" }
+			{ Engine1::ShaderDataType::Float3, "a_position" },
+			{ Engine1::ShaderDataType::Float2, "a_texCoord" }
 		};
 		squareVB->setLayout(squareVBLayout);
 		m_squareVA->addVertexBuffer(squareVB);
@@ -232,7 +233,7 @@ public:
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 		Engine1::ref<Engine1::IndexBuffer> squareIB;
 		squareIB.reset(Engine1::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
-		m_squareVA->setIndexBuffer(squareIB);*/
+		m_squareVA->setIndexBuffer(squareIB);
 
 
 		//background texture/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -391,6 +392,7 @@ public:
 
 		m_shader.reset(new Engine1::Shader(vertexSrc, fragmentSrc));*/
 
+		//tutorial/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		std::string flatColorShaderVertexSrc = R"(
 			#version 330 core
 			
@@ -399,11 +401,8 @@ public:
 			uniform mat4 u_viewProjection;
 			uniform mat4 u_transform;
 
-			out vec3 v_position;
-
 			void main()
 			{
-				v_position = a_position;
 				gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);	
 			}
 		)";
@@ -422,6 +421,42 @@ public:
 		)";
 
 		m_flatColorShader.reset(Engine1::Shader::create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
+
+		std::string textureShaderVertexSrc = R"(
+			#version 330 core
+			
+			layout(location = 0) in vec3 a_position;
+			layout(location = 1) in vec2 a_texCoord;
+
+			uniform mat4 u_viewProjection;
+			uniform mat4 u_transform;
+
+			out vec2 v_texCoord;
+
+			void main()
+			{
+				v_texCoord = a_texCoord;
+				gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);	
+			}
+		)";
+
+		std::string textureShaderFragmentSrc = R"(
+			#version 330 core
+			
+			layout(location = 0) out vec4 color;
+
+			in vec2 v_texCoord;
+
+			uniform vec3 u_color;
+
+			void main()
+			{
+				color = vec4(u_color, 1.0);
+			}
+		)";
+
+		m_textureShader.reset(Engine1::Shader::create(textureShaderVertexSrc, textureShaderFragmentSrc));
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		std::string textureSquareShaderVertexSrc = R"(
 			#version 330 core
@@ -458,7 +493,6 @@ public:
 		)";
 
 		m_textureSquareShader.reset(Engine1::Shader::create(textureSquareShaderVertexSrc, textureSquareShaderFragmentSrc));
-
 		
 	}
 
@@ -534,30 +568,34 @@ public:
 
 		Engine1::Renderer::beginScene(m_camera);
 
-		/*glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
 
 		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_flatColorShader)->bind();
 		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_flatColorShader)->uploadUniform3f("u_color", m_squareColor);
 
+		glm::mat4 transform;
+		glm::vec3 pos;
 		for (int j = 0; j < 20; ++j) {
 			for (int i = 0; i < 20; ++i) {
-				glm::vec3 pos(i * 0.11f, j * 0.11f, 0.0f);
-				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+				pos = { i * 0.11f, j * 0.11f, 0.0f };
+				transform = glm::translate(glm::mat4(1.0f), pos) * scale;
 				
 				Engine1::Renderer::submit(m_flatColorShader, m_squareVA, transform);		//blue square
 			}
-		}*/
+		}
+
+		Engine1::Renderer::submit(m_flatColorShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 			
 		//Engine1::Renderer::submit(m_shader, m_vertexArray);		//colored triangle
 
 
 		//background
-		glm::vec3 pos2(0.0f, 0.0f, 0.0f);
+		/*glm::vec3 pos2(0.0f, 0.0f, 0.0f);
 		glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), pos2);
 		m_groundPlanTex.bind();
 		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);		//weird on intel gpu
-		Engine1::Renderer::submit(m_textureSquareShader, m_backgroundVA, transform2);
+		Engine1::Renderer::submit(m_textureSquareShader, m_backgroundVA, transform2);*/
 
 		//anchors
 		//glm::mat4 anchorScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.33f));		//needs to change with zoom (or not??)
@@ -571,11 +609,24 @@ public:
 		}
 
 		//network info about nodes
-		/*if (m_server.getState()) {
+		if (m_server.getState()) {
+			int anchorID, nodeID, nodex, nodey;
 			std::string msg = m_server.getBuffer();
 			std::cout << "message: " << msg << std::endl;
+
+			std::istringstream iss(msg);
+
+
+			iss >> anchorID >> nodeID >> nodex >> nodey;
+			anchorID -= 128;
+
+
+
+
+			m_nodes[nodeID].setPosition({ nodex, nodey, 0.0 });
+
 			m_server.setState(false);
-		}*/
+		}
 
 
 		//std::string s = "yeet" + std::to_string(i);
@@ -714,11 +765,27 @@ public:
 				if (found3) {
 					m_nodes[m_nodeIndex].setPosition({ m_mouseScenePos.x, m_mouseScenePos.y, 0.0f });
 
-					//send location in packet format - FOR TESTING
-					m_client.send("129010101");
+					//send location in packet format - FOR TESTING//////////////////////////////////////
+					int arr[4];
+
+					arr[0] = 128;		//anchor id with starting bit 1, anchor id = 128 + x
+					arr[1] = 0;			//node id
+					arr[2] = (int)m_mouseScenePos.x;			//distance
+					arr[3] = (int)m_mouseScenePos.y;			//+distance
+
+					std::ostringstream os;
+					for (int i = 0; i < 4; i++) {
+						if (i >= 1) {
+							os << ' ';
+						}
+						os << arr[i];
+					}
+
+					std::string s(os.str());
+					m_client.send(s);
+					////////////////////////////////////////////////////////////////////////////////////
 				}
 			}
-
 
 
 
@@ -956,6 +1023,10 @@ public:
 		return tmpPos;
 	}
 	
+	~Layer1() {
+		//server sometimes tries to acces Pending msg bool, but it is destroyed sooner than the server -> results in an exception
+		m_server.stopThread();
+	}
 
 };
 
@@ -967,7 +1038,7 @@ public:
 	}
 
 	~Sandbox() {
-
+		
 	}
 
 };

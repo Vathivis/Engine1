@@ -40,7 +40,7 @@ void UDPServer::setState(bool state) {
 
 void UDPServer::onUpdate() {
 
-	while (true) {
+	while (!m_stopThread) {
 
 		if (!m_msgPending) {
 			mu.lock();

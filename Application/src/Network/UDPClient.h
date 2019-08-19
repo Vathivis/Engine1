@@ -11,7 +11,7 @@ private:
 	sockaddr_in m_server;
 
 
-	int i = 0;
+	//int i = 0;
 
 public:
 

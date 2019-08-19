@@ -2,6 +2,7 @@
 
 #include <string>
 
+
 class UDPServer {
 private:
 
@@ -15,6 +16,7 @@ private:
 	int m_clientLength;
 
 	bool m_msgPending = false;
+	bool m_stopThread = false;
 
 public:
 
@@ -26,6 +28,7 @@ public:
 
 	//setters
 	void setState(bool state);
+	inline void stopThread() { m_stopThread = true; }
 
 	void onUpdate();
 
