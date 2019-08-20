@@ -1,10 +1,12 @@
 #pragma once
 
+#include <string>
 
+#include "Engine1/Core.h"
 
 namespace Engine1 {
 
-	class Texture {
+	/*class Texture {
 	private:
 		uint32_t m_rendererID;
 		std::string m_filePath;
@@ -25,7 +27,23 @@ namespace Engine1 {
 		inline int getHeight() const { return m_height; }
 
 
+	};*/
+
+	class Texture {
+	public:
+
+		virtual ~Texture() = default;
+
+		virtual uint32_t getWidth() const = 0;
+		virtual uint32_t getHeight() const = 0;
+
+		virtual void bind(uint32_t slot = 0) const = 0;
 	};
 
+	class Texture2D : public Texture {
+	public:
+
+		static ref<Texture2D> create(const std::string& path);
+	};
 
 }

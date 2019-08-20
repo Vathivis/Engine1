@@ -19,6 +19,7 @@ includeDir["GLFW"] = "Engine1/vendor/GLFW/include"
 includeDir["Glad"] = "Engine1/vendor/Glad/include"
 includeDir["ImGui"] = "Engine1/vendor/imgui"
 includeDir["glm"] = "Engine1/vendor/glm"
+includeDir["stb_image"] = "Engine1/vendor/stb_image"
 
 
 group "Dependencies"
@@ -44,6 +45,8 @@ project	"Engine1"
 	files {
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/stb_image/**.h",
+		"%{prj.name}/vendor/stb_image/**.cpp",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
@@ -55,11 +58,11 @@ project	"Engine1"
 	includedirs {
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
-		"%{prj.name}/vendor/stb",
 		"%{includeDir.GLFW}",
 		"%{includeDir.Glad}",
 		"%{includeDir.ImGui}",
-		"%{includeDir.glm}"
+		"%{includeDir.glm}",
+		"%{includeDir.stb_image}"
 	}
 
 	links { 
@@ -113,7 +116,6 @@ project "Application"
 	--glad is temporary
 	includedirs {
 		"Engine1/vendor/spdlog/include",
-		"Engine1/vendor/stb",
 		"Engine1/src",
 		"Engine1/vendor",
 		"%{includeDir.Glad}",

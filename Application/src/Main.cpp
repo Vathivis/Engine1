@@ -106,20 +106,22 @@ private:
 	//Engine1::ref<Engine1::Shader> m_shader;
 	//Engine1::ref<Engine1::VertexArray> m_vertexArray;
 
-	Engine1::ref<Engine1::Shader> m_flatColorShader, m_textureShader;
+	//Engine1::ref<Engine1::Shader> m_flatColorShader, m_textureShader;
 	Engine1::ref<Engine1::VertexArray> m_squareVA;
-	glm::vec3 m_squareColor = { 0.2f, 0.3f, 0.8f };
+	//glm::vec3 m_squareColor = { 0.2f, 0.3f, 0.8f };
 
 	Engine1::ref<Engine1::Shader> m_textureSquareShader;
 
+	//Engine1::ref<Engine1::Texture2D> m_texture;
+
 	//background/groundplan
 	Engine1::ref<Engine1::VertexArray> m_backgroundVA;
-	Engine1::Texture m_groundPlanTex;
+	Engine1::ref<Engine1::Texture2D> m_groundPlanTex;
 	
 	
 	//anchors
 	Engine1::ref<Engine1::VertexArray> m_anchorVA;
-	Engine1::Texture m_anchorTex;
+	Engine1::ref<Engine1::Texture2D> m_anchorTex;
 	std::vector<Anchor> m_anchors;
 
 	bool m_invertLines = false;
@@ -127,14 +129,14 @@ private:
 
 	//nodes
 	Engine1::ref<Engine1::VertexArray> m_nodeVA;
-	Engine1::Texture m_nodeTex;
+	Engine1::ref<Engine1::Texture2D> m_nodeTex;
 	std::vector<Node> m_nodes;
 
 	int m_nodeIndex = 0;
 
 	//scale
 	Engine1::ref<Engine1::VertexArray> m_scaleVA;
-	Engine1::Texture m_scaleTex;
+	Engine1::ref<Engine1::Texture2D> m_scaleTex;
 	std::unique_ptr<Scale> m_scale;
 
 	bool m_showScale = false;
@@ -161,13 +163,12 @@ private:
 	std::vector<long long> SpeedTest;
 
 public:
-	Layer1() : Layer("Layer1"),
-		m_groundPlanTex("resources/textures/pudorys-zdi.png"),
-		m_anchorTex("resources/textures/anchor.png"),
-		m_nodeTex("resources/textures/node.png"),
-		m_scaleTex("resources/textures/meritko.png"),
-		m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_cameraPosition(0.0f) {
+	Layer1() : Layer("Layer1"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_cameraPosition(0.0f) {
 	
+		m_groundPlanTex = Engine1::Texture2D::create("assets/textures/pudorys-zdi.png");
+		m_anchorTex = Engine1::Texture2D::create("assets/textures/anchor.png");
+		m_nodeTex = Engine1::Texture2D::create("assets/textures/node.png");
+		m_scaleTex = Engine1::Texture2D::create("assets/textures/meritko.png");
 		
 		std::thread t1(&UDPServer::onUpdate, &m_server);
 		t1.detach();
@@ -239,8 +240,8 @@ public:
 		//background texture/////////////////////////////////////////////////////////////////////////////////////////////////
 		m_backgroundVA.reset(Engine1::VertexArray::create());
 
-		float groundW = m_groundPlanTex.getWidth();
-		float groundH = m_groundPlanTex.getHeight();
+		float groundW = m_groundPlanTex->getWidth();
+		float groundH = m_groundPlanTex->getHeight();
 
 		groundW = groundW / 1280 * 1.6f;
 		groundH = groundH / 720 * 0.9f;
@@ -321,8 +322,8 @@ public:
 		//scale/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		m_scaleVA.reset(Engine1::VertexArray::create());
 
-		float scaleW = m_scaleTex.getWidth();
-		float scaleH = m_scaleTex.getHeight();
+		float scaleW = m_scaleTex->getWidth();
+		float scaleH = m_scaleTex->getHeight();
 
 		m_scale = std::make_unique<Scale>(Scale(scaleW, scaleH, { 480.0f, 80.0f, 0.0f }));
 
@@ -393,7 +394,7 @@ public:
 		m_shader.reset(new Engine1::Shader(vertexSrc, fragmentSrc));*/
 
 		//tutorial/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		std::string flatColorShaderVertexSrc = R"(
+		/*std::string flatColorShaderVertexSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) in vec3 a_position;
@@ -420,9 +421,9 @@ public:
 			}
 		)";
 
-		m_flatColorShader.reset(Engine1::Shader::create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
+		m_flatColorShader.reset(Engine1::Shader::create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));*/
 
-		std::string textureShaderVertexSrc = R"(
+		/*std::string textureShaderVertexSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) in vec3 a_position;
@@ -447,15 +448,20 @@ public:
 
 			in vec2 v_texCoord;
 
-			uniform vec3 u_color;
+			uniform sampler2D u_texture; 
 
 			void main()
 			{
-				color = vec4(u_color, 1.0);
+				color = texture(u_texture, v_texCoord);
 			}
 		)";
 
 		m_textureShader.reset(Engine1::Shader::create(textureShaderVertexSrc, textureShaderFragmentSrc));
+
+		m_texture = Engine1::Texture2D::create("assets/textures/pudorys-zdi.png");
+
+		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureShader)->bind();
+		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureShader)->uploadUniform1i("u_texture", 0);*/
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		std::string textureSquareShaderVertexSrc = R"(
@@ -494,6 +500,7 @@ public:
 
 		m_textureSquareShader.reset(Engine1::Shader::create(textureSquareShaderVertexSrc, textureSquareShaderFragmentSrc));
 		
+
 	}
 
 	void onUpdate(Engine1::Timestep ts) override {
@@ -568,7 +575,7 @@ public:
 
 		Engine1::Renderer::beginScene(m_camera);
 
-		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+		/*glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
 
 		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_flatColorShader)->bind();
@@ -585,17 +592,18 @@ public:
 			}
 		}
 
-		Engine1::Renderer::submit(m_flatColorShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		m_texture->bind();
+		Engine1::Renderer::submit(m_textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));*/
 			
 		//Engine1::Renderer::submit(m_shader, m_vertexArray);		//colored triangle
 
 
 		//background
-		/*glm::vec3 pos2(0.0f, 0.0f, 0.0f);
+		glm::vec3 pos2(0.0f, 0.0f, 0.0f);
 		glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), pos2);
-		m_groundPlanTex.bind();
+		m_groundPlanTex->bind();
 		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);		//weird on intel gpu
-		Engine1::Renderer::submit(m_textureSquareShader, m_backgroundVA, transform2);*/
+		Engine1::Renderer::submit(m_textureSquareShader, m_backgroundVA, transform2);
 
 		//anchors
 		//glm::mat4 anchorScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.33f));		//needs to change with zoom (or not??)
@@ -603,7 +611,7 @@ public:
 			//glm::vec3 pos(anchor.getPosition().x, anchor.getPosition().y, 0.0f);
 			anchor.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
 			glm::mat4 anchorTransform = glm::translate(glm::mat4(1.0f), anchor.getPosition()) * anchor.getScale();
-			m_anchorTex.bind();
+			m_anchorTex->bind();
 			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);
 			Engine1::Renderer::submit(m_textureSquareShader, m_anchorVA, anchorTransform);
 		}
@@ -638,7 +646,7 @@ public:
 			//glm::vec3 pos(anchor.getPosition().x, anchor.getPosition().y, 0.0f);
 			node.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
 			glm::mat4 nodeTransform = glm::translate(glm::mat4(1.0f), node.getPosition()) * node.getScale();
-			m_nodeTex.bind();
+			m_nodeTex->bind();
 			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);
 			Engine1::Renderer::submit(m_textureSquareShader, m_nodeVA, nodeTransform);
 		}
@@ -647,7 +655,7 @@ public:
 		if (m_showScale) {	
 			m_scale->setScale(glm::vec3(m_scale->getCurrentWidth() / m_scale->getWidth(), 1.0f, 1.0f));
 			glm::mat4 scaleTransform = glm::translate(glm::mat4(1.0f), m_scale->getPosition()) * m_scale->getScale();
-			m_scaleTex.bind();
+			m_scaleTex->bind();
 			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);
 			Engine1::Renderer::submit(m_textureSquareShader, m_scaleVA, scaleTransform);
 		}
@@ -663,7 +671,7 @@ public:
 	virtual void onImGuiRender() override {
 
 		static float f1 = m_scale->getWidth();
-		//static float f2 = m_scale->getScenePosition().x;
+		static float f2 = m_scale->getScenePosition().x;
 		static glm::vec2 pos;
 		static float anchorXpos = 0.0f;
 		static float anchorYpos = 0.0f;
@@ -837,7 +845,7 @@ public:
 			//ImGui::SliderFloat("float", &f2, m_scale->getScenePosition().x - 20.0f, m_scale->getScenePosition().x + 20.0f);
 
 			m_scale->setWidth(f1);
-			//m_scale->setPosition({ f2, m_scale->getScenePosition().y, 0.0f });
+			m_scale->setPosition({ f2, m_scale->getScenePosition().y, 0.0f });
 
 			ImGui::EndPopup();
 		}

@@ -1,16 +1,16 @@
 #include "E1pch.h"
 #include "Texture.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "Engine1/Renderer/stb_image.h"
+#include "Renderer.h"
+#include "Platform/OpenGL/OpenGLTexture.h"
 
 //TEMPORARY opengl
-#include "glad/glad.h"
+//#include "glad/glad.h"
 
 namespace Engine1 {
 
 
-	Texture::Texture(const std::string& path) : m_rendererID(0), m_filePath(path), m_localBuffer(nullptr), m_width(0), m_height(0), m_BPP(0) {
+	/*Texture::Texture(const std::string& path) : m_rendererID(0), m_filePath(path), m_localBuffer(nullptr), m_width(0), m_height(0), m_BPP(0) {
 
 		stbi_set_flip_vertically_on_load(1);
 		m_localBuffer = stbi_load(path.c_str(), &m_width, &m_height, &m_BPP, 4);
@@ -35,14 +35,25 @@ namespace Engine1 {
 		glDeleteTextures(1, &m_rendererID);
 	}
 
-	void Texture::bind(unsigned int slot /*= 0*/) const {
+	void Texture::bind(unsigned int slot /*= 0*//*) const {
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_2D, m_rendererID);
 	}
 
 	void Texture::unbind() const {
 		glBindTexture(GL_TEXTURE_2D, 0);
-	}
+	}*/
 
+	ref<Texture2D> Texture2D::create(const std::string& path)
+	{
+		switch (Renderer::getAPI())
+		{
+		case RendererAPI::API::None:    E1_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:  return std::make_shared<OpenGLTexture2D>(path);
+		}
+
+		E1_CORE_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
+	}
 
 }
