@@ -21,6 +21,7 @@ private:
 public:
 
 	UDPServer();
+	~UDPServer();
 
 	//getters
 	inline std::string getBuffer() const { std::string s(m_buffer); return s; }

@@ -16,8 +16,6 @@
 #include "Network/UDPServer.h"
 #include "Network/UDPClient.h"
 
-
-
 //TEMPORARY opengl
 #include "glad/glad.h"
 
@@ -156,7 +154,7 @@ private:
 
 	//Networking
 	UDPServer m_server;
-	UDPClient m_client;
+	//UDPClient m_client;
 	//int i = 0;
 
 
@@ -697,6 +695,28 @@ public:
 		ImGui::Text("Meter in pixels: %f", m_scale->getMeter());
 		ImGui::End();
 
+		//saving
+		if (ImGui::BeginMainMenuBar()){
+			if (ImGui::BeginMenu("File")){
+				if (ImGui::MenuItem("Save", "CTRL+S")) {
+					std::ofstream saveFile;
+					saveFile.open("saves\\save.txt");
+					for (auto anchor : m_anchors) {
+						saveFile << anchor.getScenePosition().x << " " << anchor.getScenePosition().y << "\n";
+					}
+					saveFile.close();
+
+
+				}
+				if (ImGui::MenuItem("Open", "Ctrl+O")) {
+
+				}
+				ImGui::EndMenu();
+			}
+			ImGui::EndMainMenuBar();
+		}
+		
+
 		//right click
 		static bool found = false;
 		if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && ImGui::IsMouseClicked(1)) {
@@ -777,7 +797,7 @@ public:
 					int arr[4];
 
 					arr[0] = 128;		//anchor id with starting bit 1, anchor id = 128 + x
-					arr[1] = 0;			//node id
+					arr[1] = m_nodeIndex;			//node id
 					arr[2] = (int)m_mouseScenePos.x;			//distance
 					arr[3] = (int)m_mouseScenePos.y;			//+distance
 
@@ -790,7 +810,7 @@ public:
 					}
 
 					std::string s(os.str());
-					m_client.send(s);
+					//m_client.send(s);
 					////////////////////////////////////////////////////////////////////////////////////
 				}
 			}

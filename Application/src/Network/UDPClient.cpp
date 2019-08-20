@@ -17,6 +17,10 @@ UDPClient::UDPClient() {
 
 }
 
+UDPClient::~UDPClient() {
+	this->stopClient();
+}
+
 void UDPClient::send(const std::string& message) {
 
 	int sendOk;

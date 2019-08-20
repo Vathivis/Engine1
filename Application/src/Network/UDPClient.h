@@ -16,6 +16,7 @@ private:
 public:
 
 	UDPClient();
+	~UDPClient();
 
 	void send(const std::string& message);
 

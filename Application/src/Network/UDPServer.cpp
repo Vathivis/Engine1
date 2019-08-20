@@ -13,6 +13,7 @@ UDPServer::UDPServer() {
 
 	//TODO: can be done only once, probably doesnt matter with server, but it does with client || or maybe not actually???
 	this->initServer();
+	E1_INFO("Server initialized");
 
 	m_in = socket(AF_INET, SOCK_DGRAM, 0);
 	m_serverHint.sin_addr.S_un.S_addr = ADDR_ANY;
@@ -32,6 +33,10 @@ UDPServer::UDPServer() {
 
 }
 
+UDPServer::~UDPServer() {
+	this->stopServer();
+}
+
 void UDPServer::setState(bool state) {
 	mu.lock();
 	m_msgPending = state;
@@ -45,7 +50,7 @@ void UDPServer::onUpdate() {
 		if (!m_msgPending) {
 			mu.lock();
 			ZeroMemory(m_buffer, 1024);
-			//m_buffer[0] = '+';
+
 			int bytesIn = recvfrom(m_in, m_buffer, 1024, 0, (sockaddr*)& m_client, &m_clientLength);
 			mu.unlock();
 			if (bytesIn == SOCKET_ERROR) {
