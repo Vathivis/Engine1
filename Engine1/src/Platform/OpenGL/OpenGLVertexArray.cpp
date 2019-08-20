@@ -64,7 +64,7 @@ namespace Engine1 {
 				ShaderDataTypeToOpenGLBaseType(element.type),
 				element.normalized ? GL_TRUE : GL_FALSE,
 				layout.getStride(),
-				(const void*)element.offset);
+				(const void*)(intptr_t)element.offset);
 			index++;
 		}
 
