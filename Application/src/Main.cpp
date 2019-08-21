@@ -696,6 +696,10 @@ public:
 		ImGui::End();
 
 		//saving
+		//TODO: remember last save file name
+		//TODO: warning about overwriting
+		//TODO: save as
+		//TODO: shortcuts
 		if (ImGui::BeginMainMenuBar()){
 			if (ImGui::BeginMenu("File")){
 				if (ImGui::MenuItem("Save", "CTRL+S")) {
@@ -710,6 +714,31 @@ public:
 
 
 					saveFile.close();
+
+
+				}
+				if (ImGui::MenuItem("Save as", "CTRL+S")) {
+
+					//Windows ONLY, needs to be abstracted perhaps or just check OS, then ifs
+					OPENFILENAME ofn;       // common dialog box structure
+					char szFile[260];       // buffer for file name
+					HANDLE hf;              // file handle
+
+					// Initialize OPENFILENAME
+					ZeroMemory(&ofn, sizeof(ofn));
+					ofn.lStructSize = sizeof(ofn);
+					ofn.lpstrFile = (LPWSTR)szFile;
+					ofn.lpstrFile[0] = '\0';
+					ofn.nMaxFile = sizeof(szFile);
+					LPCWSTR a = L".txt";
+					ofn.lpstrFilter = a;
+					ofn.nFilterIndex = 1;
+					ofn.lpstrFileTitle = nullptr;
+					ofn.nMaxFileTitle = 0;
+					ofn.lpstrInitialDir = nullptr;
+					ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+					GetSaveFileName(&ofn);
 
 
 				}
