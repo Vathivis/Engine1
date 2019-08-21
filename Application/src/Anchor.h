@@ -27,6 +27,7 @@ public:
 	inline glm::mat4 getScale() const { return m_scale; }
 	inline float getRadius() const { return m_radius; }
 	inline bool getLock() const { return m_locked; }
+	inline int getID() const { return m_id; }
 
 	//setters
 	void setPosition(const glm::vec3& position);

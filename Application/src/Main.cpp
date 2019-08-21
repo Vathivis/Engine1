@@ -701,14 +701,85 @@ public:
 				if (ImGui::MenuItem("Save", "CTRL+S")) {
 					std::ofstream saveFile;
 					saveFile.open("saves\\save.txt");
+
+					saveFile << m_scale->getCurrentWidth() << '\n';
+
 					for (auto anchor : m_anchors) {
-						saveFile << anchor.getScenePosition().x << " " << anchor.getScenePosition().y << "\n";
+						saveFile << anchor.getScenePosition().x << " " << anchor.getScenePosition().y << " " << anchor.getID() << "\n";
 					}
+
+
 					saveFile.close();
 
 
 				}
 				if (ImGui::MenuItem("Open", "Ctrl+O")) {
+
+					//Windows ONLY, needs to be abstracted perhaps or just check OS, then ifs
+					OPENFILENAME ofn;       // common dialog box structure
+					char szFile[260];       // buffer for file name
+					HANDLE hf;              // file handle
+
+					// Initialize OPENFILENAME
+					ZeroMemory(&ofn, sizeof(ofn));
+					ofn.lStructSize = sizeof(ofn);
+					ofn.lpstrFile = (LPWSTR)szFile;
+					ofn.lpstrFile[0] = '\0';
+					ofn.nMaxFile = sizeof(szFile);
+					LPCWSTR a = L".txt";
+					ofn.lpstrFilter = a;
+					ofn.nFilterIndex = 1;
+					ofn.lpstrFileTitle = nullptr;
+					ofn.nMaxFileTitle = 0;
+					ofn.lpstrInitialDir = nullptr;
+					ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+					// Display the Open dialog box. 
+					if (GetOpenFileName(&ofn) == TRUE)
+						hf = CreateFile(ofn.lpstrFile,
+							GENERIC_READ,
+							0,
+							(LPSECURITY_ATTRIBUTES)nullptr,
+							OPEN_EXISTING,
+							FILE_ATTRIBUTE_NORMAL,
+							(HANDLE)nullptr);
+
+
+					std::ifstream openFile;
+					std::stringstream iss;
+					std::string str, str2;
+
+					for (int i = 0; i < 259; ++i) {
+						if(i == 0 || (i + 1) % 2)
+							str2 += szFile[i];
+					}
+
+
+					int xp, yp, id;
+					int scalex;
+
+					CloseHandle(hf);
+					E1_INFO("Opening File {0}", str2.c_str());
+					openFile.open(str2.c_str(), std::ios::in);
+
+					if (openFile.is_open()) {
+
+						m_anchors.clear();
+						iss << openFile.rdbuf();
+						openFile.close();
+
+						iss >> scalex;
+						m_scale->setWidth(scalex);
+
+						while (!iss.eof()) {
+
+							iss >> xp >> yp >> id;
+							addAnchor({ xp, yp }, id);
+
+						}
+					}
+					else
+						E1_ERROR("Failed to open file");
 
 				}
 				ImGui::EndMenu();
@@ -839,8 +910,6 @@ public:
 					distance = glm::distance(anchPos, pos);		//can change to fastDistance, but less accurate
 					if (distance < m_anchors[i].getRadius()) {
 						ImGui::OpenPopup("anchorClick");
-						//m_anchorScreenPos.x = 
-						//anchorYpos = m_anchors[i].getPosition().y;
 						m_anchorIndex = i;
 						anchorWalls = getAnchorAllWallDistance(m_anchors[m_anchorIndex]);
 						break;
@@ -959,8 +1028,12 @@ public:
 		return false;
 	}
 
-	void addAnchor(const glm::vec2& position) {
+	void addAnchor(const glm::vec2& position, int id = -1) {
 		Anchor anchor({ position.x, position.y, 0.0f });
+		if (id == -1)
+			anchor.setID(rand());
+		else
+			anchor.setID(id);
 		m_anchors.push_back(anchor);
 	}
 
