@@ -555,7 +555,7 @@ public:
 		m_mouseScenePos = { x + camPos.x, y + camPos.y };
 
 		//screen position from scene position//////////////////////////////////////////////////////////////
-		//TODO: perhaps rework and simplify, kind of dodgy so far
+		//TODO: replace hard values
 		glm::vec2 tmpPos = m_mouseScenePos;
 
 		tmpPos.x -= camPos.x;
@@ -1004,7 +1004,6 @@ public:
 
 			float meter = m_scale->getMeter() / m_camera.getCurrentZoom();
 
-			//TODO: prepocitat anchorwalls pri zoomu
 			ImGui::Text("Meters from northern wall: %.3f", anchorWalls.x / meter);
 			ImGui::Text("Meters from southern wall: %.3f", anchorWalls.y / meter);
 			ImGui::Text("Meters from western wall: %.3f", anchorWalls.z / meter);
@@ -1110,12 +1109,12 @@ public:
 		//FIX: currently can't spot a wall, when the wall is not on screen
 		//checking for node color is perhaps not necessary, because anchors will be added first,
 		//then they do not need to check distances anymore
-		//TODO: optimize
+
 		if (direction == 0) {
 			glm::vec2 pos = getScreenPosFromScenePos(anchor.getScenePosition());
 			for (int i = 0; i < 1000; ++i) {
 				glReadPixels(pos.x, 720 - pos.y + i, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
-				if (!(pick_col[0] > 225 && pick_col[1] > 225 && pick_col[2] > 225) && pick_col[2] < 230 && pick_col[0] < 230) {
+				if (!(pick_col[0] > 225 && pick_col[1] > 225 && pick_col[2] > 225)) {
 					return (float)i;
 				}
 			}
@@ -1124,7 +1123,7 @@ public:
 			glm::vec2 pos = getScreenPosFromScenePos(anchor.getScenePosition());
 			for (int i = 0; i < 1000; ++i) {
 				glReadPixels(pos.x, 720 - pos.y - i, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
-				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 230 && pick_col[0] < 230) {
+				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220)) {
 					return (float)i;
 				}
 			}
@@ -1133,7 +1132,7 @@ public:
 			glm::vec2 pos = getScreenPosFromScenePos(anchor.getScenePosition());
 			for (int i = 0; i < 1000; ++i) {
 				glReadPixels(pos.x - i, 720 - pos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
-				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 230 && pick_col[0] < 230) {
+				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220)) {
 					return (float)i;
 				}
 			}
@@ -1142,7 +1141,7 @@ public:
 			glm::vec2 pos = getScreenPosFromScenePos(anchor.getScenePosition());
 			for (int i = 0; i < 1000; ++i) {
 				glReadPixels(pos.x + i, 720 - pos.y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pick_col);
-				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220) && pick_col[2] < 230 && pick_col[0] < 230) {
+				if (!(pick_col[0] > 220 && pick_col[1] > 220 && pick_col[2] > 220)) {
 					return (float)i;
 				}
 			}
