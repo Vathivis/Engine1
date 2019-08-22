@@ -634,11 +634,6 @@ public:
 			m_server.setState(false);
 		}
 
-
-		//std::string s = "yeet" + std::to_string(i);
-		//m_client.send(s);
-		//++i;
-
 		//nodes
 		for (auto& node : m_nodes) {
 			//glm::vec3 pos(anchor.getPosition().x, anchor.getPosition().y, 0.0f);
@@ -698,7 +693,6 @@ public:
 		//saving
 		//TODO: remember last save file name
 		//TODO: warning about overwriting
-		//TODO: save as
 		//TODO: shortcuts
 		if (ImGui::BeginMainMenuBar()){
 			if (ImGui::BeginMenu("File")){
@@ -720,9 +714,9 @@ public:
 				if (ImGui::MenuItem("Save as", "CTRL+S")) {
 
 					//Windows ONLY, needs to be abstracted perhaps or just check OS, then ifs
+
 					OPENFILENAME ofn;       // common dialog box structure
 					char szFile[260];       // buffer for file name
-					HANDLE hf;              // file handle
 
 					// Initialize OPENFILENAME
 					ZeroMemory(&ofn, sizeof(ofn));
@@ -740,6 +734,32 @@ public:
 
 					GetSaveFileName(&ofn);
 
+					std::ofstream saveFile;
+					std::stringstream iss;
+					std::string str;
+
+					for (int i = 0; ofn.lpstrFile[i] != '\0'; ++i) {
+							str += ofn.lpstrFile[i];
+					}
+
+
+					if (!(str[str.size() - 1] == 't' && str[str.size() - 2] == 'x' && str[str.size() - 3] == 't' && str[str.size() - 4] == '.')) {
+						str += ".txt";
+					}
+
+
+					E1_INFO("Saving File {0}", str.c_str());
+					saveFile.open(str.c_str(), std::ios::out);
+
+					if (saveFile.is_open()) {
+						saveFile << m_scale->getCurrentWidth() << '\n';
+
+						for (auto anchor : m_anchors) {
+							saveFile << anchor.getScenePosition().x << " " << anchor.getScenePosition().y << " " << anchor.getID() << "\n";
+						}
+					}
+					else
+						E1_ERROR("Failed to save file");
 
 				}
 				if (ImGui::MenuItem("Open", "Ctrl+O")) {
@@ -776,11 +796,11 @@ public:
 
 					std::ifstream openFile;
 					std::stringstream iss;
-					std::string str, str2;
+					std::string str;
 
 					for (int i = 0; i < 259; ++i) {
 						if(i == 0 || (i + 1) % 2)
-							str2 += szFile[i];
+							str += szFile[i];
 					}
 
 
@@ -788,8 +808,8 @@ public:
 					int scalex;
 
 					CloseHandle(hf);
-					E1_INFO("Opening File {0}", str2.c_str());
-					openFile.open(str2.c_str(), std::ios::in);
+					E1_INFO("Opening File {0}", str.c_str());
+					openFile.open(str.c_str(), std::ios::in);
 
 					if (openFile.is_open()) {
 
