@@ -1154,6 +1154,16 @@ public:
 
 	glm::vec4 getAnchorAllWallDistance(const Anchor& anchor) {
 		glm::vec4 res;
+
+		//HACK: render only walls before checking wall distance, causes flicker
+		Engine1::Renderer::beginScene(m_camera);
+		glm::vec3 pos2(0.0f, 0.0f, 0.0f);
+		glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), pos2);
+		m_groundPlanWallsTex->bind();
+		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);	//weird on intel gpu
+		Engine1::Renderer::submit(m_textureSquareShader, m_backgroundVA, transform2);
+		Engine1::Renderer::endScene();
+
 		res.x = getAnchorWallDistance(anchor, 0);
 		res.y = getAnchorWallDistance(anchor, 1);
 		res.z = getAnchorWallDistance(anchor, 2);
