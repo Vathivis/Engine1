@@ -12,7 +12,7 @@ Currently Engine1 supports:
 
 - Computer OS:
   - ![Windows supported](https://img.shields.io/badge/Windows-win--64-green.svg)
-  - ![Linux not supported](https://img.shields.io/badge/Linux-Not%20Supported-red.svg)
+  - ![Linux not supported](https://img.shields.io/badge/Linux-Not%20Supported-red)
   - ![MacOS not supported](https://img.shields.io/badge/MacOS-Not%20Supported-red.svg)
 - Mobile OS:
   - ![Android not supported](https://img.shields.io/badge/Android-Not%20Supported-red.svg)
