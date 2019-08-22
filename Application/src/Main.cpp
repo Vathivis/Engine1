@@ -114,7 +114,10 @@ private:
 
 	//background/groundplan
 	Engine1::ref<Engine1::VertexArray> m_backgroundVA;
+	Engine1::ref<Engine1::Texture2D> m_groundPlanWallsTex;
 	Engine1::ref<Engine1::Texture2D> m_groundPlanTex;
+
+	bool m_showFurniture = false;
 	
 	
 	//anchors
@@ -163,7 +166,8 @@ private:
 public:
 	Layer1() : Layer("Layer1"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_cameraPosition(0.0f) {
 	
-		m_groundPlanTex = Engine1::Texture2D::create("assets/textures/pudorys-zdi.png");
+		m_groundPlanWallsTex = Engine1::Texture2D::create("assets/textures/pudorys-zdi.png");
+		m_groundPlanTex = Engine1::Texture2D::create("assets/textures/pudorys.png");
 		m_anchorTex = Engine1::Texture2D::create("assets/textures/anchor.png");
 		m_nodeTex = Engine1::Texture2D::create("assets/textures/node.png");
 		m_scaleTex = Engine1::Texture2D::create("assets/textures/meritko.png");
@@ -238,8 +242,8 @@ public:
 		//background texture/////////////////////////////////////////////////////////////////////////////////////////////////
 		m_backgroundVA.reset(Engine1::VertexArray::create());
 
-		float groundW = m_groundPlanTex->getWidth();
-		float groundH = m_groundPlanTex->getHeight();
+		float groundW = m_groundPlanWallsTex->getWidth();
+		float groundH = m_groundPlanWallsTex->getHeight();
 
 		groundW = groundW / 1280 * 1.6f;
 		groundH = groundH / 720 * 0.9f;
@@ -599,14 +603,18 @@ public:
 		//background
 		glm::vec3 pos2(0.0f, 0.0f, 0.0f);
 		glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), pos2);
-		m_groundPlanTex->bind();
-		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);		//weird on intel gpu
+		m_groundPlanWallsTex->bind();
+		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);	//weird on intel gpu
 		Engine1::Renderer::submit(m_textureSquareShader, m_backgroundVA, transform2);
 
+		if (m_showFurniture) {
+			m_groundPlanTex->bind();
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);
+			Engine1::Renderer::submit(m_textureSquareShader, m_backgroundVA, transform2);
+		}
+
 		//anchors
-		//glm::mat4 anchorScale = glm::scale(glm::mat4(1.0f), glm::vec3(0.33f));		//needs to change with zoom (or not??)
 		for (auto& anchor : m_anchors) {
-			//glm::vec3 pos(anchor.getPosition().x, anchor.getPosition().y, 0.0f);
 			anchor.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
 			glm::mat4 anchorTransform = glm::translate(glm::mat4(1.0f), anchor.getPosition()) * anchor.getScale();
 			m_anchorTex->bind();
@@ -636,7 +644,6 @@ public:
 
 		//nodes
 		for (auto& node : m_nodes) {
-			//glm::vec3 pos(anchor.getPosition().x, anchor.getPosition().y, 0.0f);
 			node.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
 			glm::mat4 nodeTransform = glm::translate(glm::mat4(1.0f), node.getPosition()) * node.getScale();
 			m_nodeTex->bind();
@@ -686,6 +693,7 @@ public:
 		glReadPixels(xx, 720 - yy, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, mouseCol);		//TODO: change 720
 		ImGui::Text("Color on mouse pos: R:%u G:%u B:%u A:%u", mouseCol[0], mouseCol[1], mouseCol[2], mouseCol[3]);
 		if (ImGui::Checkbox("Show Scale", &m_showScale)) {}
+		if (ImGui::Checkbox("Show Furniture", &m_showFurniture)) {}
 		ImGui::Text("Scale width: %f  height: %f", m_scale->getWidth(), m_scale->getHeight());
 		ImGui::Text("Meter in pixels: %f", m_scale->getMeter());
 		ImGui::End();
