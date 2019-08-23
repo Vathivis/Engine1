@@ -11,8 +11,9 @@
 #include "glm/glm.hpp"
 
 #include "Anchor.h"
-#include "Scale.h"
 #include "Node.h"
+#include "Forklift.h"
+#include "Scale.h"
 #include "Network/UDPServer.h"
 #include "Network/UDPClient.h"
 
@@ -38,9 +39,9 @@ glm::vec4 calculateFromZ(const glm::vec3& anch1pos, const glm::vec3& anch2pos, c
 	return result;
 }
 
-//glm::vec3 localizeNode(const Anchor& anchor1, const Anchor& anchor2, const Anchor& anchor3, const Node& node) {
+glm::vec3 localizeNode(const Anchor& anchor1, const Anchor& anchor2, const Anchor& anchor3, const Node& node) {
 
-glm::vec3 localizeNode() {
+//glm::vec3 localizeNode() {
 	glm::vec3 anch1Pos;
 	glm::vec3 anch2Pos;
 	glm::vec3 anch3Pos;
@@ -134,6 +135,13 @@ private:
 	std::vector<Node> m_nodes;
 
 	int m_nodeIndex = 0;
+
+	//forklifts
+	Engine1::ref<Engine1::VertexArray> m_forkliftVA;
+	Engine1::ref<Engine1::Texture2D> m_forkliftTex;
+	std::vector<Forklift> m_forklifts;
+
+	int m_forkliftIndex = 0;
 
 	//scale
 	Engine1::ref<Engine1::VertexArray> m_scaleVA;
@@ -571,9 +579,9 @@ public:
 
 		m_mouseScreenPos = { tmpPos.x, tmpPos.y };
 
-		glm::vec3 tmploc;
+		//glm::vec3 tmploc;
 
-		tmploc = localizeNode();
+		//tmploc = localizeNode();
 
 		Engine1::Renderer::beginScene(m_camera);
 
@@ -625,6 +633,7 @@ public:
 		//network info about nodes
 		if (m_server.getState()) {
 			int anchorID, nodeID, nodex, nodey;
+			int nodeIndex;
 			std::string msg = m_server.getBuffer();
 			std::cout << "message: " << msg << std::endl;
 
@@ -634,10 +643,20 @@ public:
 			iss >> anchorID >> nodeID >> nodex >> nodey;
 			anchorID -= 128;
 
+			for (int i = 0; i < m_nodes.size(); ++i) {
+				if (m_nodes[i].getID() == nodeID) {
+					nodeIndex = i;
+					break;
+				}
+			}
+
+			glm::vec3 nodePos;
+			if (m_anchors.size() >= 3) {
+				nodePos = localizeNode(m_anchors[0], m_anchors[1], m_anchors[2], m_nodes[nodeIndex]);
+			}
 
 
-
-			m_nodes[nodeID].setPosition({ nodex, nodey, 0.0 });
+			m_nodes[nodeID].setPosition(nodePos);
 
 			m_server.setState(false);
 		}
@@ -972,6 +991,19 @@ public:
 						break;
 					}
 				}
+
+				if (!ImGui::BeginPopup("anchorClick")) {
+					for (int i = 0; i < m_nodes.size(); ++i) {
+						glm::vec2 nodePos = m_anchors[i].getScenePosition();
+						distance = glm::distance(nodePos, pos);		//can change to fastDistance, but less accurate
+						if (distance < m_anchors[i].getRadius()) {
+							ImGui::OpenPopup("nodeClick");
+							m_anchorIndex = i;
+							anchorWalls = getAnchorAllWallDistance(m_anchors[m_anchorIndex]);
+							break;
+						}
+					}
+				}
 			}
 		}
 
@@ -1085,11 +1117,9 @@ public:
 	}
 
 	void addAnchor(const glm::vec2& position, int id = -1) {
-		Anchor anchor({ position.x, position.y, 0.0f });
+		Anchor anchor({ position.x, position.y, 0.0f }, id);
 		if (id == -1)
 			anchor.setID(rand());
-		else
-			anchor.setID(id);
 		m_anchors.push_back(anchor);
 	}
 

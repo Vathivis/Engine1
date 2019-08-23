@@ -19,7 +19,7 @@ private:
 public:
 
 	Anchor() = default;
-	Anchor(const glm::vec3& position);
+	Anchor(const glm::vec3& position, int id = -1);
 
 	//getters
 	inline glm::vec3 getPosition() const { return m_position; }
