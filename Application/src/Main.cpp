@@ -179,6 +179,7 @@ public:
 		m_anchorTex = Engine1::Texture2D::create("assets/textures/anchor.png");
 		m_nodeTex = Engine1::Texture2D::create("assets/textures/node.png");
 		m_scaleTex = Engine1::Texture2D::create("assets/textures/meritko.png");
+		m_forkliftTex = Engine1::Texture2D::create("assets/textures/forklift.png");
 		
 		std::thread t1(&UDPServer::onUpdate, &m_server);
 		t1.detach();
@@ -327,6 +328,30 @@ public:
 		nodeIB.reset(Engine1::IndexBuffer::create(nodeIndices, sizeof(nodeIndices) / sizeof(uint32_t)));
 		m_nodeVA->setIndexBuffer(nodeIB);
 
+
+		//forklift//////////////////////////////////////////////////////////////////////////////////////////////////////////
+		m_forkliftVA.reset(Engine1::VertexArray::create());
+		float forkliftVertices[] = {
+			-0.1f, -0.1f, 0.0f, 0.0f, 0.0f,	//left bot
+			 0.1f, -0.1f, 0.0f, 1.0f, 0.0f,	//right bot
+			 0.1f,  0.1f, 0.0f, 1.0f, 1.0f,	//right top
+			-0.1f,  0.1f, 0.0f, 0.0f, 1.0f	//left top
+		};
+
+		Engine1::BufferLayout forkliftVBLayout = {
+			{ Engine1::ShaderDataType::Float3, "a_position" },
+			{ Engine1::ShaderDataType::Float2, "a_texPos" }
+		};
+
+		Engine1::ref<Engine1::VertexBuffer> forkliftVB;
+		forkliftVB.reset(Engine1::VertexBuffer::create(forkliftVertices, sizeof(forkliftVertices)));
+		forkliftVB->setLayout(forkliftVBLayout);
+		m_forkliftVA->addVertexBuffer(forkliftVB);
+
+		uint32_t forkliftIndices[6] = { 0, 1, 2, 2, 3, 0 };
+		Engine1::ref<Engine1::IndexBuffer> forkliftIB;
+		forkliftIB.reset(Engine1::IndexBuffer::create(forkliftIndices, sizeof(forkliftIndices) / sizeof(uint32_t)));
+		m_forkliftVA->setIndexBuffer(forkliftIB);
 
 
 		//scale/////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -668,6 +693,15 @@ public:
 			m_nodeTex->bind();
 			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);
 			Engine1::Renderer::submit(m_textureSquareShader, m_nodeVA, nodeTransform);
+		}
+
+		//forklifts
+		for (auto& forklift : m_forklifts) {
+			forklift.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
+			glm::mat4 forkliftTransform = glm::translate(glm::mat4(1.0f), forklift.getPosition()) *	forklift.getScale();
+			m_forkliftTex->bind();
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);
+			Engine1::Renderer::submit(m_textureSquareShader, m_forkliftVA, forkliftTransform);
 		}
 
 		//scale	
@@ -1100,6 +1134,10 @@ public:
 			m_camera.setZoom(1.0f);
 		}
 
+		if (event.getKeyCode() == E1_KEY_F) {
+			addForklift(m_mouseScenePos);
+		}
+
 		return false;
 	}
 
@@ -1126,6 +1164,11 @@ public:
 	void addNode(const glm::vec2& position) {
 		Node node({ position.x, position.y, 0.0f });
 		m_nodes.push_back(node);
+	}
+
+	void addForklift(const glm::vec2& position) {
+		Forklift forklift({ position.x, position.y, 0.0f });
+		m_forklifts.push_back(forklift);
 	}
 
 	//directions: 0 = north, 1 = south, 2 = west, 3 = east
