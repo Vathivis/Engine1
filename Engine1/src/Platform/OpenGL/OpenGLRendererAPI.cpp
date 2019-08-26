@@ -5,6 +5,12 @@
 
 namespace Engine1 {
 
+	void OpenGLRendererAPI::init() {
+		//texture transparency
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+
 	void OpenGLRendererAPI::clear() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
@@ -14,11 +20,6 @@ namespace Engine1 {
 	}
 
 	void OpenGLRendererAPI::drawIndexed(const ref<VertexArray>& vertexArray) {
-		glEnable(GL_TEXTURE_2D);
-		//zapnuti transparence textur
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 		glDrawElements(GL_TRIANGLES, vertexArray->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, nullptr);
 	}
 

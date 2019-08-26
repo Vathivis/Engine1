@@ -18,6 +18,8 @@ namespace Engine1 {
 
 	public:
 
+		static void init();
+
 		static void beginScene(OrthographicCamera& camera);
 		static void endScene();
 

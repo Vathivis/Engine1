@@ -105,13 +105,14 @@ private:
 	//Engine1::ref<Engine1::Shader> m_shader;
 	//Engine1::ref<Engine1::VertexArray> m_vertexArray;
 
-	//Engine1::ref<Engine1::Shader> m_flatColorShader, m_textureShader;
+	/*Engine1::ref<Engine1::Shader> m_flatColorShader, m_textureShader;
 	Engine1::ref<Engine1::VertexArray> m_squareVA;
-	//glm::vec3 m_squareColor = { 0.2f, 0.3f, 0.8f };
+	glm::vec3 m_squareColor = { 0.2f, 0.3f, 0.8f };*/
+
+	//Engine1::ref<Engine1::Texture2D> m_texture;
 
 	Engine1::ref<Engine1::Shader> m_textureSquareShader;
 
-	//Engine1::ref<Engine1::Texture2D> m_texture;
 
 	//background/groundplan
 	Engine1::ref<Engine1::VertexArray> m_backgroundVA;
@@ -223,7 +224,7 @@ public:
 		//	nakonec glDrawElements, kde pocet indexu je VertexArray->getIndexBuffer()->getCount()				   //
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		m_squareVA.reset(Engine1::VertexArray::create());
+		/*m_squareVA.reset(Engine1::VertexArray::create());
 
 		float squareVertices[4 * 5] = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -245,7 +246,7 @@ public:
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 		Engine1::ref<Engine1::IndexBuffer> squareIB;
 		squareIB.reset(Engine1::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
-		m_squareVA->setIndexBuffer(squareIB);
+		m_squareVA->setIndexBuffer(squareIB);*/
 
 
 		//background texture/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -456,9 +457,9 @@ public:
 			}
 		)";
 
-		m_flatColorShader.reset(Engine1::Shader::create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));*/
+		m_flatColorShader.reset(Engine1::Shader::create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
 
-		/*std::string textureShaderVertexSrc = R"(
+		std::string textureShaderVertexSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) in vec3 a_position;
@@ -1005,7 +1006,7 @@ public:
 		}
 
 
-		//double click on anchor or scale
+		//double click on anchor, node or scale
 		if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && ImGui::IsMouseDoubleClicked(0)) {
 			pos = m_mouseScenePos;
 			float distance = 0;
@@ -1026,7 +1027,7 @@ public:
 					}
 				}
 
-				if (!ImGui::BeginPopup("anchorClick")) {
+				/*if (!ImGui::BeginPopup("anchorClick")) {
 					for (int i = 0; i < m_nodes.size(); ++i) {
 						glm::vec2 nodePos = m_anchors[i].getScenePosition();
 						distance = glm::distance(nodePos, pos);		//can change to fastDistance, but less accurate
@@ -1037,7 +1038,7 @@ public:
 							break;
 						}
 					}
-				}
+				}*/
 			}
 		}
 

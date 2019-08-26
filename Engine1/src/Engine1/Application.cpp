@@ -24,10 +24,10 @@ namespace Engine1 {
 		m_window->setEventCallback(BIND_EVENT_FN(onEvent));
 		m_window->setVSync(true);
 
+		Renderer::init();
+
 		m_ImGuiLayer = new ImGuiLayer();
 		pushOverlay(m_ImGuiLayer);
-
-		
 
 	}
 

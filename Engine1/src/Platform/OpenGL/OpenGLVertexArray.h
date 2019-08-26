@@ -8,6 +8,7 @@ namespace Engine1 {
 	private:
 		std::vector<ref<VertexBuffer>> m_vertexBuffers;
 		ref<IndexBuffer> m_indexBuffer;
+		uint32_t m_vertexBufferIndex = 0;
 		uint32_t m_rendererID;
 
 	public:

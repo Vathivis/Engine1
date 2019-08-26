@@ -10,6 +10,10 @@ namespace Engine1 {
 
 	public:
 
+		inline static void init() {
+			s_rendererAPI->init();
+		}
+
 		inline static void clear() {
 			s_rendererAPI->clear();
 		}
