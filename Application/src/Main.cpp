@@ -571,6 +571,7 @@ public:
 
 		//recalculation of mouse scene position based on camera position and zoom////////////////////////////////////
 		//TODO: replace 1280, 720 with widnows dimensions
+		//TODO: put this to a function
 		auto [x, y] = Engine1::Input::getMousePosition();
 
 		x = x * 2 * m_camera.getRight() / 1280 - m_camera.getRight();
@@ -729,6 +730,7 @@ public:
 		static float f1 = m_scale->getWidth();
 		static float f2 = m_scale->getScenePosition().x;
 		static glm::vec2 pos;
+		static glm::vec2 origin;
 		static float anchorXpos = 0.0f;
 		static float anchorYpos = 0.0f;
 		static float north, south, west, east;
@@ -924,8 +926,14 @@ public:
 				ImGui::OpenPopup("backgroundRightClick");
 			}
 
-		}	
+		}
 		
+		if (ImGui::IsMouseClicked(0)) {
+			origin = m_mouseScenePos;
+			//normalize
+			origin.x = origin.x * 2 * m_camera.getRight() / 1280 - m_camera.getRight();
+			origin.y = origin.y * 2 * m_camera.getTop() / 720 - m_camera.getTop();
+		}
 
 		//mouse hold
 		static bool found2 = false;
@@ -933,6 +941,7 @@ public:
 		if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && ImGui::IsMouseDragging(0)) {
 			float distance = 0;
 			pos = m_mouseScenePos;
+
 
 			//the position of the scale
 			//TODO: scale not locked to mouse when dragging
@@ -996,6 +1005,17 @@ public:
 					std::string s(os.str());
 					//m_client.send(s);
 					////////////////////////////////////////////////////////////////////////////////////
+				}
+
+				//screen moving
+				if (!found2 && !found3) {
+					glm::vec2 mousePos = m_mouseScenePos;
+
+					mousePos.x = mousePos.x * 2 * m_camera.getRight() / 1280 - m_camera.getRight();
+					mousePos.y = mousePos.y * 2 * m_camera.getTop() / 720 - m_camera.getTop();
+
+					m_cameraPosition.x -= (mousePos.x - origin.x) * 0.3;
+					m_cameraPosition.y += (mousePos.y - origin.y) * 0.3;
 				}
 			}
 
@@ -1177,8 +1197,10 @@ public:
 		m_nodes.push_back(node);
 	}
 
-	void addForklift(const glm::vec2& position) {
-		Forklift forklift({ position.x, position.y, 0.0f });
+	void addForklift(const glm::vec2& position, int id = -1) {
+		Forklift forklift({ position.x, position.y, 0.0f }, id);
+		if (id == -1)
+			forklift.setID(rand());
 		m_forklifts.push_back(forklift);
 	}
 
