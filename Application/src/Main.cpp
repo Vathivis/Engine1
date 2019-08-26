@@ -938,6 +938,7 @@ public:
 		//mouse hold
 		static bool found2 = false;
 		static bool found3 = false;
+		static bool dragging = false;
 		if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && ImGui::IsMouseDragging(0)) {
 			float distance = 0;
 			pos = m_mouseScenePos;
@@ -952,7 +953,7 @@ public:
 			}
 			else {
 				//anchor moving
-				if (!found2 && !found3) {
+				if (!dragging && !found2 && !found3) {
 					for (unsigned int i = 0; i < m_anchors.size(); ++i) {
 						glm::vec2 anchPos = m_anchors[i].getScenePosition();
 						distance = glm::distance(anchPos, pos);		//can change to fastDistance, but less accurate
@@ -965,7 +966,7 @@ public:
 				}
 
 				//node moving - ONLY FOR TESTING
-				if (!found2 && !found3) {
+				if (!dragging && !found2 && !found3) {
 					for (unsigned int i = 0; i < m_nodes.size(); ++i) {
 						glm::vec2 nodePos = m_nodes[i].getScenePosition();
 						distance = glm::distance(nodePos, pos);	
@@ -1009,6 +1010,7 @@ public:
 
 				//screen moving
 				if (!found2 && !found3) {
+					dragging = true;
 					glm::vec2 mousePos = m_mouseScenePos;
 
 					mousePos.x = mousePos.x * 2 * m_camera.getRight() / 1280 - m_camera.getRight();
@@ -1023,8 +1025,11 @@ public:
 
 		}
 		else {
-			found2 = false;
-			found3 = false;
+			if (ImGui::IsMouseReleased(0)) {
+				found2 = false;
+				found3 = false;
+				dragging = false;
+			}
 		}
 
 
