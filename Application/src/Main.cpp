@@ -174,6 +174,8 @@ private:
 
 public:
 	Layer1() : Layer("Layer1"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_cameraPosition(0.0f) {
+
+		srand(time(nullptr));
 	
 		m_groundPlanWallsTex = Engine1::Texture2D::create("assets/textures/pudorys-zdi.png");
 		m_groundPlanTex = Engine1::Texture2D::create("assets/textures/pudorys.png");
@@ -1010,6 +1012,7 @@ public:
 		if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && ImGui::IsMouseDoubleClicked(0)) {
 			pos = m_mouseScenePos;
 			float distance = 0;
+			bool anchorClickOpen = false;
 			
 			if (m_showScale && pos.x >= m_scale->getScenePosition().x - m_scale->getWidth() / 2 && pos.x <= m_scale->getScenePosition().x + m_scale->getWidth() / 2
 				&& pos.y >= m_scale->getScenePosition().y - m_scale->getHeight() / 2 && pos.y <= m_scale->getScenePosition().y + m_scale->getHeight() / 2) {
@@ -1021,24 +1024,24 @@ public:
 					distance = glm::distance(anchPos, pos);		//can change to fastDistance, but less accurate
 					if (distance < m_anchors[i].getRadius()) {
 						ImGui::OpenPopup("anchorClick");
+						anchorClickOpen = true;
 						m_anchorIndex = i;
 						anchorWalls = getAnchorAllWallDistance(m_anchors[m_anchorIndex]);
 						break;
 					}
 				}
 
-				/*if (!ImGui::BeginPopup("anchorClick")) {
+				if (!anchorClickOpen) {
 					for (int i = 0; i < m_nodes.size(); ++i) {
-						glm::vec2 nodePos = m_anchors[i].getScenePosition();
+						glm::vec2 nodePos = m_nodes[i].getScenePosition();
 						distance = glm::distance(nodePos, pos);		//can change to fastDistance, but less accurate
-						if (distance < m_anchors[i].getRadius()) {
+						if (distance < m_nodes[i].getRadius()) {
 							ImGui::OpenPopup("nodeClick");
-							m_anchorIndex = i;
-							anchorWalls = getAnchorAllWallDistance(m_anchors[m_anchorIndex]);
+							m_nodeIndex = i;
 							break;
 						}
 					}
-				}*/
+				}
 			}
 		}
 
@@ -1067,7 +1070,7 @@ public:
 			if (ImGui::Checkbox("Invert Lines", &m_invertLines)) {}
 			ImGui::Text("Position: %f %f", m_anchors[m_anchorIndex].getPosition().x, m_anchors[m_anchorIndex].getPosition().y);
 			ImGui::Text("Scene position: %f %f", m_anchors[m_anchorIndex].getScenePosition().x, m_anchors[m_anchorIndex].getScenePosition().y);
-			ImGui::Text("Anchor ID: %d", m_anchorIndex);
+			ImGui::Text("Anchor ID: %d", m_anchors[m_anchorIndex].getID());
 
 			float meter = m_scale->getMeter() / m_camera.getCurrentZoom();
 
@@ -1076,8 +1079,13 @@ public:
 			ImGui::Text("Meters from western wall: %.3f", anchorWalls.z / meter);
 			ImGui::Text("Meters from eastern wall: %.3f", anchorWalls.w / meter);
 
+			ImGui::EndPopup();
+		}
 
-			
+		if (ImGui::BeginPopup("nodeClick")) {
+			ImGui::Text("Position: %f %f", m_nodes[m_nodeIndex].getPosition().x, m_nodes[m_nodeIndex].getPosition().y);
+			ImGui::Text("Scene position: %f %f", m_nodes[m_nodeIndex].getScenePosition().x, m_nodes[m_nodeIndex].getScenePosition().y);
+			ImGui::Text("Node ID: %d", m_nodes[m_nodeIndex].getID());
 
 			ImGui::EndPopup();
 		}
@@ -1162,8 +1170,10 @@ public:
 		m_anchors.push_back(anchor);
 	}
 
-	void addNode(const glm::vec2& position) {
-		Node node({ position.x, position.y, 0.0f });
+	void addNode(const glm::vec2& position, int id = -1) {
+		Node node({ position.x, position.y, 0.0f }, id);
+		if (id == -1)
+			node.setID(rand());
 		m_nodes.push_back(node);
 	}
 
