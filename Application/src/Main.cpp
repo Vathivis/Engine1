@@ -47,16 +47,16 @@ glm::vec3 localizeNode(const Anchor& anchor1, const Anchor& anchor2, const Ancho
 	glm::vec3 anch3Pos;
 	glm::vec3 nodePos;
 	
-	anch1Pos = { -19, 66, 0 };
-	anch2Pos = { 420, 66, 0 };
-	anch3Pos = { -19, 340, 0 };
-	nodePos = { 178, 213, 0 };
+	anch1Pos = anchor1.getScenePosition();	//{ -19, 66, 0 };
+	anch2Pos = anchor2.getScenePosition();	//{ 420, 66, 0 };
+	anch3Pos = anchor3.getScenePosition();	//{ -19, 340, 0 };
+	nodePos = node.getScenePosition();		//{ 178, 213, 0 };
 
 
 	// vzdalenosti objektu od majaku vcetne sumu
-	float v1 = sqrt(pow((nodePos.x - anch1Pos.x), 2) + pow((nodePos.y - anch1Pos.y), 2) + pow((nodePos.z - anch1Pos.z), 2)) + 0.25 * rand() / RAND_MAX - 0.125;
-	float v2 = sqrt(pow((nodePos.x - anch2Pos.x), 2) + pow((nodePos.y - anch2Pos.y), 2) + pow((nodePos.z - anch2Pos.z), 2)) - 0.25 * rand() / RAND_MAX - 0.125;
-	float v3 = sqrt(pow((nodePos.x - anch3Pos.x), 2) + pow((nodePos.y - anch3Pos.y), 2) + pow((nodePos.z - anch3Pos.z), 2)) + 0.25 * rand() / RAND_MAX - 0.125;
+	float v1 = sqrt(pow((nodePos.x - anch1Pos.x), 2) + pow((nodePos.y - anch1Pos.y), 2) + pow((nodePos.z - anch1Pos.z), 2)) + 1.45 * rand() / RAND_MAX - 0.125;
+	float v2 = sqrt(pow((nodePos.x - anch2Pos.x), 2) + pow((nodePos.y - anch2Pos.y), 2) + pow((nodePos.z - anch2Pos.z), 2)) - 1.45 * rand() / RAND_MAX - 0.125;
+	float v3 = sqrt(pow((nodePos.x - anch3Pos.x), 2) + pow((nodePos.y - anch3Pos.y), 2) + pow((nodePos.z - anch3Pos.z), 2)) + 1.45 * rand() / RAND_MAX - 0.125;
 
 
 	//triangulace
@@ -171,6 +171,7 @@ private:
 
 
 	std::vector<long long> SpeedTest;
+	int count = 0;
 
 public:
 	Layer1() : Layer("Layer1"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_cameraPosition(0.0f) {
@@ -662,7 +663,7 @@ public:
 		//network info about nodes
 		if (m_server.getState()) {
 			int anchorID, nodeID, nodex, nodey;
-			int nodeIndex;
+			int nodeIndex = -1;
 			std::string msg = m_server.getBuffer();
 			std::cout << "message: " << msg << std::endl;
 
@@ -679,13 +680,14 @@ public:
 				}
 			}
 
+			m_nodes[nodeIndex].setPosition({ nodex, nodey, 0.0f });
 			glm::vec3 nodePos;
-			if (m_anchors.size() >= 3) {
+			if (m_anchors.size() >= 3 && nodeIndex != -1) {
 				nodePos = localizeNode(m_anchors[0], m_anchors[1], m_anchors[2], m_nodes[nodeIndex]);
 			}
 
 
-			m_nodes[nodeID].setPosition(nodePos);
+			m_nodes[nodeIndex].setPosition(nodePos);
 
 			m_server.setState(false);
 		}
@@ -774,7 +776,6 @@ public:
 
 
 					saveFile.close();
-
 
 				}
 				if (ImGui::MenuItem("Save as", "CTRL+S")) {
@@ -870,7 +871,8 @@ public:
 					}
 
 
-					int xp, yp, id;
+					float xp, yp;
+					int id;
 					int scalex;
 
 					CloseHandle(hf);
@@ -1197,8 +1199,11 @@ public:
 
 	void addNode(const glm::vec2& position, int id = -1) {
 		Node node({ position.x, position.y, 0.0f }, id);
-		if (id == -1)
-			node.setID(rand());
+		if (id == -1) {
+			id = 0 + count;
+			count++;
+			node.setID(id);
+		}
 		m_nodes.push_back(node);
 	}
 
