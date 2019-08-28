@@ -10,7 +10,7 @@ Engine1 is in active development. Here is a short list of what is supported and 
 ### 1.1 Supported platforms
 Currently Engine1 supports:
 
-- Computer OS:
+- PC OS:
   - ![Windows supported](https://img.shields.io/badge/Windows-win--64-green.svg)
   - ![Linux not supported](https://img.shields.io/badge/Linux-Not%20Supported-red)
   - ![MacOS not supported](https://img.shields.io/badge/MacOS-Not%20Supported-red.svg)
