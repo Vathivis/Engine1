@@ -5,11 +5,18 @@
 
 namespace Engine1 {
 
-	class ENGINE1_API Input {
+	class Input {
 	private:
 		static Input* s_Instance;	//povolena pouze jedna instance tridy
 
+	protected:
+		Input() = default;
+
 	public:
+
+		Input(const Input&) = delete;
+		Input& operator=(const Input&) = delete;
+
 		inline static bool isKeyPressed(int keycode) { return s_Instance->isKeyPressedImpl(keycode); }
 		inline static bool isMouseButtonPressed(int button) { return s_Instance->isMouseButtonPressedImpl(button); }
 

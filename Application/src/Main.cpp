@@ -680,14 +680,16 @@ public:
 				}
 			}
 
-			m_nodes[nodeIndex].setPosition({ nodex, nodey, 0.0f });
+			if (nodeIndex != -1)
+				m_nodes[nodeIndex].setPosition({ nodex, nodey, 0.0f });
+
 			glm::vec3 nodePos;
 			if (m_anchors.size() >= 3 && nodeIndex != -1) {
 				nodePos = localizeNode(m_anchors[0], m_anchors[1], m_anchors[2], m_nodes[nodeIndex]);
 			}
 
-
-			m_nodes[nodeIndex].setPosition(nodePos);
+			if(nodeIndex != -1)
+				m_nodes[nodeIndex].setPosition(nodePos);
 
 			m_server.setState(false);
 		}

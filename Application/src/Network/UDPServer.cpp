@@ -37,6 +37,11 @@ UDPServer::~UDPServer() {
 	this->stopServer();
 }
 
+/*std::string UDPServer::getBuffer() const {
+	std::string s(m_buffer1);
+	return s;
+}*/
+
 void UDPServer::setState(bool state) {
 	mu.lock();
 	m_msgPending = state;
@@ -71,6 +76,56 @@ void UDPServer::onUpdate() {
 		}
 		//else
 			//E1_WARN("Message Pending");
+
+		/*if (m_buffer1Empty) {
+			mu.lock();
+			ZeroMemory(m_buffer1, 1024);
+
+			int bytesIn = recvfrom(m_in, m_buffer1, 1024, 0, (sockaddr*)& m_client, &m_clientLength);
+			mu.unlock();
+			if (bytesIn == SOCKET_ERROR) {
+				//E1_ERROR("Error recieving from client {0}", WSAGetLastError());
+				//return;
+				continue;
+			}
+
+
+			ZeroMemory(&m_clientIP, 256);
+
+			inet_ntop(AF_INET, &m_client.sin_addr, m_clientIP, 256);
+			E1_INFO("message recieved from {0} : {1}", m_clientIP, m_buffer1);
+
+			mu2.lock();
+			m_buffer1Empty = false;
+			mu2.unlock();
+		}
+		else if (m_buffer2Empty) {
+			mu.lock();
+			ZeroMemory(m_buffer2, 1024);
+
+			int bytesIn = recvfrom(m_in, m_buffer2, 1024, 0, (sockaddr*)& m_client, &m_clientLength);
+			mu.unlock();
+			if (bytesIn == SOCKET_ERROR) {
+				//E1_ERROR("Error recieving from client {0}", WSAGetLastError());
+				//return;
+				continue;
+			}
+
+
+			ZeroMemory(&m_clientIP, 256);
+
+			inet_ntop(AF_INET, &m_client.sin_addr, m_clientIP, 256);
+			E1_INFO("message recieved from {0} : {1}", m_clientIP, m_buffer2);
+
+
+			mu2.lock();
+			m_buffer2Empty = false;
+			mu2.unlock();
+		}
+		else {
+
+		}*/
+
 
 	}
 

@@ -61,19 +61,15 @@ namespace Engine1 {
 		muzeme pote volat funkce zavisle na tomto eventu
 	*/
 	class EventDispatcher {
-		template<typename T>
-		using EventFn = std::function<bool(T&)>;
 	public:
 
 
-		EventDispatcher(Event& event)
-			: m_event(event)
-		{}
+		EventDispatcher(Event& event) : m_event(event) {}
 
-		template<typename T>
-		bool dispatch(EventFn<T> func) {
+		template<typename T, typename F>
+		bool dispatch(const F& func) {
 			if (m_event.getEventType() == T::getStaticType()) {
-				m_event.handled = func(*(T*)& m_event);
+				m_event.handled = func(static_cast<T&>(m_event));
 				return true;
 			}
 			return false;

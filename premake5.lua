@@ -8,6 +8,10 @@ workspace "IPS_demo_v2"
 		"Dist"
 	}
 
+	flags {
+		"MultiProcessorCompile"
+	}
+
 	startproject "Application"
 	
 
