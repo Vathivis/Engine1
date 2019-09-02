@@ -105,13 +105,11 @@ private:
 	//Engine1::ref<Engine1::Shader> m_shader;
 	//Engine1::ref<Engine1::VertexArray> m_vertexArray;
 
-	/*Engine1::ref<Engine1::Shader> m_flatColorShader, m_textureShader;
+	Engine1::ref<Engine1::Shader> m_flatColorShader, m_textureShader;
 	Engine1::ref<Engine1::VertexArray> m_squareVA;
-	glm::vec3 m_squareColor = { 0.2f, 0.3f, 0.8f };*/
+	glm::vec3 m_squareColor = { 0.2f, 0.3f, 0.8f };
+	Engine1::ref<Engine1::Texture2D> m_texture;
 
-	//Engine1::ref<Engine1::Texture2D> m_texture;
-
-	Engine1::ref<Engine1::Shader> m_textureSquareShader;
 
 
 	//background/groundplan
@@ -227,7 +225,7 @@ public:
 		//	nakonec glDrawElements, kde pocet indexu je VertexArray->getIndexBuffer()->getCount()				   //
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		/*m_squareVA.reset(Engine1::VertexArray::create());
+		m_squareVA.reset(Engine1::VertexArray::create());
 
 		float squareVertices[4 * 5] = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -249,7 +247,7 @@ public:
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 		Engine1::ref<Engine1::IndexBuffer> squareIB;
 		squareIB.reset(Engine1::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
-		m_squareVA->setIndexBuffer(squareIB);*/
+		m_squareVA->setIndexBuffer(squareIB);
 
 
 		//background texture/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -462,40 +460,7 @@ public:
 
 		m_flatColorShader.reset(Engine1::Shader::create(flatColorShaderVertexSrc, flatColorShaderFragmentSrc));
 
-		std::string textureShaderVertexSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_position;
-			layout(location = 1) in vec2 a_texCoord;
-
-			uniform mat4 u_viewProjection;
-			uniform mat4 u_transform;
-
-			out vec2 v_texCoord;
-
-			void main()
-			{
-				v_texCoord = a_texCoord;
-				gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);	
-			}
-		)";
-
-		std::string textureShaderFragmentSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-
-			in vec2 v_texCoord;
-
-			uniform sampler2D u_texture; 
-
-			void main()
-			{
-				color = texture(u_texture, v_texCoord);
-			}
-		)";
-
-		m_textureShader.reset(Engine1::Shader::create(textureShaderVertexSrc, textureShaderFragmentSrc));
+	
 
 		m_texture = Engine1::Texture2D::create("assets/textures/pudorys-zdi.png");
 
@@ -503,41 +468,9 @@ public:
 		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureShader)->uploadUniform1i("u_texture", 0);*/
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		std::string textureSquareShaderVertexSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_position;
-			layout(location = 1) in vec2 a_texPos;
 
-			uniform mat4 u_viewProjection;
-			uniform mat4 u_transform;
 
-			out vec2 v_texPos;
-
-			void main()
-			{
-				v_texPos = a_texPos;
-				gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);	
-			}
-		)";
-
-		std::string textureSquareShaderFragmentSrc = R"(
-			#version 430 core
-			
-			layout(location = 0) out vec4 color;
-
-			in vec2 v_texPos;
-
-			uniform sampler2D u_texture;
-
-			void main()
-			{
-				vec4 texColor = texture(u_texture, v_texPos);
-				color = texColor;
-			}
-		)";
-
-		m_textureSquareShader.reset(Engine1::Shader::create(textureSquareShaderVertexSrc, textureSquareShaderFragmentSrc));
+		m_textureShader.reset(Engine1::Shader::create("assets/shaders/Texture.glsl"));
 		
 
 	}
@@ -642,13 +575,13 @@ public:
 		glm::vec3 pos2(0.0f, 0.0f, 0.0f);
 		glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), pos2);
 		m_groundPlanWallsTex->bind();
-		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);	//weird on intel gpu
-		Engine1::Renderer::submit(m_textureSquareShader, m_backgroundVA, transform2);
+		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureShader)->uploadUniform1f("u_texture", 0);	//weird on intel gpu
+		Engine1::Renderer::submit(m_textureShader, m_backgroundVA, transform2);
 
 		if (m_showFurniture) {
 			m_groundPlanTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);
-			Engine1::Renderer::submit(m_textureSquareShader, m_backgroundVA, transform2);
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureShader)->uploadUniform1f("u_texture", 0);
+			Engine1::Renderer::submit(m_textureShader, m_backgroundVA, transform2);
 		}
 
 		//anchors
@@ -656,8 +589,8 @@ public:
 			anchor.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
 			glm::mat4 anchorTransform = glm::translate(glm::mat4(1.0f), anchor.getPosition()) * anchor.getScale();
 			m_anchorTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);
-			Engine1::Renderer::submit(m_textureSquareShader, m_anchorVA, anchorTransform);
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureShader)->uploadUniform1f("u_texture", 0);
+			Engine1::Renderer::submit(m_textureShader, m_anchorVA, anchorTransform);
 		}
 
 		//network info about nodes
@@ -699,8 +632,8 @@ public:
 			node.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
 			glm::mat4 nodeTransform = glm::translate(glm::mat4(1.0f), node.getPosition()) * node.getScale();
 			m_nodeTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);
-			Engine1::Renderer::submit(m_textureSquareShader, m_nodeVA, nodeTransform);
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureShader)->uploadUniform1f("u_texture", 0);
+			Engine1::Renderer::submit(m_textureShader, m_nodeVA, nodeTransform);
 		}
 
 		//forklifts
@@ -708,8 +641,8 @@ public:
 			forklift.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
 			glm::mat4 forkliftTransform = glm::translate(glm::mat4(1.0f), forklift.getPosition()) *	forklift.getScale();
 			m_forkliftTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);
-			Engine1::Renderer::submit(m_textureSquareShader, m_forkliftVA, forkliftTransform);
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureShader)->uploadUniform1f("u_texture", 0);
+			Engine1::Renderer::submit(m_textureShader, m_forkliftVA, forkliftTransform);
 		}
 
 		//scale	
@@ -717,8 +650,8 @@ public:
 			m_scale->setScale(glm::vec3(m_scale->getCurrentWidth() / m_scale->getWidth(), 1.0f, 1.0f));
 			glm::mat4 scaleTransform = glm::translate(glm::mat4(1.0f), m_scale->getPosition()) * m_scale->getScale();
 			m_scaleTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);
-			Engine1::Renderer::submit(m_textureSquareShader, m_scaleVA, scaleTransform);
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureShader)->uploadUniform1f("u_texture", 0);
+			Engine1::Renderer::submit(m_textureShader, m_scaleVA, scaleTransform);
 		}
 
 		Engine1::Renderer::endScene();
@@ -1277,8 +1210,8 @@ public:
 		glm::vec3 pos2(0.0f, 0.0f, 0.0f);
 		glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), pos2);
 		m_groundPlanWallsTex->bind();
-		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureSquareShader)->uploadUniform1f("u_texture", 0);	//weird on intel gpu
-		Engine1::Renderer::submit(m_textureSquareShader, m_backgroundVA, transform2);
+		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureShader)->uploadUniform1f("u_texture", 0);	//weird on intel gpu
+		Engine1::Renderer::submit(m_textureShader, m_backgroundVA, transform2);
 		Engine1::Renderer::endScene();
 
 		res.x = getAnchorWallDistance(anchor, 0);

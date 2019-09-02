@@ -3,7 +3,9 @@
 #include "Engine1/Renderer/Shader.h"
 #include "glm/glm.hpp"
 
-#include "glad/glad.h"
+//TODO: remove
+typedef unsigned int GLenum;
+typedef int GLint;
 
 namespace Engine1 {
 
@@ -14,6 +16,7 @@ namespace Engine1 {
 
 	public:
 
+		OpenGLShader(const std::string& filepath);
 		OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
 		virtual ~OpenGLShader();
 
@@ -33,6 +36,9 @@ namespace Engine1 {
 
 	private:
 
+		std::string readFile(const std::string& filepath);
+		std::unordered_map<GLenum, std::string> preProcess(const std::string& source);
+		void compile(const std::unordered_map<GLenum, std::string>& shaderSources);
 		GLint getUniformLocation(const std::string& name) const;
 
 	};
