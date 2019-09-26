@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "glm/glm.hpp"
 
 
 class UDPServer {
@@ -24,6 +25,9 @@ private:
 	bool m_buffer2Empty = true;
 	bool m_stopThread = false;
 
+	//COM port temporary variables
+	int m_pos1, m_pos2, m_pos3;
+
 
 public:
 
@@ -34,6 +38,7 @@ public:
 	inline std::string getBuffer() const { std::string s(m_buffer); return s; }
 	//inline std::string getBuffer() const;
 	inline bool getState() const { return m_msgPending; }
+	inline glm::vec3 getDists() const { return glm::vec3(m_pos1, m_pos2, m_pos3); }		//comm port getter
 
 	//setters
 	void setState(bool state);

@@ -39,9 +39,9 @@ glm::vec4 calculateFromZ(const glm::vec3& anch1pos, const glm::vec3& anch2pos, c
 	return result;
 }
 
-glm::vec3 localizeNode(const Anchor& anchor1, const Anchor& anchor2, const Anchor& anchor3, const Node& node) {
+//glm::vec3 localizeNode(const Anchor& anchor1, const Anchor& anchor2, const Anchor& anchor3, const Node& node) {
+glm::vec3 localizeNode(const Anchor & anchor1, const Anchor & anchor2, const Anchor & anchor3, float v1, float v2, float v3) {
 
-//glm::vec3 localizeNode() {
 	glm::vec3 anch1Pos;
 	glm::vec3 anch2Pos;
 	glm::vec3 anch3Pos;
@@ -50,13 +50,13 @@ glm::vec3 localizeNode(const Anchor& anchor1, const Anchor& anchor2, const Ancho
 	anch1Pos = anchor1.getScenePosition();	//{ -19, 66, 0 };
 	anch2Pos = anchor2.getScenePosition();	//{ 420, 66, 0 };
 	anch3Pos = anchor3.getScenePosition();	//{ -19, 340, 0 };
-	nodePos = node.getScenePosition();		//{ 178, 213, 0 };
+	//nodePos = node.getScenePosition();		//{ 178, 213, 0 };
 
 
 	// vzdalenosti objektu od majaku vcetne sumu
-	float v1 = sqrt(pow((nodePos.x - anch1Pos.x), 2) + pow((nodePos.y - anch1Pos.y), 2) + pow((nodePos.z - anch1Pos.z), 2)) + 1.45 * rand() / RAND_MAX - 0.125;
-	float v2 = sqrt(pow((nodePos.x - anch2Pos.x), 2) + pow((nodePos.y - anch2Pos.y), 2) + pow((nodePos.z - anch2Pos.z), 2)) - 1.45 * rand() / RAND_MAX - 0.125;
-	float v3 = sqrt(pow((nodePos.x - anch3Pos.x), 2) + pow((nodePos.y - anch3Pos.y), 2) + pow((nodePos.z - anch3Pos.z), 2)) + 1.45 * rand() / RAND_MAX - 0.125;
+	//float v1 = sqrt(pow((nodePos.x - anch1Pos.x), 2) + pow((nodePos.y - anch1Pos.y), 2) + pow((nodePos.z - anch1Pos.z), 2)) + 1.45 * rand() / RAND_MAX - 0.125;
+	//float v2 = sqrt(pow((nodePos.x - anch2Pos.x), 2) + pow((nodePos.y - anch2Pos.y), 2) + pow((nodePos.z - anch2Pos.z), 2)) - 1.45 * rand() / RAND_MAX - 0.125;
+	//float v3 = sqrt(pow((nodePos.x - anch3Pos.x), 2) + pow((nodePos.y - anch3Pos.y), 2) + pow((nodePos.z - anch3Pos.z), 2)) + 1.45 * rand() / RAND_MAX - 0.125;
 
 
 	//triangulace
@@ -618,13 +618,20 @@ public:
 
 			glm::vec3 nodePos;
 			if (m_anchors.size() >= 3 && nodeIndex != -1) {
-				nodePos = localizeNode(m_anchors[0], m_anchors[1], m_anchors[2], m_nodes[nodeIndex]);
+				//nodePos = localizeNode(m_anchors[0], m_anchors[1], m_anchors[2], m_nodes[nodeIndex]);
 			}
 
 			if(nodeIndex != -1)
 				m_nodes[nodeIndex].setPosition(nodePos);
 
 			m_server.setState(false);
+		}
+
+		//COM port networking
+		if (!m_nodes.empty()) {
+			glm::vec3 p = m_server.getDists();
+
+			m_nodes[0].setPosition(localizeNode(m_anchors[0], m_anchors[1], m_anchors[2], p.x, p.y, p.z));
 		}
 
 		//nodes
