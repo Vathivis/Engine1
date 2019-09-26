@@ -3,6 +3,9 @@
 ## About
 Engine1 is [a 2D/3D graphics engine project](https://github.com/vovojta/Engine1/). Engine1's goal is to be a library that structures and manages the inner workings of a game, with abstractions to different APIs and platforms.
 
+## Current WIP
+Real device integration
+
 ## 1. Engine1 support
 
 Engine1 is in active development. Here is a short list of what is supported and what isn't. This can change at any time.
