@@ -594,7 +594,7 @@ public:
 		}
 
 		//network info about nodes
-		if (m_server.getState()) {
+		/*if (m_server.getState()) {
 			int anchorID, nodeID, nodex, nodey;
 			int nodeIndex = -1;
 			std::string msg = m_server.getBuffer();
@@ -625,13 +625,19 @@ public:
 				m_nodes[nodeIndex].setPosition(nodePos);
 
 			m_server.setState(false);
-		}
+		}*/
 
 		//COM port networking
-		if (!m_nodes.empty()) {
+		if (!m_nodes.empty() && m_server.getState()) {
 			glm::vec3 p = m_server.getDists();
+			p.x = (p.x / 1000) * m_scale->getMeter();
+			p.y = (p.y / 1000) * m_scale->getMeter();
+			p.z = (p.z / 1000) * m_scale->getMeter();
 
-			m_nodes[0].setPosition(localizeNode(m_anchors[0], m_anchors[1], m_anchors[2], p.x, p.y, p.z));
+			glm::vec3 nposition = localizeNode(m_anchors[0], m_anchors[1], m_anchors[2], p.x, p.y, p.z);
+
+			m_nodes[0].setPosition({ nposition.x, nposition.y, 0 });
+			m_server.setState(false);
 		}
 
 		//nodes

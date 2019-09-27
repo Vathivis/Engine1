@@ -104,37 +104,37 @@ void UDPServer::onUpdate() {
 
 		//needs COM port synchronization, probably wont be needed in the future since the communication will be provided by ethernet
 		//ethernet communication is the commented out part, for now works only with local host, not tested otherwise
+		if (!m_msgPending) {
+			char szBuff[n + 1] = { 0 };
+			DWORD dwBytesRead = 0;
+			if (!ReadFile(serialHandle, szBuff, n, &dwBytesRead, NULL)) {
+				//error occurred. Report to user.
+				std::cout << "err" << std::endl;
+				continue;
+			}
 
-		char szBuff[n + 1] = { 0 };
-		DWORD dwBytesRead = 0;
-		if (!ReadFile(serialHandle, szBuff, n, &dwBytesRead, NULL)) {
-			//error occurred. Report to user.
-			std::cout << "err" << std::endl;
-			continue;
+			std::string x(szBuff);
+			std::string y;
+			remove_copy(x.begin(), x.end(), std::back_inserter(y), '\n' || '\r');
+
+			std::stringstream str;
+			str << y;
+
+			if (y == "\n")
+				continue;
+
+			std::string header, end;
+			int num1, num2, num3, num4;
+			int pos4;
+
+			str >> header >> std::hex >> num1 >> m_pos1 >> m_pos2 >> m_pos3 >> pos4 >> num2 >> num3 >> num4 >> end;
+
+			if (header != "mc")
+				continue;
+
+			std::cout << header << " " << num1 << " " << m_pos1 << " " << m_pos2 << " " << m_pos3 << std::endl;
+			m_msgPending = true;
 		}
-
-		std::string x(szBuff);
-		std::string y;
-		remove_copy(x.begin(), x.end(), std::back_inserter(y), '\n' || '\r');
-
-		std::stringstream str;
-		str << y;
-
-		if (y == "\n")
-			continue;
-
-		std::string header, end;
-		int num1, num2, num3, num4;
-		int pos4;
-
-		str >> header >> std::hex >> num1 >> m_pos1 >> m_pos2 >> m_pos3 >> pos4 >> num2 >> num3 >> num4 >> end;
-
-		if (header != "mc")
-			continue;
-
-		std::cout << header << " " << num1 << " " << m_pos1 << " " << m_pos2 << " " << m_pos3 << std::endl;
-
-
 
 		/*if (!m_msgPending) {
 			mu.lock();
