@@ -710,6 +710,7 @@ public:
 		//TODO: remember last save file name
 		//TODO: warning about overwriting
 		//TODO: shortcuts
+		//FIX: load/save bugs, loads one more anchor, crash when closing open dialog without selecting
 		if (ImGui::BeginMainMenuBar()){
 			if (ImGui::BeginMenu("File")){
 				if (ImGui::MenuItem("Save", "CTRL+S")) {

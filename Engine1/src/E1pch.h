@@ -21,6 +21,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <array>
 #include <vector>
 #include <list>
 #include <map>

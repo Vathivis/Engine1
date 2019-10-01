@@ -34,7 +34,7 @@ namespace Engine1 {
 	}
 
 	std::string OpenGLShader::readFile(const std::string& filepath) {
-		std::ifstream in(filepath, std::ios::in, std::ios::binary);
+		std::ifstream in(filepath, std::ios::in | std::ios::binary);
 		std::string result;
 
 		if (in) {
@@ -76,8 +76,10 @@ namespace Engine1 {
 
 	void OpenGLShader::compile(const std::unordered_map<GLenum, std::string>& shaderSources) {
 		GLuint program = glCreateProgram();
-		std::vector<GLenum> glShaderIDs;
-		glShaderIDs.reserve(shaderSources.size());
+		//TODO: needs to be somewhat dynamic but on stack for speed, maybe not necessary on stack
+		E1_CORE_ASSERT(shaderSources.size() <= 2, "wrong number of shaders");
+		std::array<GLenum, 2> glShaderIDs;
+		int glShaderIDIndex = 0;
 
 		for (auto& kv : shaderSources) {	//kv - key value
 			GLenum type = kv.first;
@@ -107,7 +109,7 @@ namespace Engine1 {
 			}
 
 			glAttachShader(program, shader);
-			glShaderIDs.push_back(shader);
+			glShaderIDs[glShaderIDIndex++] = shader;
 		}
 
 		glLinkProgram(program);
