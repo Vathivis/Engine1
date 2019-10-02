@@ -6,14 +6,14 @@
 
 namespace Engine1 {
 
-	Engine1::Shader* Shader::create(const std::string& filepath) {
+	ref<Shader> Shader::create(const std::string& filepath) {
 		switch (Renderer::getAPI()) {
 		case RendererAPI::API::None:
 			E1_CORE_ASSERT(false, "RendererAPI::None is currently not supported");
 			return nullptr;
 
 		case RendererAPI::API::OpenGL:
-			return new OpenGLShader(filepath);
+			return std::make_shared<OpenGLShader>(filepath);
 
 		}
 
@@ -22,14 +22,14 @@ namespace Engine1 {
 
 	}
 
-	Shader* Shader::create(const std::string& vertexSrc, const std::string& fragmentSrc) {
+	ref<Shader> Shader::create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) {
 		switch (Renderer::getAPI()) {
 		case RendererAPI::API::None:
 			E1_CORE_ASSERT(false, "RendererAPI::None is currently not supported");
 			return nullptr;
 
 		case RendererAPI::API::OpenGL:
-			return new OpenGLShader(vertexSrc, fragmentSrc);
+			return std::make_shared<OpenGLShader>(name, vertexSrc, fragmentSrc);
 
 		}
 
@@ -37,6 +37,36 @@ namespace Engine1 {
 		return nullptr;
 	}
 
+	void ShaderLibrary::add(const std::string& name, const ref<Shader>& shader) {
+		E1_CORE_ASSERT(!exists(name), "Shader already exists");
+		m_shaders[name] = shader;
+	}
+
+	void ShaderLibrary::add(const ref<Shader>& shader) {
+		auto& name = shader->getName();
+		add(name, shader);
+	}
+
+	ref<Engine1::Shader> ShaderLibrary::load(const std::string& filepath) {
+		auto shader = Shader::create(filepath);
+		add(shader);
+		return shader;
+	}
+
+	ref<Engine1::Shader> ShaderLibrary::load(const std::string& name, const std::string& filepath) {
+		auto shader = Shader::create(filepath);
+		add(name, shader);
+		return shader;
+	}
+
+	ref<Engine1::Shader> ShaderLibrary::get(const std::string& name) {
+		E1_CORE_ASSERT(exists(name), "Shader not found");
+		return m_shaders[name];
+	}
+
+	bool ShaderLibrary::exists(const std::string& name) const {
+		return m_shaders.find(name) != m_shaders.end();
+	}
 
 }
 

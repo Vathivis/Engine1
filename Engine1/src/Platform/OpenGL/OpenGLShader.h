@@ -12,16 +12,19 @@ namespace Engine1 {
 	class OpenGLShader : public Shader {
 	private:
 		uint32_t m_rendererID;
+		std::string m_name;
 		mutable std::unordered_map<std::string, GLint> m_uniformLocationCache;
 
 	public:
 
 		OpenGLShader(const std::string& filepath);
-		OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
+		OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
 		virtual ~OpenGLShader();
 
 		virtual void bind() const override;
 		virtual void unbind() const override;
+
+		virtual const std::string getName() const override { return m_name; }
 
 		//set uniforms
 		void uploadUniform1i(const std::string& name, int value);

@@ -105,11 +105,13 @@ private:
 	//Engine1::ref<Engine1::Shader> m_shader;
 	//Engine1::ref<Engine1::VertexArray> m_vertexArray;
 
-	Engine1::ref<Engine1::Shader> m_flatColorShader, m_textureShader;
+	Engine1::ref<Engine1::Shader> m_flatColorShader;
 	Engine1::ref<Engine1::VertexArray> m_squareVA;
 	glm::vec3 m_squareColor = { 0.2f, 0.3f, 0.8f };
 	Engine1::ref<Engine1::Texture2D> m_texture;
 
+	//shader library
+	Engine1::ShaderLibrary m_shaderLibrary;
 
 
 	//background/groundplan
@@ -470,7 +472,7 @@ public:
 
 
 
-		m_textureShader.reset(Engine1::Shader::create("assets/shaders/Texture.glsl"));
+		m_shaderLibrary.load("assets/shaders/Texture.glsl");
 		
 
 	}
@@ -570,18 +572,19 @@ public:
 			
 		//Engine1::Renderer::submit(m_shader, m_vertexArray);		//colored triangle
 
+		auto textureShader = m_shaderLibrary.get("Texture");
 
 		//background
 		glm::vec3 pos2(0.0f, 0.0f, 0.0f);
 		glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), pos2);
 		m_groundPlanWallsTex->bind();
-		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureShader)->uploadUniform1f("u_texture", 0);	//weird on intel gpu
-		Engine1::Renderer::submit(m_textureShader, m_backgroundVA, transform2);
+		std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniform1f("u_texture", 0);	//weird on intel gpu
+		Engine1::Renderer::submit(textureShader, m_backgroundVA, transform2);
 
 		if (m_showFurniture) {
 			m_groundPlanTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureShader)->uploadUniform1f("u_texture", 0);
-			Engine1::Renderer::submit(m_textureShader, m_backgroundVA, transform2);
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniform1f("u_texture", 0);
+			Engine1::Renderer::submit(textureShader, m_backgroundVA, transform2);
 		}
 
 		//anchors
@@ -589,8 +592,8 @@ public:
 			anchor.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
 			glm::mat4 anchorTransform = glm::translate(glm::mat4(1.0f), anchor.getPosition()) * anchor.getScale();
 			m_anchorTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureShader)->uploadUniform1f("u_texture", 0);
-			Engine1::Renderer::submit(m_textureShader, m_anchorVA, anchorTransform);
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniform1f("u_texture", 0);
+			Engine1::Renderer::submit(textureShader, m_anchorVA, anchorTransform);
 		}
 
 		//network info about nodes
@@ -645,8 +648,8 @@ public:
 			node.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
 			glm::mat4 nodeTransform = glm::translate(glm::mat4(1.0f), node.getPosition()) * node.getScale();
 			m_nodeTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureShader)->uploadUniform1f("u_texture", 0);
-			Engine1::Renderer::submit(m_textureShader, m_nodeVA, nodeTransform);
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniform1f("u_texture", 0);
+			Engine1::Renderer::submit(textureShader, m_nodeVA, nodeTransform);
 		}
 
 		//forklifts
@@ -654,8 +657,8 @@ public:
 			forklift.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
 			glm::mat4 forkliftTransform = glm::translate(glm::mat4(1.0f), forklift.getPosition()) *	forklift.getScale();
 			m_forkliftTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureShader)->uploadUniform1f("u_texture", 0);
-			Engine1::Renderer::submit(m_textureShader, m_forkliftVA, forkliftTransform);
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniform1f("u_texture", 0);
+			Engine1::Renderer::submit(textureShader, m_forkliftVA, forkliftTransform);
 		}
 
 		//scale	
@@ -663,8 +666,8 @@ public:
 			m_scale->setScale(glm::vec3(m_scale->getCurrentWidth() / m_scale->getWidth(), 1.0f, 1.0f));
 			glm::mat4 scaleTransform = glm::translate(glm::mat4(1.0f), m_scale->getPosition()) * m_scale->getScale();
 			m_scaleTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureShader)->uploadUniform1f("u_texture", 0);
-			Engine1::Renderer::submit(m_textureShader, m_scaleVA, scaleTransform);
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniform1f("u_texture", 0);
+			Engine1::Renderer::submit(textureShader, m_scaleVA, scaleTransform);
 		}
 
 		Engine1::Renderer::endScene();
@@ -1218,14 +1221,15 @@ public:
 
 	glm::vec4 getAnchorAllWallDistance(const Anchor& anchor) {
 		glm::vec4 res;
+		auto textureShader = m_shaderLibrary.get("Texture");
 
 		//HACK: render only walls before checking wall distance, causes flicker
 		Engine1::Renderer::beginScene(m_camera);
 		glm::vec3 pos2(0.0f, 0.0f, 0.0f);
 		glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), pos2);
 		m_groundPlanWallsTex->bind();
-		std::dynamic_pointer_cast<Engine1::OpenGLShader>(m_textureShader)->uploadUniform1f("u_texture", 0);	//weird on intel gpu
-		Engine1::Renderer::submit(m_textureShader, m_backgroundVA, transform2);
+		std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniform1f("u_texture", 0);	//weird on intel gpu
+		Engine1::Renderer::submit(textureShader, m_backgroundVA, transform2);
 		Engine1::Renderer::endScene();
 
 		res.x = getAnchorWallDistance(anchor, 0);

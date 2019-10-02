@@ -20,9 +20,17 @@ namespace Engine1 {
 		std::string source = readFile(filepath);
 		auto shaderSources = preProcess(source);
 		compile(shaderSources);
+
+		//getting the shader name from the filepath
+		//assets/shaders/Texture.glsl - example path
+		auto lastSlash = filepath.find_last_of("/\\");		//looks for any of the characters specified
+		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
+		auto lastDot = filepath.rfind('.');		//looks for exact match of the argument
+		auto count = lastDot == std::string::npos ? filepath.size() - lastSlash : lastDot - lastSlash;
+		m_name = filepath.substr(lastSlash, count);
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc) {
+	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) : m_name(name) {
 		std::unordered_map<GLenum, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
 		sources[GL_FRAGMENT_SHADER] = fragmentSrc;
