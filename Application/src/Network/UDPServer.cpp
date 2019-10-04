@@ -100,6 +100,7 @@ void UDPServer::onUpdate() {
 	//      mr = tag to anchor ranging report (raw)
 	//      mc = tag to anchor ranging report (range bias corrected)
 	const int n = 64;
+	//condition needs to be locked
 	while (!m_stopThread) {
 
 		//needs COM port synchronization, probably wont be needed in the future since the communication will be provided by ethernet

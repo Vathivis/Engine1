@@ -173,12 +173,20 @@ private:
 	std::vector<long long> SpeedTest;
 	int count = 0;
 
+
+	//timestamp stuff
+	std::string m_fileName;
+
 public:
 	Layer1() : Layer("Layer1"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_cameraPosition(0.0f) {
 
 		srand(time(nullptr));
+
+		std::time_t result = std::time(nullptr);
+		m_fileName = "Log_";
+		m_fileName += std::asctime(std::localtime(&result));
 	
-		m_groundPlanWallsTex = Engine1::Texture2D::create("assets/textures/pudorys-zdi.png");
+		m_groundPlanWallsTex = Engine1::Texture2D::create("assets/textures/grid.png");	//Engine1::Texture2D::create("assets/textures/pudorys-zdi.png");
 		m_groundPlanTex = Engine1::Texture2D::create("assets/textures/pudorys.png");
 		m_anchorTex = Engine1::Texture2D::create("assets/textures/anchor.png");
 		m_nodeTex = Engine1::Texture2D::create("assets/textures/node.png");
@@ -480,24 +488,6 @@ public:
 	void onUpdate(Engine1::Timestep ts) override {
 
 
-		//else if to prevent cancelling each other
-		if (Engine1::Input::isKeyPressed(E1_KEY_D))
-			m_cameraPosition.x += m_cameraMoveSpeed * ts;
-		else if (Engine1::Input::isKeyPressed(E1_KEY_A))
-			m_cameraPosition.x -= m_cameraMoveSpeed * ts;
-
-		if (Engine1::Input::isKeyPressed(E1_KEY_W))
-			m_cameraPosition.y += m_cameraMoveSpeed * ts;
-		else if (Engine1::Input::isKeyPressed(E1_KEY_S))
-			m_cameraPosition.y -= m_cameraMoveSpeed * ts;
-
-
-		if (Engine1::Input::isKeyPressed(E1_KEY_E))
-			m_cameraRotation += m_cameraRotationSpeed * ts;
-		else if (Engine1::Input::isKeyPressed(E1_KEY_Q))
-			m_cameraRotation -= m_cameraRotationSpeed * ts;
-
-
 		Engine1::RenderCommand::setClearColor({ 0.2f, 0.2f, 0.2f, 1 });
 		Engine1::RenderCommand::clear();
 
@@ -638,6 +628,14 @@ public:
 			p.z = (p.z / 1000) * m_scale->getMeter();
 
 			glm::vec3 nposition = localizeNode(m_anchors[0], m_anchors[1], m_anchors[2], p.x, p.y, p.z);
+
+			std::ofstream file;
+
+			//timestamp
+			std::time_t result = std::time(nullptr);
+
+			file.open(m_fileName, std::ios::in || std::ios::app);
+			file << "[" << std::asctime(std::localtime(&result)) << "]  x: " << nposition.x << " y: " << nposition.y;
 
 			m_nodes[0].setPosition({ nposition.x, nposition.y, 0 });
 			m_server.setState(false);
