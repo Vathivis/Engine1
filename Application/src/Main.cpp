@@ -20,7 +20,8 @@
 //TEMPORARY opengl
 #include "glad/glad.h"
 
-//lokalize node from distances
+//TODO: put to separate file
+//localize node from distances
 glm::vec4 calculateFromZ(const glm::vec3& anch1pos, const glm::vec3& anch2pos, const glm::vec3& anch3pos, const glm::mat2& matrix, float v1, float k1d, float k2d, float z) {
 
 	float k1 = k1d - 2 * (anch2pos.z - anch1pos.z) * z;
@@ -153,14 +154,11 @@ private:
 	
 
 	//camera
-	Engine1::OrthographicCamera m_camera;
-	glm::vec3 m_cameraPosition;
+	Engine1::OrthographicCameraController m_cameraController;
+
+	//mouse positions
 	glm::vec2 m_mouseScenePos;
 	glm::vec2 m_mouseScreenPos;
-	float m_cameraRotation = 0.0f;
-
-	float m_cameraMoveSpeed = 2.0f;
-	float m_cameraRotationSpeed = 180.0f;
 
 	bool show = true;
 
@@ -178,7 +176,7 @@ private:
 	std::string m_fileName;
 
 public:
-	Layer1() : Layer("Layer1"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_cameraPosition(0.0f) {
+	Layer1() : Layer("Layer1"), m_cameraController(1280.0f / 720.0f) {
 
 		srand(time(nullptr));
 
@@ -487,12 +485,8 @@ public:
 
 	void onUpdate(Engine1::Timestep ts) override {
 
-
-		Engine1::RenderCommand::setClearColor({ 0.2f, 0.2f, 0.2f, 1 });
-		Engine1::RenderCommand::clear();
-
-		m_camera.setPosition(m_cameraPosition);
-		m_camera.setRotation(m_cameraRotation);
+		//update
+		m_cameraController.onUpdate(ts);
 
 
 		//recalculation of mouse scene position based on camera position and zoom////////////////////////////////////
@@ -500,6 +494,7 @@ public:
 		//TODO: put this to a function
 		auto [x, y] = Engine1::Input::getMousePosition();
 
+		auto m_camera = m_cameraController.getCamera();		//temp
 		x = x * 2 * m_camera.getRight() / 1280 - m_camera.getRight();
 		float tmp = m_camera.getRight() / m_camera.getCurrentZoom();
 		x = (x + tmp) * 1280 / (tmp * 2);
@@ -534,11 +529,13 @@ public:
 
 		m_mouseScreenPos = { tmpPos.x, tmpPos.y };
 
-		//glm::vec3 tmploc;
 
-		//tmploc = localizeNode();
+		//render
 
-		Engine1::Renderer::beginScene(m_camera);
+		Engine1::RenderCommand::setClearColor({ 0.2f, 0.2f, 0.2f, 1 });
+		Engine1::RenderCommand::clear();
+
+		Engine1::Renderer::beginScene(m_cameraController.getCamera());
 
 		/*glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
@@ -677,6 +674,10 @@ public:
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	virtual void onImGuiRender() override {
+
+		//temp
+		auto m_camera = m_cameraController.getCamera();
+		auto m_cameraPosition = m_cameraController.getCamera().getPosition();
 
 		static float f1 = m_scale->getWidth();
 		static float f2 = m_scale->getScenePosition().x;
@@ -1103,6 +1104,9 @@ public:
 	void onEvent(Engine1::Event& event) override {
 		Engine1::EventDispatcher dispatcher(event);
 
+		m_cameraController.onEvent(event);
+
+
 		dispatcher.dispatch<Engine1::KeyPressedEvent>(E1_BIND_EVENT_FN(Layer1::onKeyPressedEvent));
 		dispatcher.dispatch<Engine1::MouseScrolledEvent>(E1_BIND_EVENT_FN(Layer1::onMouseScrolledEvent));
 
@@ -1115,9 +1119,9 @@ public:
 		}
 
 		if (event.getKeyCode() == E1_KEY_C) {
-			m_cameraPosition = { 0.0f, 0.0f, 0.0f };
-			m_cameraRotation = 0.0f;
-			m_camera.setZoom(1.0f);
+			m_cameraController.getCamera().setPosition({ 0.0f, 0.0f, 0.0f });
+			m_cameraController.getCamera().setRotation(0.0f);
+			//m_camera.setZoom(1.0f);
 		}
 
 		if (event.getKeyCode() == E1_KEY_F) {
@@ -1129,13 +1133,13 @@ public:
 
 	bool onMouseScrolledEvent(Engine1::MouseScrolledEvent& event) {
 
-		if (event.getYOffset() == -1) {
+		/*if (event.getYOffset() == -1) {
 			m_camera.zoomOut();
 		}
 
 		if (event.getYOffset() == 1) {
 			m_camera.zoomIn();
-		}
+		}*/
 
 		return false;
 	}
@@ -1222,7 +1226,7 @@ public:
 		auto textureShader = m_shaderLibrary.get("Texture");
 
 		//HACK: render only walls before checking wall distance, causes flicker
-		Engine1::Renderer::beginScene(m_camera);
+		Engine1::Renderer::beginScene(m_cameraController.getCamera());
 		glm::vec3 pos2(0.0f, 0.0f, 0.0f);
 		glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), pos2);
 		m_groundPlanWallsTex->bind();
@@ -1239,6 +1243,10 @@ public:
 	}
 
 	glm::vec2 getScreenPosFromScenePos(const glm::vec2& scenePos) {
+
+		//temp
+		auto m_camera = m_cameraController.getCamera();
+
 		glm::vec2 tmpPos = scenePos;
 		glm::vec2 camPos = m_camera.getPosition();
 		camPos.x *= 1280 / (m_camera.getRight() * 2);

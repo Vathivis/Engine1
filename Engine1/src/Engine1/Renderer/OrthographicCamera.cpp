@@ -8,13 +8,13 @@ namespace Engine1 {
 	OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top) 
 		: m_projectionM(glm::ortho(left, right, bottom, top, -1.0f, 1.0f)), m_viewM(1.0f) {
 		m_viewProjectionM = m_projectionM * m_viewM;
-		m_left = left;
+		/*m_left = left;
 		m_right = right;
 		m_bottom = bottom;
-		m_top = top;
+		m_top = top;*/
 	}
 
-	void OrthographicCamera::zoomIn() {
+	/*void OrthographicCamera::zoomIn() {
 		if (m_currentZoom <= 0.81)
 			return;
 		else {
@@ -34,6 +34,12 @@ namespace Engine1 {
 
 		m_projectionM = glm::ortho(m_left * m_currentZoom, m_right * m_currentZoom, m_bottom * m_currentZoom, m_top * m_currentZoom, -1.0f, 1.0f);
 		m_viewProjectionM = m_projectionM * m_viewM;
+	}*/
+
+	void OrthographicCamera::setProjection(float left, float right, float bottom, float top) {
+		m_projectionM = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
+		m_viewProjectionM = m_projectionM * m_viewM;
+
 	}
 
 	void OrthographicCamera::recalculateViewMatrix() {

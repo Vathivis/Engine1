@@ -25,20 +25,23 @@ namespace Engine1 {
 
 		OrthographicCamera(float left, float right, float bottom, float top);
 
-		void zoomIn();
-		void zoomOut();
+		//void zoomIn();
+		//void zoomOut();
 
 		//setters
+		void setProjection(float left, float right, float bottom, float top);
+
 		void setPosition(const glm::vec3& position) { m_position = position; recalculateViewMatrix(); }
 		void setRotation(float rotation) { m_rotation = rotation; recalculateViewMatrix(); }
 		void setZoom(float zoom) { m_currentZoom = zoom; recalculateProjectionMatrix(); }
 
+
 		//getters
 		const glm::vec3& getPosition() const { return m_position; }
-		float getRotation() const { return m_rotation; }
 		const glm::mat4& getProjectionMatrix() const { return m_projectionM; }
 		const glm::mat4& getViewMatrix() const { return m_viewM; }
 		const glm::mat4& getViewProjectionMatrix() const { return m_viewProjectionM; }
+		float getRotation() const { return m_rotation; }
 		float getCurrentZoom() const { return m_currentZoom; }
 		float getLeft() const { return m_left; }
 		float getRight() const { return m_right; }
