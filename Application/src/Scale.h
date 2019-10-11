@@ -5,12 +5,16 @@
 
 
 //TODO: scale should not be a texture, but an opengl drawing to avoid texture disstortion when scaling the scale
+//FIX: jumping around when double clicked after moving
 class Scale {
 private:
 	glm::vec3 m_position;
 	glm::vec3 m_scenePosition;
 	glm::mat4 m_scaleMat;		//scale of the scale
 	glm::vec3 m_scaleVec;
+
+	float m_aspectRatio;
+	float m_zoomLevel;
 
 	float m_width, m_height;
 	float m_currentWidth, m_currentHeight;		//storage for width and height, so that recalculation does not forget original width/height
@@ -20,7 +24,7 @@ private:
 public:
 
 	Scale() = default;
-	Scale(float width, float height, const glm::vec3& position);
+	Scale(float width, float height, float aspectRatio, float zoomLevel, const glm::vec3& position);
 
 	//getters
 	inline glm::vec3 getPosition() const { return m_position; }

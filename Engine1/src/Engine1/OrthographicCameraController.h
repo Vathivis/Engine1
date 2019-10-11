@@ -32,6 +32,8 @@ namespace Engine1 {
 		//getters
 		OrthographicCamera& getCamera() { return m_camera; }
 		const OrthographicCamera& getCamera() const { return m_camera; }
+		inline float getZoomLevel() { return m_zoomLevel; }
+		inline float getAspectRatio() { return m_aspectRatio; }
 
 	private:
 

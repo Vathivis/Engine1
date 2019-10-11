@@ -33,7 +33,7 @@ namespace Engine1 {
 
 		void setPosition(const glm::vec3& position) { m_position = position; recalculateViewMatrix(); }
 		void setRotation(float rotation) { m_rotation = rotation; recalculateViewMatrix(); }
-		void setZoom(float zoom) { m_currentZoom = zoom; recalculateProjectionMatrix(); }
+		//void setZoom(float zoom) { m_currentZoom = zoom; recalculateProjectionMatrix(); }
 
 
 		//getters

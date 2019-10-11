@@ -181,8 +181,11 @@ public:
 		srand(time(nullptr));
 
 		std::time_t result = std::time(nullptr);
-		m_fileName = "Log_";
-		m_fileName += std::asctime(std::localtime(&result));
+		m_fileName = "Log_1";
+
+		//m_fileName += std::asctime(std::localtime(&result));
+		//m_fileName = m_fileName.substr(0, m_fileName.size() - 1);
+		m_fileName += ".txt";
 	
 		m_groundPlanWallsTex = Engine1::Texture2D::create("assets/textures/grid.png");	//Engine1::Texture2D::create("assets/textures/pudorys-zdi.png");
 		m_groundPlanTex = Engine1::Texture2D::create("assets/textures/pudorys.png");
@@ -370,7 +373,7 @@ public:
 		float scaleW = m_scaleTex->getWidth();
 		float scaleH = m_scaleTex->getHeight();
 
-		m_scale = std::make_unique<Scale>(Scale(scaleW, scaleH, { 480.0f, 80.0f, 0.0f }));
+		m_scale = std::make_unique<Scale>(Scale(scaleW, scaleH, m_cameraController.getAspectRatio(), m_cameraController.getZoomLevel(), { 480.0f, 80.0f, 0.0f }));
 
 		scaleW = scaleW / 1280 * 1.6f;
 		scaleH = scaleH / 720 * 0.9f;
@@ -494,40 +497,39 @@ public:
 		//TODO: put this to a function
 		auto [x, y] = Engine1::Input::getMousePosition();
 
-		auto m_camera = m_cameraController.getCamera();		//temp
-		x = x * 2 * m_camera.getRight() / 1280 - m_camera.getRight();
-		float tmp = m_camera.getRight() / m_camera.getCurrentZoom();
+		x = x * 2 * m_cameraController.getAspectRatio() / 1280 - m_cameraController.getAspectRatio();
+		float tmp = m_cameraController.getAspectRatio() / m_cameraController.getZoomLevel();
 		x = (x + tmp) * 1280 / (tmp * 2);
 
-		y = y * 2 * m_camera.getTop() / 720 - m_camera.getTop();
-		tmp = m_camera.getTop() / m_camera.getCurrentZoom();
+		y = y * 2 * m_cameraController.getZoomLevel() / 720 - m_cameraController.getZoomLevel();
+		tmp = m_cameraController.getZoomLevel() / m_cameraController.getZoomLevel();
 		y = (y + tmp) * 720 / (tmp * 2);
-
-
+		
 
 		//denormalize camera/////////////////////////////////////////////////////////////////////
-		glm::vec3 camPos = m_camera.getPosition();
-		camPos.x *= 1280 / (m_camera.getRight() * 2);
-		camPos.y *= -720 / (m_camera.getTop() * 2);
+		glm::vec3 camPos = m_cameraController.getCamera().getPosition();
+		camPos.x *= 1280 / (m_cameraController.getAspectRatio() * m_cameraController.getZoomLevel() * 2);
+		camPos.y *= -720 / (m_cameraController.getZoomLevel() * 2);
 
-		m_mouseScenePos = { x + camPos.x, y + camPos.y };
+		m_mouseScenePos = { x + camPos.x , y + camPos.y };
 
 		//screen position from scene position//////////////////////////////////////////////////////////////
 		//TODO: replace hard values
-		glm::vec2 tmpPos = m_mouseScenePos;
+		/*glm::vec2 tmpPos = m_mouseScenePos;
 
 		tmpPos.x -= camPos.x;
-		tmpPos.x = m_camera.getRight() * m_camera.getCurrentZoom() * 2 * tmpPos.x / 1280;
-		tmp = m_camera.getRight() * m_camera.getCurrentZoom() * m_camera.getCurrentZoom();
-		tmpPos.x = (tmpPos.x + tmp) * 1280 / (2 * tmp) - 640 / m_camera.getCurrentZoom();
+		tmpPos.x = m_cameraController.getAspectRatio() * m_cameraController.getZoomLevel() * 2 * tmpPos.x / 1280;
+		tmp = m_cameraController.getAspectRatio() * m_cameraController.getZoomLevel() * m_cameraController.getZoomLevel();
+		tmpPos.x = (tmpPos.x + tmp) * 1280 / (2 * tmp) - 640 / m_cameraController.getZoomLevel();
 
 		tmpPos.y -= camPos.y;
-		tmpPos.y = m_camera.getTop() * m_camera.getCurrentZoom() * 2 * tmpPos.y / 720;
-		tmp = m_camera.getTop() * m_camera.getCurrentZoom() * m_camera.getCurrentZoom();
-		tmpPos.y = (tmpPos.y + tmp) * 720 / (2 * tmp) - 360 / m_camera.getCurrentZoom();
+		tmpPos.y = m_cameraController.getZoomLevel() * m_cameraController.getZoomLevel() * 2 * tmpPos.y / 720;
+		tmp = m_cameraController.getZoomLevel() * m_cameraController.getZoomLevel() * m_cameraController.getZoomLevel();
+		tmpPos.y = (tmpPos.y + tmp) * 720 / (2 * tmp) - 360 / m_cameraController.getZoomLevel();
 		
 
-		m_mouseScreenPos = { tmpPos.x, tmpPos.y };
+		m_mouseScreenPos = { tmpPos.x, tmpPos.y };*/
+		m_mouseScreenPos = { x, y };
 
 
 		//render
@@ -620,6 +622,7 @@ public:
 		//COM port networking
 		if (!m_nodes.empty() && m_server.getState()) {
 			glm::vec3 p = m_server.getDists();
+			//divided by 1000 because the distances are in millimeters
 			p.x = (p.x / 1000) * m_scale->getMeter();
 			p.y = (p.y / 1000) * m_scale->getMeter();
 			p.z = (p.z / 1000) * m_scale->getMeter();
@@ -631,8 +634,13 @@ public:
 			//timestamp
 			std::time_t result = std::time(nullptr);
 
-			file.open(m_fileName, std::ios::in || std::ios::app);
-			file << "[" << std::asctime(std::localtime(&result)) << "]  x: " << nposition.x << " y: " << nposition.y;
+			file.open(m_fileName, std::ios::in | std::ios::app);
+			if (file.is_open()) {
+				std::string time = std::asctime(std::localtime(&result));
+				time.pop_back();
+				file << "[" << time << "]  x: " << nposition.x << " y: " << nposition.y << "\n";
+				file.close();
+			}
 
 			m_nodes[0].setPosition({ nposition.x, nposition.y, 0 });
 			m_server.setState(false);
@@ -698,8 +706,8 @@ public:
 		ImGui::Text("Mouse scene position: %f %f", m_mouseScenePos.x, m_mouseScenePos.y);
 		ImGui::Text("Mouse screen position: %f %f", xx, yy);
 		ImGui::Text("Mouse screen pos from scene pos: %.3f %.3f", m_mouseScreenPos.x, m_mouseScreenPos.y);
-		ImGui::Text("Camera position: %f %f", (float)m_camera.getPosition().x * 1280 / 3.2, (float)m_camera.getPosition().y * -720 / 1.8);
-		ImGui::Text("Camera zoom: %f", m_camera.getCurrentZoom());
+		ImGui::Text("Camera position: %f %f", (float)m_camera.getPosition().x * 1280 / (m_cameraController.getAspectRatio() * 2), (float)m_camera.getPosition().y * -720 / (m_cameraController.getZoomLevel() * 2));
+		ImGui::Text("Camera zoom: %f", m_cameraController.getZoomLevel());
 		glReadPixels(xx, 720 - yy, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, mouseCol);		//TODO: change 720
 		ImGui::Text("Color on mouse pos: R:%u G:%u B:%u A:%u", mouseCol[0], mouseCol[1], mouseCol[2], mouseCol[3]);
 		if (ImGui::Checkbox("Show Scale", &m_showScale)) {}
@@ -888,6 +896,7 @@ public:
 			origin.y = origin.y * 2 * m_camera.getTop() / 720 - m_camera.getTop();
 		}
 
+		//FIX: dragging not working
 		//mouse hold
 		static bool found2 = false;
 		static bool found3 = false;
@@ -1145,14 +1154,14 @@ public:
 	}
 
 	void addAnchor(const glm::vec2& position, int id = -1) {
-		Anchor anchor({ position.x, position.y, 0.0f }, id);
+		Anchor anchor({ position.x, position.y, 0.0f }, m_cameraController.getAspectRatio(), m_cameraController.getZoomLevel(), id);
 		if (id == -1)
 			anchor.setID(rand());
 		m_anchors.push_back(anchor);
 	}
 
 	void addNode(const glm::vec2& position, int id = -1) {
-		Node node({ position.x, position.y, 0.0f }, id);
+		Node node({ position.x, position.y, 0.0f }, m_cameraController.getAspectRatio(), m_cameraController.getZoomLevel(), id);
 		if (id == -1) {
 			id = 0 + count;
 			count++;
@@ -1162,7 +1171,7 @@ public:
 	}
 
 	void addForklift(const glm::vec2& position, int id = -1) {
-		Forklift forklift({ position.x, position.y, 0.0f }, id);
+		Forklift forklift({ position.x, position.y, 0.0f }, m_cameraController.getAspectRatio(), m_cameraController.getZoomLevel(), id);
 		if (id == -1)
 			forklift.setID(rand());
 		m_forklifts.push_back(forklift);

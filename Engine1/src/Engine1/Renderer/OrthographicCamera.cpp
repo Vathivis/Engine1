@@ -8,10 +8,10 @@ namespace Engine1 {
 	OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top) 
 		: m_projectionM(glm::ortho(left, right, bottom, top, -1.0f, 1.0f)), m_viewM(1.0f) {
 		m_viewProjectionM = m_projectionM * m_viewM;
-		/*m_left = left;
+		m_left = left;
 		m_right = right;
 		m_bottom = bottom;
-		m_top = top;*/
+		m_top = top;
 	}
 
 	/*void OrthographicCamera::zoomIn() {
@@ -38,6 +38,10 @@ namespace Engine1 {
 
 	void OrthographicCamera::setProjection(float left, float right, float bottom, float top) {
 		m_projectionM = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
+		m_left = left;
+		m_right = right;
+		m_bottom = bottom;
+		m_top = top;
 		m_viewProjectionM = m_projectionM * m_viewM;
 
 	}

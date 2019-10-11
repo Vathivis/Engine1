@@ -9,6 +9,9 @@ private:
 	glm::vec3 m_scenePosition;
 	glm::mat4 m_scale;
 
+	float m_aspectRatio;
+	float m_zoomLevel;
+
 	float m_speed;
 	float m_radius;		//texture is 100x100
 	int m_id;
@@ -16,7 +19,7 @@ private:
 public:
 
 	Forklift() = default;
-	Forklift(const glm::vec3& position, int id = -1);
+	Forklift(const glm::vec3& position, float aspectRatio, float zoomLevel, int id = -1);
 
 	//getters
 	inline glm::vec3 getPosition() const { return m_position; }
