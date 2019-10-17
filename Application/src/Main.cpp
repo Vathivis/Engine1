@@ -502,7 +502,7 @@ public:
 		x = (x + tmp) * 1280 / (tmp * 2);
 
 		y = y * 2 * m_cameraController.getZoomLevel() / 720 - m_cameraController.getZoomLevel();
-		tmp = m_cameraController.getZoomLevel() / m_cameraController.getZoomLevel();
+		tmp = 1.0f / m_cameraController.getZoomLevel();
 		y = (y + tmp) * 720 / (tmp * 2);
 		
 
@@ -896,7 +896,6 @@ public:
 			origin.y = origin.y * 2 * m_camera.getTop() / 720 - m_camera.getTop();
 		}
 
-		//FIX: dragging not working
 		//mouse hold
 		static bool found2 = false;
 		static bool found3 = false;
@@ -1141,14 +1140,6 @@ public:
 	}
 
 	bool onMouseScrolledEvent(Engine1::MouseScrolledEvent& event) {
-
-		/*if (event.getYOffset() == -1) {
-			m_camera.zoomOut();
-		}
-
-		if (event.getYOffset() == 1) {
-			m_camera.zoomIn();
-		}*/
 
 		return false;
 	}

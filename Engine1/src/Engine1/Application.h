@@ -17,11 +17,13 @@ namespace Engine1 {
 	class Application {
 	private:
 		std::unique_ptr<Window> m_window;
-		bool m_running = true;
 		LayerStack m_layerStack;
 		static Application* s_Instance;		//instance aplikace - muze byt pouze jedna v programu
 		ImGuiLayer* m_ImGuiLayer;
 		float m_lastFrameTime = 0.0f;
+
+		bool m_running = true;
+		bool m_minimized = false;
 
 	public:
 		Application();
@@ -39,6 +41,7 @@ namespace Engine1 {
 	
 	private:
 		bool onWindowClose(WindowCloseEvent& e);
+		bool onWindowResize(WindowResizeEvent& e);
 	};
 
 	// To be defined in CLIENT

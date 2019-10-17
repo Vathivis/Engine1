@@ -43,8 +43,10 @@ namespace Engine1 {
 			Timestep timestep = time - m_lastFrameTime;
 			m_lastFrameTime = time;
 
-			for (Layer* layer : m_layerStack)
-				layer->onUpdate(timestep);
+			if (!m_minimized) {
+				for (Layer* layer : m_layerStack)
+					layer->onUpdate(timestep);
+			}
 
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_layerStack)
@@ -59,6 +61,7 @@ namespace Engine1 {
 	void Application::onEvent(Event& e) {
 		EventDispatcher dispatcher(e);
 		dispatcher.dispatch<WindowCloseEvent>(BIND_EVENT_FN(onWindowClose));
+		dispatcher.dispatch<WindowResizeEvent>(BIND_EVENT_FN(onWindowResize));
 
 		//E1_CORE_INFO("{0}", e);
 
@@ -86,6 +89,19 @@ namespace Engine1 {
 		m_running = false;
 
 		return true;
+	}
+
+	bool Application::onWindowResize(WindowResizeEvent& e) {
+		
+		if (e.getWidth() == 0 || e.getHeight() == 0) {
+			m_minimized = true;
+			return false;
+		}
+
+		m_minimized = false;
+		Renderer::onWindowResize(e.getWidth(), e.getHeight());
+
+		return false;
 	}
 
 }

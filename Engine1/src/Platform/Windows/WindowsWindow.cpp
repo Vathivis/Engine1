@@ -64,6 +64,7 @@ namespace Engine1 {
 			data.height = height;
 
 			WindowResizeEvent event(width, height);		//nastaveni eventu
+			E1_CORE_WARN("Window resize: {0}, {1}", width, height);
 			data.eventCallback(event);		//event dispatch > zachyceni nekde
 		});
 
