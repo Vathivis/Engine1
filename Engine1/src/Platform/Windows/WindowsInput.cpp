@@ -1,7 +1,7 @@
 #include "E1pch.h"
 #include "WindowsInput.h"
 
-#include "Engine1/Application.h"
+#include "Engine1/Core/Application.h"
 
 #include "GLFW/glfw3.h"
 
@@ -9,7 +9,7 @@
 
 namespace Engine1 {
 
-	Input* Input::s_Instance = new WindowsInput();		//staticka inicializace
+	scope<Input> Input::s_Instance = createScope<WindowsInput>();		//staticka inicializace
 
 
 

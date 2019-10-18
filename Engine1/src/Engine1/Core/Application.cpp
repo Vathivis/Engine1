@@ -1,7 +1,7 @@
 #include "E1pch.h"
 
 #include "Application.h"
-#include "Engine1/Log.h"
+#include "Engine1/Core/Log.h"
 #include "Input.h"
 
 #include "Engine1/Renderer/Renderer.h"

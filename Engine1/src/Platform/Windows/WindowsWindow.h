@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine1/Window.h"
+#include "Engine1/Core/Window.h"
 
 #include "Engine1/Renderer/GraphicsContext.h"
 
@@ -11,7 +11,7 @@ namespace Engine1 {
 	class WindowsWindow : public Window {
 	private:
 		GLFWwindow* m_window;
-		GraphicsContext* m_context;	
+		scope<GraphicsContext> m_context;	
 
 		struct WindowData {
 			std::string title;

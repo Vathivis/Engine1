@@ -2,13 +2,14 @@
 .vs/
 /bin/
 /bin-int/
+/App\ diary/
+**/bin/
+!vendor/bin/premake/
 
 #files
 *.user
-*.sln
-*.vcxproj
-*.vcxproj.*
-Application/imgui.ini
-Engine1/vendor/spdlog/
+**.sln
+**.vcxproj
+**.vcxproj.*
 *.docx
 *.tmp

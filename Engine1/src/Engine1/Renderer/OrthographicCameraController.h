@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine1/Renderer/OrthographicCamera.h"
-#include "Core/Timestep.h"
+#include "Engine1/Core/Timestep.h"
 
 #include "Engine1/Events/ApplicationEvent.h"
 #include "Engine1/Events/MouseEvent.h"
@@ -18,7 +18,7 @@ namespace Engine1 {
 		OrthographicCamera m_camera;
 
 		glm::vec3 m_cameraPosition = { 0.0f, 0.0f, 0.0f };
-		float m_cameraRotation = 0.0f;
+		float m_cameraRotation = 0.0f; //In degrees, in the anti-clockwise direction
 
 		float m_cameraTranslationSpeed = 5.0f;
 		float m_cameraRotationSpeed = 180.0f;

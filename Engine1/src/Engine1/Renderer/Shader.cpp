@@ -47,19 +47,19 @@ namespace Engine1 {
 		add(name, shader);
 	}
 
-	ref<Engine1::Shader> ShaderLibrary::load(const std::string& filepath) {
+	ref<Shader> ShaderLibrary::load(const std::string& filepath) {
 		auto shader = Shader::create(filepath);
 		add(shader);
 		return shader;
 	}
 
-	ref<Engine1::Shader> ShaderLibrary::load(const std::string& name, const std::string& filepath) {
+	ref<Shader> ShaderLibrary::load(const std::string& name, const std::string& filepath) {
 		auto shader = Shader::create(filepath);
 		add(name, shader);
 		return shader;
 	}
 
-	ref<Engine1::Shader> ShaderLibrary::get(const std::string& name) {
+	ref<Shader> ShaderLibrary::get(const std::string& name) {
 		E1_CORE_ASSERT(exists(name), "Shader not found");
 		return m_shaders[name];
 	}

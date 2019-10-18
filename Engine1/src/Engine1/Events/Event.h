@@ -1,6 +1,6 @@
 #pragma once
 #include "E1pch.h"
-#include "Engine1/Core.h"
+#include "Engine1/Core/Core.h"
 
 namespace Engine1 {
 
@@ -30,7 +30,7 @@ namespace Engine1 {
 	};
 
 	//makro pro dopsani virtualnich funkci k eventum - usetreni mista
-#define EVENT_CLASS_TYPE(type) static EventType getStaticType() { return EventType::##type; }\
+#define EVENT_CLASS_TYPE(type) static EventType getStaticType() { return EventType::type; }\
 								virtual EventType getEventType() const override { return getStaticType(); }\
 								virtual const char* getName() const override { return #type; }
 

@@ -3,16 +3,16 @@
 //for use by Engine1 applications
 
 
-#include "Engine1/Application.h"
-#include "Engine1/Log.h"
-#include "Engine1/Layer.h"
+#include "Engine1/Core/Application.h"
+#include "Engine1/Core/Log.h"
+#include "Engine1/Core/Layer.h"
 
 #include "Engine1/Core/Timestep.h"
 
-#include "Engine1/Input.h"
-#include "Engine1/KeyCodes.h"
-#include "Engine1/MouseButtonCodes.h"
-#include "Engine1/OrthographicCameraController.h"
+#include "Engine1/Core/Input.h"
+#include "Engine1/Core/KeyCodes.h"
+#include "Engine1/Core/MouseButtonCodes.h"
+#include "Engine1/Renderer/OrthographicCameraController.h"
 
 #include "Engine1/imgui/ImGuiLayer.h"
 
@@ -32,5 +32,5 @@
 
 
 //-----------Entry Point-----------------
-#include "Engine1/EntryPoint.h"
+#include "Engine1/Core/EntryPoint.h"
 //---------------------------------------

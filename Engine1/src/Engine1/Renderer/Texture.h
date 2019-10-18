@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "Engine1/Core.h"
+#include "Engine1/Core/Core.h"
 
 namespace Engine1 {
 

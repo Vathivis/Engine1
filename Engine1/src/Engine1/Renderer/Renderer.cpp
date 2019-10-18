@@ -5,7 +5,7 @@
 
 namespace Engine1 {
 
-	Renderer::sceneData* Renderer::s_sceneData = new Renderer::sceneData;
+	scope<Renderer::sceneData> Renderer::s_sceneData = createScope<Renderer::sceneData>();
 
 	void Renderer::init() {
 		RenderCommand::init();

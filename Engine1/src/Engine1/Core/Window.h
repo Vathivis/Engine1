@@ -2,7 +2,7 @@
 
 #include "E1pch.h"
 
-#include "Engine1/Core.h"
+#include "Engine1/Core/Core.h"
 #include "Engine1/Events/Event.h"
 
 namespace Engine1 {

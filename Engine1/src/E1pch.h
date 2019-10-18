@@ -29,9 +29,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "Engine1/Log.h"
-#include "Engine1/KeyCodes.h"
-#include "Engine1/MouseButtonCodes.h"
+#include "Engine1/Core/Log.h"
+#include "Engine1/Core/KeyCodes.h"
+#include "Engine1/Core/MouseButtonCodes.h"
 
 
 

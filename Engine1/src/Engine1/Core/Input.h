@@ -1,13 +1,13 @@
 #pragma once
 
 #include "E1pch.h"
-#include "Engine1/Core.h"
+#include "Engine1/Core/Core.h"
 
 namespace Engine1 {
 
 	class Input {
 	private:
-		static Input* s_Instance;	//povolena pouze jedna instance tridy
+		static scope<Input> s_Instance;	//povolena pouze jedna instance tridy
 
 	protected:
 		Input() = default;

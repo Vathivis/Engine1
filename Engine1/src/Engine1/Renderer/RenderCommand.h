@@ -6,7 +6,7 @@ namespace Engine1 {
 
 	class RenderCommand {
 	private:
-		static RendererAPI* s_rendererAPI;
+		static scope<RendererAPI> s_rendererAPI;
 
 	public:
 

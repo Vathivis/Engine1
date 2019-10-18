@@ -80,7 +80,6 @@ project	"Engine1"
 		systemversion "latest"
 
 		defines {
-			"E1_PLATFORM_WINDOWS",
 			"E1_BUILD_DLL",
 			"GLFW_INCLUDE_NONE"
 		}
@@ -133,11 +132,6 @@ project "Application"
 
 	filter "system:windows"
 		systemversion "latest"
-
-		defines {
-			"E1_PLATFORM_WINDOWS"
-		}
-
 	
 	filter "configurations:Debug"
 		defines "E1_DEBUG"

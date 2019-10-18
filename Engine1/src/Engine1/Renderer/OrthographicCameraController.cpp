@@ -1,7 +1,7 @@
 #include "E1pch.h"
 #include "OrthographicCameraController.h"
 
-#include "Engine1/Input.h"
+#include "Engine1/Core/Input.h"
 
 namespace Engine1 {
 
@@ -12,21 +12,34 @@ namespace Engine1 {
 
 	void OrthographicCameraController::onUpdate(Timestep ts) {
 		//else if to prevent cancelling each other
-		if (Input::isKeyPressed(E1_KEY_D))
-			m_cameraPosition.x += m_cameraTranslationSpeed * ts;
-		else if (Input::isKeyPressed(E1_KEY_A))
-			m_cameraPosition.x -= m_cameraTranslationSpeed * ts;
+		if (Input::isKeyPressed(E1_KEY_D)) {
+			m_cameraPosition.x += cos(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * ts;
+			m_cameraPosition.y += sin(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * ts;
+		}
+		else if (Input::isKeyPressed(E1_KEY_A)) {
+			m_cameraPosition.x -= cos(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * ts;
+			m_cameraPosition.y -= sin(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * ts;
+		}
 
-		if (Input::isKeyPressed(E1_KEY_W))
-			m_cameraPosition.y += m_cameraTranslationSpeed * ts;
-		else if (Input::isKeyPressed(E1_KEY_S))
-			m_cameraPosition.y -= m_cameraTranslationSpeed * ts;
+		if (Input::isKeyPressed(E1_KEY_W)) {
+			m_cameraPosition.x += -sin(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * ts;
+			m_cameraPosition.y += cos(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * ts;
+		}
+		else if (Input::isKeyPressed(E1_KEY_S)) {
+			m_cameraPosition.x -= -sin(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * ts;
+			m_cameraPosition.y -= cos(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * ts;
+		}
 
 		if (m_rotation) {
 			if (Input::isKeyPressed(E1_KEY_E))
 				m_cameraRotation += m_cameraRotationSpeed * ts;
 			else if (Input::isKeyPressed(E1_KEY_Q))
 				m_cameraRotation -= m_cameraRotationSpeed * ts;
+
+			if (m_cameraRotation > 180.0f)
+				m_cameraRotation -= 360.0f;
+			else if (m_cameraRotation <= -180.0f)
+				m_cameraRotation += 360.0f;
 
 			m_camera.setRotation(m_cameraRotation);
 		}
