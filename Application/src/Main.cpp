@@ -1,4 +1,5 @@
 #include <Engine1.h>
+#include <Engine1/Core/EntryPoint.h>
 
 #include "Platform/OpenGL/OpenGLShader.h"
 
@@ -16,6 +17,8 @@
 #include "Scale.h"
 #include "Network/UDPServer.h"
 #include "Network/UDPClient.h"
+
+#include "Sandbox2D.h"
 
 //TEMPORARY opengl
 #include "glad/glad.h"
@@ -236,7 +239,7 @@ public:
 		//	nakonec glDrawElements, kde pocet indexu je VertexArray->getIndexBuffer()->getCount()				   //
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		m_squareVA.reset(Engine1::VertexArray::create());
+		m_squareVA = Engine1::VertexArray::create();
 
 		float squareVertices[4 * 5] = {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -262,7 +265,7 @@ public:
 
 
 		//background texture/////////////////////////////////////////////////////////////////////////////////////////////////
-		m_backgroundVA.reset(Engine1::VertexArray::create());
+		m_backgroundVA = Engine1::VertexArray::create();
 
 		float groundW = m_groundPlanWallsTex->getWidth();
 		float groundH = m_groundPlanWallsTex->getHeight();
@@ -294,7 +297,7 @@ public:
 
 	
 		//anchor/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		m_anchorVA.reset(Engine1::VertexArray::create());
+		m_anchorVA = Engine1::VertexArray::create();
 		float anchorVertices[] = {
 			-0.1f, -0.1f, 0.0f, 0.0f, 0.0f,	//left bot
 			 0.1f, -0.1f, 0.0f, 1.0f, 0.0f,	//right bot
@@ -318,7 +321,7 @@ public:
 		m_anchorVA->setIndexBuffer(anchorIB);
 
 		//node//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		m_nodeVA.reset(Engine1::VertexArray::create());
+		m_nodeVA = Engine1::VertexArray::create();
 		float nodeVertices[] = {
 			-0.1f, -0.1f, 0.0f, 0.0f, 0.0f,	//left bot
 			 0.1f, -0.1f, 0.0f, 1.0f, 0.0f,	//right bot
@@ -343,7 +346,7 @@ public:
 
 
 		//forklift//////////////////////////////////////////////////////////////////////////////////////////////////////////
-		m_forkliftVA.reset(Engine1::VertexArray::create());
+		m_forkliftVA = Engine1::VertexArray::create();
 		float forkliftVertices[] = {
 			-0.1f, -0.1f, 0.0f, 0.0f, 0.0f,	//left bot
 			 0.1f, -0.1f, 0.0f, 1.0f, 0.0f,	//right bot
@@ -368,7 +371,7 @@ public:
 
 
 		//scale/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		m_scaleVA.reset(Engine1::VertexArray::create());
+		m_scaleVA = Engine1::VertexArray::create();
 
 		float scaleW = m_scaleTex->getWidth();
 		float scaleH = m_scaleTex->getHeight();
@@ -1275,13 +1278,11 @@ public:
 class Sandbox : public Engine1::Application {
 public:
 	Sandbox() {
-		pushLayer(new Layer1());
-		//pushOverlay(new Overlay1());
+		//pushLayer(new Layer1());
+		pushLayer(new Sandbox2D());
 	}
 
-	~Sandbox() {
-		
-	}
+	~Sandbox() {}
 
 };
 

@@ -28,9 +28,3 @@
 
 #include "Engine1/Renderer/OrthographicCamera.h"
 //---------------------------------------
-
-
-
-//-----------Entry Point-----------------
-#include "Engine1/Core/EntryPoint.h"
-//---------------------------------------

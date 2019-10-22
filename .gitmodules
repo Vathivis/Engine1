@@ -1,11 +1,11 @@
 [submodule "IPS_demo_v2/vendor/spdlog"]
-	path = IPS_demo_v2/vendor/spdlog
+	path = Engine1/vendor/spdlog
 	url = https://github.com/gabime/spdlog
 	ignore = dirty
 	branch = v1.x
 [submodule "Engine1/vendor/GLFW"]
 	path = Engine1/vendor/GLFW
-	url = https://github.com/TheCherno/GLFW
+	url = https://github.com/TheCherno/glfw
 	ignore = dirty
 	branch = master
 [submodule "Engine1/vendor/imgui"]
@@ -16,8 +16,4 @@
 [submodule "Engine1/vendor/glm"]
 	path = Engine1/vendor/glm
 	url = https://github.com/g-truc/glm
-	branch = master
-[submodule "Engine1/vendor/stb"]
-	path = Engine1/vendor/stb
-	url = https://github.com/nothings/stb
 	branch = master
