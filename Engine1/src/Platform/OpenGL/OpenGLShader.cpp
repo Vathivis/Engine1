@@ -157,27 +157,39 @@ namespace Engine1 {
 		glUseProgram(0);
 	}
 
-	void OpenGLShader::uploadUniform1i(const std::string& name, int value) {
+	void OpenGLShader::setFloat3(const std::string& name, const glm::vec3& value) {
+		uploadUniformFloat3(name, value);
+	}
+
+	void OpenGLShader::setFloat4(const std::string& name, const glm::vec4& value) {
+		uploadUniformFloat4(name, value);
+	}
+
+	void OpenGLShader::setMat4(const std::string& name, const glm::mat4& value) {
+		uploadUniformMat4(name, value);
+	}
+
+	void OpenGLShader::uploadUniformInt1(const std::string& name, int value) {
 		GLint location = getUniformLocation(name);
 		glUniform1i(location, value);
 	}
 
-	void OpenGLShader::uploadUniform1f(const std::string& name, float value) {
+	void OpenGLShader::uploadUniformFloat1(const std::string& name, float value) {
 		GLint location = getUniformLocation(name);
 		glUniform1f(location, value);
 	}
 
-	void OpenGLShader::uploadUniform2f(const std::string& name, const glm::vec2& value) {
+	void OpenGLShader::uploadUniformFloat2(const std::string& name, const glm::vec2& value) {
 		GLint location = getUniformLocation(name);
 		glUniform2f(location, value.x, value.y);
 	}
 
-	void OpenGLShader::uploadUniform3f(const std::string& name, const glm::vec3& value) {
+	void OpenGLShader::uploadUniformFloat3(const std::string& name, const glm::vec3& value) {
 		GLint location = getUniformLocation(name);
 		glUniform3f(location, value.x, value.y, value.z);
 	}
 
-	void OpenGLShader::uploadUniform4f(const std::string& name, const glm::vec4& value) {
+	void OpenGLShader::uploadUniformFloat4(const std::string& name, const glm::vec4& value) {
 		GLint location = getUniformLocation(name);
 		glUniform4f(location, value.x, value.y, value.z, value.w);
 	}

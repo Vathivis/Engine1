@@ -570,12 +570,12 @@ public:
 		glm::vec3 pos2(0.0f, 0.0f, 0.0f);
 		glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), pos2);
 		m_groundPlanWallsTex->bind();
-		std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniform1f("u_texture", 0);	//weird on intel gpu
+		std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniformFloat1("u_texture", 0);	//weird on intel gpu
 		Engine1::Renderer::submit(textureShader, m_backgroundVA, transform2);
 
 		if (m_showFurniture) {
 			m_groundPlanTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniform1f("u_texture", 0);
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniformFloat1("u_texture", 0);
 			Engine1::Renderer::submit(textureShader, m_backgroundVA, transform2);
 		}
 
@@ -584,7 +584,7 @@ public:
 			anchor.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
 			glm::mat4 anchorTransform = glm::translate(glm::mat4(1.0f), anchor.getPosition()) * anchor.getScale();
 			m_anchorTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniform1f("u_texture", 0);
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniformFloat1("u_texture", 0);
 			Engine1::Renderer::submit(textureShader, m_anchorVA, anchorTransform);
 		}
 
@@ -654,7 +654,7 @@ public:
 			node.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
 			glm::mat4 nodeTransform = glm::translate(glm::mat4(1.0f), node.getPosition()) * node.getScale();
 			m_nodeTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniform1f("u_texture", 0);
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniformFloat1("u_texture", 0);
 			Engine1::Renderer::submit(textureShader, m_nodeVA, nodeTransform);
 		}
 
@@ -663,7 +663,7 @@ public:
 			forklift.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
 			glm::mat4 forkliftTransform = glm::translate(glm::mat4(1.0f), forklift.getPosition()) *	forklift.getScale();
 			m_forkliftTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniform1f("u_texture", 0);
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniformFloat1("u_texture", 0);
 			Engine1::Renderer::submit(textureShader, m_forkliftVA, forkliftTransform);
 		}
 
@@ -672,7 +672,7 @@ public:
 			m_scale->setScale(glm::vec3(m_scale->getCurrentWidth() / m_scale->getWidth(), 1.0f, 1.0f));
 			glm::mat4 scaleTransform = glm::translate(glm::mat4(1.0f), m_scale->getPosition()) * m_scale->getScale();
 			m_scaleTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniform1f("u_texture", 0);
+			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniformFloat1("u_texture", 0);
 			Engine1::Renderer::submit(textureShader, m_scaleVA, scaleTransform);
 		}
 
@@ -1233,7 +1233,7 @@ public:
 		glm::vec3 pos2(0.0f, 0.0f, 0.0f);
 		glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), pos2);
 		m_groundPlanWallsTex->bind();
-		std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniform1f("u_texture", 0);	//weird on intel gpu
+		std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniformFloat1("u_texture", 0);	//weird on intel gpu
 		Engine1::Renderer::submit(textureShader, m_backgroundVA, transform2);
 		Engine1::Renderer::endScene();
 

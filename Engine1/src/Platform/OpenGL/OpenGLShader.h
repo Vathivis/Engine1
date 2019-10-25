@@ -27,12 +27,17 @@ namespace Engine1 {
 		virtual const std::string getName() const override { return m_name; }
 
 		//set uniforms
-		void uploadUniform1i(const std::string& name, int value);
+		virtual void setFloat3(const std::string& name, const glm::vec3& value) override;
+		virtual void setFloat4(const std::string& name, const glm::vec4& value) override;
+		virtual void setMat4(const std::string& name, const glm::mat4& value) override;
 
-		void uploadUniform1f(const std::string& name, float value);
-		void uploadUniform2f(const std::string& name, const glm::vec2& value);
-		void uploadUniform3f(const std::string& name, const glm::vec3& value);
-		void uploadUniform4f(const std::string& name, const glm::vec4& value);
+		//upload uniforms
+		void uploadUniformInt1(const std::string& name, int value);
+
+		void uploadUniformFloat1(const std::string& name, float value);
+		void uploadUniformFloat2(const std::string& name, const glm::vec2& value);
+		void uploadUniformFloat3(const std::string& name, const glm::vec3& value);
+		void uploadUniformFloat4(const std::string& name, const glm::vec4& value);
 
 		void uploadUniformMat3(const std::string& name, const glm::mat3& matrix);
 		void uploadUniformMat4(const std::string& name, const glm::mat4& matrix);
