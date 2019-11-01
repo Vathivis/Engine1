@@ -39,4 +39,4 @@ Next: Follow the steps relevant to your operating system.
 
 Premake 5.0.0-alpha14 is provided as [premake5.exe](https://github.com/vovojta/Engine1/blob/master/vendor/bin/premake/premake5.exe) in the repository. Execute and follow the install instructions.
 
-Premake generates project files for Visual Studio. To generate the `.sln` and `.vcxproj` files for Visual Studio 2019, run `premake vs2019` at the command line. Or you may run [GenerateProjects.bat](https://github.com/vovojta/Engine1/blob/master/GenerateProjects.bat) as a convenience batch file for this task.
+Premake generates project files for Visual Studio. To generate the `.sln` and `.vcxproj` files for Visual Studio 2019, run `premake vs2019` at the command line. Or you may run [Win-GenProjects.bat](https://github.com/vovojta/Engine1/blob/master/scripts/Win-GenProjects.bat) from the scripts folder as a convenience batch file for this task.
