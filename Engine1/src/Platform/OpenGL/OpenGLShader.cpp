@@ -157,6 +157,10 @@ namespace Engine1 {
 		glUseProgram(0);
 	}
 
+	void OpenGLShader::setInt1(const std::string& name, int value) {
+		uploadUniformInt1(name, value);
+	}
+
 	void OpenGLShader::setFloat3(const std::string& name, const glm::vec3& value) {
 		uploadUniformFloat3(name, value);
 	}

@@ -12,6 +12,8 @@ private:
 	Engine1::ref<Engine1::VertexArray> m_squareVA;
 	Engine1::ref<Engine1::Shader> m_flatColorShader;
 
+	Engine1::ref<Engine1::Texture2D> m_checkerboardTexture;
+
 	glm::vec4 m_squareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 
 

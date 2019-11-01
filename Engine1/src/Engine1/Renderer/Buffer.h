@@ -32,7 +32,7 @@ namespace Engine1 {
 		std::string name;
 		ShaderDataType type;
 		uint32_t size = 0;
-		uint32_t offset = 0;
+		size_t offset = 0;
 		bool normalized = false;
 
 		BufferElement() = default;
@@ -84,7 +84,7 @@ namespace Engine1 {
 	private:
 		void calculateOffsetsAndStride()
 		{
-			uint32_t offset = 0;
+			size_t offset = 0;
 			m_stride = 0;
 			for (auto& element : m_elements)
 			{

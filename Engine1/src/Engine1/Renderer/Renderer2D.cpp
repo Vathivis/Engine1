@@ -12,6 +12,7 @@ namespace Engine1 {
 	struct Renderer2DStorage {
 		ref<VertexArray> quadVertexArray;
 		ref<Shader> flatColorShader;
+		ref<Shader> textureShader;
 	};
 
 	static Renderer2DStorage* s_data;
@@ -22,16 +23,17 @@ namespace Engine1 {
 		s_data->quadVertexArray = VertexArray::create();
 
 		float squareVertices[5 * 4] = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.5f,  0.5f, 0.0f,
-			-0.5f,  0.5f, 0.0f
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
 		ref<VertexBuffer> squareVB;
 		squareVB.reset(VertexBuffer::create(squareVertices, sizeof(squareVertices)));
 		squareVB->setLayout({
-			{ ShaderDataType::Float3, "a_position" }
+			{ ShaderDataType::Float3, "a_position" },
+			{ ShaderDataType::Float2, "a_texCoord" }
 		});
 		s_data->quadVertexArray->addVertexBuffer(squareVB);
 
@@ -41,6 +43,10 @@ namespace Engine1 {
 		s_data->quadVertexArray->setIndexBuffer(squareIB);
 
 		s_data->flatColorShader = Shader::create("assets/shaders/FlatColor.glsl");
+		s_data->textureShader = Shader::create("assets/shaders/Texture.glsl");
+		s_data->textureShader->bind();
+		s_data->textureShader->setInt1("u_texture", 0);
+
 	}
 
 	void Renderer2D::shutdown() {
@@ -51,6 +57,9 @@ namespace Engine1 {
 
 		s_data->flatColorShader->bind();
 		s_data->flatColorShader->setMat4("u_viewProjection", camera.getViewProjectionMatrix());
+
+		s_data->textureShader->bind();
+		s_data->textureShader->setMat4("u_viewProjection", camera.getViewProjectionMatrix());
 
 	}
 
@@ -73,6 +82,22 @@ namespace Engine1 {
 		s_data->quadVertexArray->bind();
 		RenderCommand::drawIndexed(s_data->quadVertexArray);
 
+	}
+
+	void Renderer2D::drawQuad(const glm::vec2& position, const glm::vec2& size, const ref<Texture2D>& texture) {
+		drawQuad({ position.x, position.y, 0.0f }, size, texture);
+	}
+
+	void Renderer2D::drawQuad(const glm::vec3& position, const glm::vec2& size, const ref<Texture2D>& texture) {
+		s_data->textureShader->bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		s_data->textureShader->setMat4("u_transform", transform);
+
+		texture->bind();
+
+		s_data->quadVertexArray->bind();
+		RenderCommand::drawIndexed(s_data->quadVertexArray);
 	}
 
 }

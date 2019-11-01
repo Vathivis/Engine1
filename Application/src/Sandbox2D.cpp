@@ -11,7 +11,7 @@ Sandbox2D::Sandbox2D() : Layer("Sandbox2D"), m_cameraController(1280.0f / 720.0f
 }
 
 void Sandbox2D::onAttach() {
-	
+	m_checkerboardTexture = Engine1::Texture2D::create("assets/textures/checkerboard.png");
 }
 
 void Sandbox2D::onDetach() {
@@ -29,7 +29,7 @@ void Sandbox2D::onUpdate(Engine1::Timestep ts) {
 
 	Engine1::Renderer2D::beginScene(m_cameraController.getCamera());
 
-	Engine1::Renderer2D::drawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+	Engine1::Renderer2D::drawQuad({ 0.0f, 0.5f }, { 1.0f, 1.0f }, m_checkerboardTexture);
 	Engine1::Renderer2D::drawQuad({ 1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.7f, 0.3f, 1.0f });
 	Engine1::Renderer2D::drawQuad({ -1.0f, 0.0f }, { 0.5f, 0.5f }, { 0.2f, 0.2f, 0.9f, 1.0f });
 

@@ -27,6 +27,7 @@ namespace Engine1 {
 		virtual const std::string getName() const override { return m_name; }
 
 		//set uniforms
+		virtual void setInt1(const std::string& name, int value) override;
 		virtual void setFloat3(const std::string& name, const glm::vec3& value) override;
 		virtual void setFloat4(const std::string& name, const glm::vec4& value) override;
 		virtual void setMat4(const std::string& name, const glm::mat4& value) override;
@@ -41,6 +42,9 @@ namespace Engine1 {
 
 		void uploadUniformMat3(const std::string& name, const glm::mat3& matrix);
 		void uploadUniformMat4(const std::string& name, const glm::mat4& matrix);
+
+
+		
 
 	private:
 

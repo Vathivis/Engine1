@@ -11,7 +11,7 @@
 
 namespace Engine1 {
 
-	static bool s_GLFWInitialized = false;
+	static uint32_t s_GLFWWindowCount = 0;
 
 	static void GLFWErrorCallback(int error, const char* description) {
 		E1_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
@@ -39,16 +39,16 @@ namespace Engine1 {
 
 		
 
-		if (!s_GLFWInitialized)
+		if (s_GLFWWindowCount == 0)
 		{
-			// TODO: glfwTerminate on system shutdown
+			E1_CORE_INFO("Initializing GLFW");
 			int success = glfwInit();
 			E1_CORE_ASSERT(success, "Could not intialize GLFW!");
 			glfwSetErrorCallback(GLFWErrorCallback);
-			s_GLFWInitialized = true;
 		}
 
 		m_window = glfwCreateWindow((int)props.width, (int)props.height, m_data.title.c_str(), nullptr, nullptr);
+		++s_GLFWWindowCount;
 
 		m_context = createScope<OpenGLContext>(m_window);
 		m_context->init();
@@ -147,6 +147,11 @@ namespace Engine1 {
 
 	void WindowsWindow::shutdown() {
 		glfwDestroyWindow(m_window);
+
+		if (--s_GLFWWindowCount == 0) {
+			E1_CORE_INFO("Terminating GLFW");
+			glfwTerminate();
+		}
 	}
 
 	void WindowsWindow::onUpdate()

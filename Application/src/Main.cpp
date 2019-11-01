@@ -197,8 +197,8 @@ public:
 		m_scaleTex = Engine1::Texture2D::create("assets/textures/meritko.png");
 		m_forkliftTex = Engine1::Texture2D::create("assets/textures/forklift.png");
 		
-		std::thread t1(&UDPServer::onUpdate, &m_server);
-		t1.detach();
+		//std::thread t1(&UDPServer::onUpdate, &m_server);
+		//t1.detach();
 
 		/*std::thread t2(&UDPClient::send, &m_client, "yes");
 		t2.detach();*/
@@ -623,7 +623,7 @@ public:
 		}*/
 
 		//COM port networking
-		if (!m_nodes.empty() && m_server.getState()) {
+		/*if (!m_nodes.empty() && m_server.getState()) {
 			glm::vec3 p = m_server.getDists();
 			//divided by 1000 because the distances are in millimeters
 			p.x = (p.x / 1000) * m_scale->getMeter();
@@ -647,7 +647,7 @@ public:
 
 			m_nodes[0].setPosition({ nposition.x, nposition.y, 0 });
 			m_server.setState(false);
-		}
+		}*/
 
 		//nodes
 		for (auto& node : m_nodes) {
@@ -813,7 +813,7 @@ public:
 					ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
 					// Display the Open dialog box. 
-					if (GetOpenFileName(&ofn) == TRUE)
+					if (GetOpenFileName(&ofn) == TRUE) {
 						hf = CreateFile(ofn.lpstrFile,
 							GENERIC_READ,
 							0,
@@ -823,43 +823,46 @@ public:
 							(HANDLE)nullptr);
 
 
-					std::ifstream openFile;
-					std::stringstream iss;
-					std::string str;
 
-					for (int i = 0; i < 259; ++i) {
-						if(i == 0 || (i + 1) % 2)
-							str += szFile[i];
-					}
+						std::ifstream openFile;
+						std::stringstream iss;
+						std::string str;
 
-
-					float xp, yp;
-					int id;
-					int scalex;
-
-					CloseHandle(hf);
-					E1_INFO("Opening File {0}", str.c_str());
-					openFile.open(str.c_str(), std::ios::in);
-
-					if (openFile.is_open()) {
-
-						m_anchors.clear();
-						iss << openFile.rdbuf();
-						openFile.close();
-
-						iss >> scalex;
-						m_scale->setWidth(scalex);
-
-						while (!iss.eof()) {
-
-							iss >> xp >> yp >> id;
-							addAnchor({ xp, yp }, id);
-
+						for (int i = 0; i < 259; ++i) {
+							if (i == 0 || (i + 1) % 2)
+								str += szFile[i];
 						}
+
+
+						float xp, yp;
+						int id;
+						int scalex;
+
+						CloseHandle(hf);
+						E1_INFO("Opening File {0}", str.c_str());
+						openFile.open(str.c_str(), std::ios::in);
+
+						if (openFile.is_open()) {
+
+							m_anchors.clear();
+							iss << openFile.rdbuf();
+							openFile.close();
+
+							iss >> scalex;
+							m_scale->setWidth(scalex);
+
+							while (!iss.eof()) {
+
+								iss >> xp >> yp >> id;
+								addAnchor({ xp, yp }, id);
+
+							}
+						}
+						else
+							E1_ERROR("Failed to open file");
 					}
 					else
-						E1_ERROR("Failed to open file");
-
+						E1_WARN("No file selected");
 				}
 				ImGui::EndMenu();
 			}
@@ -1278,8 +1281,8 @@ public:
 class Sandbox : public Engine1::Application {
 public:
 	Sandbox() {
-		//pushLayer(new Layer1());
-		pushLayer(new Sandbox2D());
+		pushLayer(new Layer1());
+		//pushLayer(new Sandbox2D());
 	}
 
 	~Sandbox() {}
