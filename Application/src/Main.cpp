@@ -567,7 +567,7 @@ public:
 		auto textureShader = m_shaderLibrary.get("Texture");
 
 		//background
-		glm::vec3 pos2(0.0f, 0.0f, 0.0f);
+		glm::vec3 pos2(0.0f, 0.0f, -0.1f);
 		glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), pos2);
 		m_groundPlanWallsTex->bind();
 		std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniformFloat1("u_texture", 0);	//weird on intel gpu
@@ -723,7 +723,6 @@ public:
 		//TODO: remember last save file name
 		//TODO: warning about overwriting
 		//TODO: shortcuts
-		//FIX: load/save bugs, loads one more anchor, crash when closing open dialog without selecting
 		if (ImGui::BeginMainMenuBar()){
 			if (ImGui::BeginMenu("File")){
 				if (ImGui::MenuItem("Save", "CTRL+S")) {
@@ -851,10 +850,10 @@ public:
 							iss >> scalex;
 							m_scale->setWidth(scalex);
 
-							while (!iss.eof()) {
+							while (iss >> xp) {
 
-								iss >> xp >> yp >> id;
-								addAnchor({ xp, yp }, id);
+								iss >> yp >> id;
+								addAnchor({ xp, yp, 0.0f }, id);				
 
 							}
 						}
@@ -1085,7 +1084,7 @@ public:
 
 		if (ImGui::BeginPopup("backgroundRightClick")) {
 			if (ImGui::Button("Add Anchor")) {
-				addAnchor(pos);
+				addAnchor({ pos.x, pos.y, 0.0f });
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::EndPopup();
@@ -1150,8 +1149,8 @@ public:
 		return false;
 	}
 
-	void addAnchor(const glm::vec2& position, int id = -1) {
-		Anchor anchor({ position.x, position.y, 0.0f }, m_cameraController.getAspectRatio(), m_cameraController.getZoomLevel(), id);
+	void addAnchor(const glm::vec3& position, int id = -1) {
+		Anchor anchor({ position.x, position.y, position.z }, m_cameraController.getAspectRatio(), m_cameraController.getZoomLevel(), id);
 		if (id == -1)
 			anchor.setID(rand());
 		m_anchors.push_back(anchor);
