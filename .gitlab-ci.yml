@@ -1,0 +1,14 @@
+stages:
+    - build
+    
+image: gcc
+    
+before_script:
+    # Install build dependencies
+    - apt-get update && apt-get -y install premake
+    
+build:
+    stage: build
+    script:
+        - cd vendor/bin/premake
+        - ./premake-linux
