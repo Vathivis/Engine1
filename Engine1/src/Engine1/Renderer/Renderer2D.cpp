@@ -11,7 +11,6 @@ namespace Engine1 {
 
 	struct Renderer2DStorage {
 		ref<VertexArray> quadVertexArray;
-		ref<Shader> flatColorShader;
 		ref<Shader> textureShader;
 	};
 

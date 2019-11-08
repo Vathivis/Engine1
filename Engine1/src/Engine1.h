@@ -19,6 +19,7 @@
 //-----------Renderer--------------------
 #include "Engine1/Renderer/Renderer.h"
 #include "Engine1/Renderer/Renderer2D.h"
+#include "Engine1/Renderer/Renderer3D.h"
 #include "Engine1/Renderer/RenderCommand.h"
 
 #include "Engine1/Renderer/Buffer.h"

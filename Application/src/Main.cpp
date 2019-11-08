@@ -19,6 +19,7 @@
 #include "Network/UDPClient.h"
 
 #include "Sandbox2D.h"
+#include "Sandbox3D.h"
 
 //TEMPORARY opengl
 #include "glad/glad.h"
@@ -1280,8 +1281,9 @@ public:
 class Sandbox : public Engine1::Application {
 public:
 	Sandbox() {
-		pushLayer(new Layer1());
-		//pushLayer(new Sandbox2D());
+		//pushLayer(new Layer1());
+		pushLayer(new Sandbox2D());
+		//pushLayer(new Sandbox3D());
 	}
 
 	~Sandbox() {}
