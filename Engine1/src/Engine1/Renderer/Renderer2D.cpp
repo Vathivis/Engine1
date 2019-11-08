@@ -41,7 +41,6 @@ namespace Engine1 {
 		squareIB.reset(IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
 		s_data->quadVertexArray->setIndexBuffer(squareIB);
 
-		s_data->flatColorShader = Shader::create("assets/shaders/FlatColor.glsl");
 		s_data->textureShader = Shader::create("assets/shaders/Texture.glsl");
 		s_data->textureShader->bind();
 		s_data->textureShader->setInt1("u_texture", 0);
