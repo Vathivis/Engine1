@@ -1,7 +1,7 @@
 stages:
     - build
     
-image: gcc
+image: bincrafters/gcc8-x86
     
 before_script:
     # Install build dependencies
