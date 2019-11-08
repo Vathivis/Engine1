@@ -11,4 +11,4 @@ build:
     stage: build
     script:
         - cd vendor/bin/premake
-        - ./premake-linux
+        - ./premake5-linux
