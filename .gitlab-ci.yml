@@ -5,7 +5,7 @@ image: gcc
     
 before_script:
     # Install build dependencies
-    - apt-get update && apt-get -y install premake
+    - apt-get update
     
 build:
     stage: build
