@@ -5,12 +5,12 @@
 	branch = v1.x
 [submodule "Engine1/vendor/GLFW"]
 	path = Engine1/vendor/GLFW
-	url = https://github.com/TheCherno/glfw
+	url = https://github.com/vovojta/glfw
 	ignore = dirty
 	branch = master
 [submodule "Engine1/vendor/imgui"]
 	path = Engine1/vendor/imgui
-	url = https://github.com/TheCherno/imgui
+	url = https://github.com/vovojta/imgui
 	ignore = dirty
 	branch = docking
 [submodule "Engine1/vendor/glm"]
