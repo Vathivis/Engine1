@@ -10,5 +10,4 @@ before_script:
 build:
     stage: build
     script:
-        - cd vendor/bin/premake
-        - premake5-linux
+        - make debug all
