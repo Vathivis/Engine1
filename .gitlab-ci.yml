@@ -2,6 +2,9 @@ stages:
     - build
     
 image: gcc
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
     
 before_script:
     # Install build dependencies
