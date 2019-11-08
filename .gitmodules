@@ -10,7 +10,7 @@
 	branch = master
 [submodule "Engine1/vendor/imgui"]
 	path = Engine1/vendor/imgui
-	url = https://github.com/vovojta/imgui1
+	url = https://github.com/TheCherno/imgui
 	ignore = dirty
 	branch = docking
 [submodule "Engine1/vendor/glm"]
