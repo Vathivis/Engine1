@@ -12,7 +12,18 @@ namespace Engine1 {
 		switch (Renderer::getAPI())
 		{
 		case RendererAPI::API::None:    E1_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-		case RendererAPI::API::OpenGL:  return std::make_shared<OpenGLTexture2D>(path);
+		case RendererAPI::API::OpenGL:  return createRef<OpenGLTexture2D>(path);
+		}
+
+		E1_CORE_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
+	}
+
+	ref<Engine1::Texture2D> Texture2D::create(uint32_t width, uint32_t height) {
+		switch (Renderer::getAPI())
+		{
+		case RendererAPI::API::None:    E1_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:  return createRef<OpenGLTexture2D>(width, height);
 		}
 
 		E1_CORE_ASSERT(false, "Unknown RendererAPI!");
