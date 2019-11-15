@@ -9,5 +9,4 @@ jobs:
     
     steps:
     - name: configure
-      run: |
-        dir
+      run: dir
