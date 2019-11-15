@@ -11,5 +11,4 @@ jobs:
     - name: configure
       run: |
         cd ..
-        cd Engine1
         dir
