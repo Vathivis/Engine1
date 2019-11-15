@@ -9,4 +9,7 @@ jobs:
     
     steps:
     - name: configure
-      run: dir
+      run: |
+        cd ..
+        cd Engine1
+        dir
