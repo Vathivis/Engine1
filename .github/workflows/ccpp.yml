@@ -1,0 +1,20 @@
+name: C/C++ CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    
+    steps:
+    - name: wtf
+      uses: actions/checkout@v1
+      with: 
+        submodules: true
+    - name: configure
+      run: |
+        dir
+        cd scripts
+        dir
+        ./Win-GenProjects.bat
