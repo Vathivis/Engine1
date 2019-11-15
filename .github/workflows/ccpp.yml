@@ -9,5 +9,6 @@ jobs:
     
     steps:
     - name: Run premake5
-      run: premake5.exe
-      working-directory: ./vendor/bin/premake      
+    - uses: actions/checkout@v1
+    - name: configure
+    - run: cd vendor/bin/premake && echo hi   
