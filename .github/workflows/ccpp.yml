@@ -10,5 +10,6 @@ jobs:
     steps:
     - name: configure
       run: |
+        cd ..
         cd vendor/bin/premake
         echo hi   
