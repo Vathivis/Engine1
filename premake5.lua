@@ -15,7 +15,7 @@ workspace "IPS_demo_v2"
 	startproject "Application"
 	
 
-outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 -- Include directories relative to root folder (solution directory)
 includeDir = {}
@@ -40,8 +40,8 @@ project	"Engine1"
 	cppdialect "C++17"
 	staticruntime "on"
 
-	targetdir("bin/" .. outputDir .. "/%{prj.name}")
-	objdir("bin-int/" .. outputDir .. "/%{prj.name}")
+	targetdir("bin/" .. outputdir .. "/%{prj.name}")
+	objdir("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	pchheader "E1pch.h"
 	pchsource "Engine1/src/E1pch.cpp"
@@ -108,8 +108,8 @@ project "Application"
 	cppdialect "C++17"
 	staticruntime "on"
 
-	targetdir("bin/" .. outputDir .. "/%{prj.name}")
-	objdir("bin-int/" .. outputDir .. "/%{prj.name}")
+	targetdir("bin/" .. outputdir .. "/%{prj.name}")
+	objdir("bin-int/" .. outputdir .. "/%{prj.name}")
 
 		files {
 		"%{prj.name}/src/**.h",
