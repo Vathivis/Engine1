@@ -10,8 +10,8 @@ jobs:
     steps:
     - name: wtf
       uses: actions/checkout@v1
-    - name: Checkout submodules
-      uses: textbook/git-checkout-submodule-action@1.0.0
+    - name: submodules-init
+      uses: snickerbockers/submodules-init@v1
     - name: configure
       run: |
         dir
