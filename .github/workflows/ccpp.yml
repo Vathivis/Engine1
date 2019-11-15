@@ -10,8 +10,8 @@ jobs:
     steps:
     - name: wtf
       uses: actions/checkout@v1
-    - name: submodules-init
-      uses: snickerbockers/submodules-init@v1
+      with: 
+        submodules: true
     - name: configure
       run: |
         dir
