@@ -20,3 +20,4 @@ jobs:
         ./premake5.exe
         cd ../../..
         dir
+        cd Engine1/vendor
