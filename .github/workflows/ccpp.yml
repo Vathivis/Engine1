@@ -18,3 +18,5 @@ jobs:
         cd scripts
         dir
         ./Win-GenProjects.bat
+        dir
+        echo yeet
