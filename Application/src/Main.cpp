@@ -249,8 +249,7 @@ public:
 			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
-		Engine1::ref<Engine1::VertexBuffer> squareVB;
-		squareVB.reset(Engine1::VertexBuffer::create(squareVertices, sizeof(squareVertices)));
+		Engine1::ref<Engine1::VertexBuffer> squareVB = Engine1::VertexBuffer::create(squareVertices, sizeof(squareVertices));
 
 		Engine1::BufferLayout squareVBLayout = {
 			{ Engine1::ShaderDataType::Float3, "a_position" },
@@ -260,8 +259,7 @@ public:
 		m_squareVA->addVertexBuffer(squareVB);
 
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		Engine1::ref<Engine1::IndexBuffer> squareIB;
-		squareIB.reset(Engine1::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+		Engine1::ref<Engine1::IndexBuffer> squareIB = Engine1::IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
 		m_squareVA->setIndexBuffer(squareIB);
 
 
@@ -286,14 +284,12 @@ public:
 			{ Engine1::ShaderDataType::Float2, "a_texPos" }
 		};
 
-		Engine1::ref<Engine1::VertexBuffer> backgroundVB;
-		backgroundVB.reset(Engine1::VertexBuffer::create(backgroundVertices, sizeof(backgroundVertices)));
+		Engine1::ref<Engine1::VertexBuffer> backgroundVB = Engine1::VertexBuffer::create(backgroundVertices, sizeof(backgroundVertices));
 		backgroundVB->setLayout(backgroundVBLayout);
 		m_backgroundVA->addVertexBuffer(backgroundVB);
 
 		uint32_t backgroundIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		Engine1::ref<Engine1::IndexBuffer> backgroundIB;
-		backgroundIB.reset(Engine1::IndexBuffer::create(backgroundIndices, sizeof(backgroundIndices) / sizeof(uint32_t)));
+		Engine1::ref<Engine1::IndexBuffer> backgroundIB = Engine1::IndexBuffer::create(backgroundIndices, sizeof(backgroundIndices) / sizeof(uint32_t));
 		m_backgroundVA->setIndexBuffer(backgroundIB);
 
 	
@@ -311,14 +307,12 @@ public:
 			{ Engine1::ShaderDataType::Float2, "a_texPos" }
 		};
 
-		Engine1::ref<Engine1::VertexBuffer> anchorVB;
-		anchorVB.reset(Engine1::VertexBuffer::create(anchorVertices, sizeof(anchorVertices)));
+		Engine1::ref<Engine1::VertexBuffer> anchorVB = Engine1::VertexBuffer::create(anchorVertices, sizeof(anchorVertices));
 		anchorVB->setLayout(anchorVBLayout);
 		m_anchorVA->addVertexBuffer(anchorVB);
 
 		uint32_t anchorIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		Engine1::ref<Engine1::IndexBuffer> anchorIB;
-		anchorIB.reset(Engine1::IndexBuffer::create(anchorIndices, sizeof(anchorIndices) / sizeof(uint32_t)));
+		Engine1::ref<Engine1::IndexBuffer> anchorIB = Engine1::IndexBuffer::create(anchorIndices, sizeof(anchorIndices) / sizeof(uint32_t));
 		m_anchorVA->setIndexBuffer(anchorIB);
 
 		//node//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -335,14 +329,12 @@ public:
 			{ Engine1::ShaderDataType::Float2, "a_texPos" }
 		};
 
-		Engine1::ref<Engine1::VertexBuffer> nodeVB;
-		nodeVB.reset(Engine1::VertexBuffer::create(nodeVertices, sizeof(nodeVertices)));
+		Engine1::ref<Engine1::VertexBuffer> nodeVB = Engine1::VertexBuffer::create(nodeVertices, sizeof(nodeVertices));
 		nodeVB->setLayout(nodeVBLayout);
 		m_nodeVA->addVertexBuffer(nodeVB);
 
 		uint32_t nodeIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		Engine1::ref<Engine1::IndexBuffer> nodeIB;
-		nodeIB.reset(Engine1::IndexBuffer::create(nodeIndices, sizeof(nodeIndices) / sizeof(uint32_t)));
+		Engine1::ref<Engine1::IndexBuffer> nodeIB = Engine1::IndexBuffer::create(nodeIndices, sizeof(nodeIndices) / sizeof(uint32_t));
 		m_nodeVA->setIndexBuffer(nodeIB);
 
 
@@ -360,14 +352,12 @@ public:
 			{ Engine1::ShaderDataType::Float2, "a_texPos" }
 		};
 
-		Engine1::ref<Engine1::VertexBuffer> forkliftVB;
-		forkliftVB.reset(Engine1::VertexBuffer::create(forkliftVertices, sizeof(forkliftVertices)));
+		Engine1::ref<Engine1::VertexBuffer> forkliftVB = Engine1::VertexBuffer::create(forkliftVertices, sizeof(forkliftVertices));
 		forkliftVB->setLayout(forkliftVBLayout);
 		m_forkliftVA->addVertexBuffer(forkliftVB);
 
 		uint32_t forkliftIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		Engine1::ref<Engine1::IndexBuffer> forkliftIB;
-		forkliftIB.reset(Engine1::IndexBuffer::create(forkliftIndices, sizeof(forkliftIndices) / sizeof(uint32_t)));
+		Engine1::ref<Engine1::IndexBuffer> forkliftIB = Engine1::IndexBuffer::create(forkliftIndices, sizeof(forkliftIndices) / sizeof(uint32_t));
 		m_forkliftVA->setIndexBuffer(forkliftIB);
 
 
@@ -395,14 +385,12 @@ public:
 			{ Engine1::ShaderDataType::Float2, "a_texPos" }
 		};
 
-		Engine1::ref<Engine1::VertexBuffer> scaleVB;
-		scaleVB.reset(Engine1::VertexBuffer::create(scaleVertices, sizeof(scaleVertices)));
+		Engine1::ref<Engine1::VertexBuffer> scaleVB = Engine1::VertexBuffer::create(scaleVertices, sizeof(scaleVertices));
 		scaleVB->setLayout(scaleVBLayout);
 		m_scaleVA->addVertexBuffer(scaleVB);
 
 		uint32_t scaleIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		Engine1::ref<Engine1::IndexBuffer> scaleIB;
-		scaleIB.reset(Engine1::IndexBuffer::create(scaleIndices, sizeof(scaleIndices) / sizeof(uint32_t)));
+		Engine1::ref<Engine1::IndexBuffer> scaleIB = Engine1::IndexBuffer::create(scaleIndices, sizeof(scaleIndices) / sizeof(uint32_t));
 		m_scaleVA->setIndexBuffer(scaleIB);
 
 
@@ -571,12 +559,12 @@ public:
 		glm::vec3 pos2(0.0f, 0.0f, -0.1f);
 		glm::mat4 transform2 = glm::translate(glm::mat4(1.0f), pos2);
 		m_groundPlanWallsTex->bind();
-		std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniformFloat1("u_texture", 0);	//weird on intel gpu
+		textureShader->setInt1("u_texture", 0);	//weird on intel gpu
 		Engine1::Renderer::submit(textureShader, m_backgroundVA, transform2);
 
 		if (m_showFurniture) {
 			m_groundPlanTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniformFloat1("u_texture", 0);
+			textureShader->setInt1("u_texture", 0);
 			Engine1::Renderer::submit(textureShader, m_backgroundVA, transform2);
 		}
 
@@ -585,7 +573,7 @@ public:
 			anchor.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
 			glm::mat4 anchorTransform = glm::translate(glm::mat4(1.0f), anchor.getPosition()) * anchor.getScale();
 			m_anchorTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniformFloat1("u_texture", 0);
+			textureShader->setInt1("u_texture", 0);
 			Engine1::Renderer::submit(textureShader, m_anchorVA, anchorTransform);
 		}
 
@@ -655,7 +643,7 @@ public:
 			node.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
 			glm::mat4 nodeTransform = glm::translate(glm::mat4(1.0f), node.getPosition()) * node.getScale();
 			m_nodeTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniformFloat1("u_texture", 0);
+			textureShader->setInt1("u_texture", 0);
 			Engine1::Renderer::submit(textureShader, m_nodeVA, nodeTransform);
 		}
 
@@ -664,7 +652,7 @@ public:
 			forklift.setScale(glm::scale(glm::mat4(1.0f), glm::vec3(0.33f)));
 			glm::mat4 forkliftTransform = glm::translate(glm::mat4(1.0f), forklift.getPosition()) *	forklift.getScale();
 			m_forkliftTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniformFloat1("u_texture", 0);
+			textureShader->setInt1("u_texture", 0);
 			Engine1::Renderer::submit(textureShader, m_forkliftVA, forkliftTransform);
 		}
 
@@ -673,7 +661,7 @@ public:
 			m_scale->setScale(glm::vec3(m_scale->getCurrentWidth() / m_scale->getWidth(), 1.0f, 1.0f));
 			glm::mat4 scaleTransform = glm::translate(glm::mat4(1.0f), m_scale->getPosition()) * m_scale->getScale();
 			m_scaleTex->bind();
-			std::dynamic_pointer_cast<Engine1::OpenGLShader>(textureShader)->uploadUniformFloat1("u_texture", 0);
+			textureShader->setInt1("u_texture", 0);
 			Engine1::Renderer::submit(textureShader, m_scaleVA, scaleTransform);
 		}
 

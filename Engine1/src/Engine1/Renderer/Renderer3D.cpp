@@ -14,13 +14,13 @@ namespace Engine1 {
 		ref<Shader> flatColorShader;
 	};
 
-	static Renderer3DStorage* s_data;
+	static Renderer3DStorage* s_data3D;
 
 	void Renderer3D::init() {
 
-		s_data = new Renderer3DStorage;
+		s_data3D = new Renderer3DStorage;
 
-		s_data->cubeVertexArray = VertexArray::create();
+		s_data3D->cubeVertexArray = VertexArray::create();
 
 		float cubeVertices[8 * 3] = {
 			-1.0f, -1.0f,  1.0f,
@@ -33,29 +33,27 @@ namespace Engine1 {
 			 1.0f,  1.0f, -1.0f
 		};
 
-		ref<VertexBuffer> cubeVB;
-		cubeVB.reset(VertexBuffer::create(cubeVertices, sizeof(cubeVertices)));
+		ref<VertexBuffer> cubeVB = VertexBuffer::create(cubeVertices, sizeof(cubeVertices));
 		cubeVB->setLayout({
 			{ ShaderDataType::Float3, "a_position" }
 			});
-		s_data->cubeVertexArray->addVertexBuffer(cubeVB);
+		s_data3D->cubeVertexArray->addVertexBuffer(cubeVB);
 
-		uint32_t cubeIndices[14] = { 0, 1, 2, 3, 7, 1, 5, 4, 7, 6, 2, 4, 0, 1 };
-		ref<IndexBuffer> cubeIB;
-		cubeIB.reset(IndexBuffer::create(cubeIndices, sizeof(cubeIndices) / sizeof(uint32_t)));
-		s_data->cubeVertexArray->setIndexBuffer(cubeIB);
+		uint32_t cubeIndices[] = { 0, 1, 2, 3, 7, 1, 5, 4, 7, 6, 2, 4, 0, 1 };
+		ref<IndexBuffer> cubeIB = IndexBuffer::create(cubeIndices, sizeof(cubeIndices) / sizeof(uint32_t));
+		s_data3D->cubeVertexArray->setIndexBuffer(cubeIB);
 
-		s_data->flatColorShader = Shader::create("assets/shaders/FlatColor.glsl");
+		s_data3D->flatColorShader = Shader::create("assets/shaders/FlatColor.glsl");
 
 	}
 
 	void Renderer3D::shutdown() {
-		delete s_data;
+		delete s_data3D;
 	}
 
 	void Renderer3D::beginScene() {
-		s_data->flatColorShader->bind();
-		s_data->flatColorShader->setMat4("u_viewProjection", glm::mat4(1.0f));
+		s_data3D->flatColorShader->bind();
+		s_data3D->flatColorShader->setMat4("u_viewProjection", glm::mat4(1.0f));
 	}
 
 	void Renderer3D::endScene() {
@@ -63,14 +61,14 @@ namespace Engine1 {
 	}
 
 	void Renderer3D::drawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color) {
-		s_data->flatColorShader->bind();
-		s_data->flatColorShader->setFloat4("u_color", color);
+		s_data3D->flatColorShader->bind();
+		s_data3D->flatColorShader->setFloat4("u_color", color);
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, size.z });
-		s_data->flatColorShader->setMat4("u_transform", transform);
+		s_data3D->flatColorShader->setMat4("u_transform", transform);
 
-		s_data->cubeVertexArray->bind();
-		RenderCommand::drawIndexed(s_data->cubeVertexArray);
+		s_data3D->cubeVertexArray->bind();
+		RenderCommand::drawIndexed(s_data3D->cubeVertexArray);
 	}
 
 }

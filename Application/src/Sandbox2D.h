@@ -16,7 +16,12 @@ private:
 
 	glm::vec4 m_squareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 
+	struct ProfileResult {
+		const char* name;
+		float time;
+	};
 
+	std::vector<ProfileResult> m_profileResults;
 
 
 public:

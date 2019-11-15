@@ -40,7 +40,7 @@ namespace Engine1 {
 	/*
 		zakladni trida pro eventy od ktere dedi dalsi typy eventu
 	*/
-	class ENGINE1_API Event {
+	class Event {
 	public:
 		bool handled = false;
 

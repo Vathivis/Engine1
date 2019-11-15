@@ -1,9 +1,9 @@
 #include "E1pch.h"
-#include "Renderer2D.h"
+#include "Engine1/Renderer/Renderer2D.h"
 
-#include "VertexArray.h"
-#include "Shader.h"
-#include "RenderCommand.h"
+#include "Engine1/Renderer/VertexArray.h"
+#include "Engine1/Renderer/Shader.h"
+#include "Engine1/Renderer/RenderCommand.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -29,8 +29,7 @@ namespace Engine1 {
 			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
-		ref<VertexBuffer> squareVB;
-		squareVB.reset(VertexBuffer::create(squareVertices, sizeof(squareVertices)));
+		ref<VertexBuffer> squareVB = VertexBuffer::create(squareVertices, sizeof(squareVertices));
 		squareVB->setLayout({
 			{ ShaderDataType::Float3, "a_position" },
 			{ ShaderDataType::Float2, "a_texCoord" }
@@ -38,8 +37,7 @@ namespace Engine1 {
 		s_data->quadVertexArray->addVertexBuffer(squareVB);
 
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		ref<IndexBuffer> squareIB;
-		squareIB.reset(IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+		ref<IndexBuffer> squareIB = IndexBuffer::create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
 		s_data->quadVertexArray->setIndexBuffer(squareIB);
 
 		s_data->whiteTexture = Texture2D::create(1, 1);

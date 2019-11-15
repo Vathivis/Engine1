@@ -1,8 +1,8 @@
 #include "E1pch.h"
-#include "Renderer.h"
+#include "Engine1/Renderer/Renderer.h"
 
-#include "Platform/OpenGL/OpenGLShader.h"
-#include "Renderer2D.h"
+#include "Engine1/Renderer/Renderer2D.h"
+#include "Engine1/Renderer/Renderer3D.h"
 
 namespace Engine1 {
 
@@ -11,6 +11,12 @@ namespace Engine1 {
 	void Renderer::init() {
 		RenderCommand::init();
 		Renderer2D::init();
+		Renderer3D::init();
+	}
+
+	void Renderer::shutdown() {
+		Renderer2D::shutdown();
+		Renderer3D::shutdown();
 	}
 
 	void Renderer::onWindowResize(uint32_t width, uint32_t height) {
@@ -27,8 +33,8 @@ namespace Engine1 {
 
 	void Renderer::submit(const ref<Shader>& shader, const ref<VertexArray>& vertexArray, /*const Texture& texture,*/ const glm::mat4& transform) {
 		shader->bind();
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->uploadUniformMat4("u_viewProjection", s_sceneData->viewProjectionMatrix);
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->uploadUniformMat4("u_transform", transform);
+		shader->setMat4("u_viewProjection", s_sceneData->viewProjectionMatrix);
+		shader->setMat4("u_transform", transform);
 		vertexArray->bind();
 		RenderCommand::drawIndexed(vertexArray);
 	}

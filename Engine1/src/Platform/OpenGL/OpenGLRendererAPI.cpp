@@ -1,7 +1,7 @@
 #include "E1pch.h"
-#include "OpenGLRendererAPI.h"
+#include "Platform/OpenGL/OpenGLRendererAPI.h"
 
-#include "glad/glad.h"
+#include <glad/glad.h>
 
 namespace Engine1 {
 
@@ -10,7 +10,8 @@ namespace Engine1 {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		//glEnable(GL_DEPTH_TEST);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
 	}
 
 	void OpenGLRendererAPI::clear() {
@@ -27,6 +28,7 @@ namespace Engine1 {
 
 	void OpenGLRendererAPI::drawIndexed(const ref<VertexArray>& vertexArray) {
 		glDrawElements(GL_TRIANGLES, vertexArray->getIndexBuffer()->getCount(), GL_UNSIGNED_INT, nullptr);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 }

@@ -1,7 +1,7 @@
 #include "E1pch.h"
-#include "Texture.h"
+#include "Engine1/Renderer/Texture.h"
 
-#include "Renderer.h"
+#include "Engine1/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLTexture.h"
 
 

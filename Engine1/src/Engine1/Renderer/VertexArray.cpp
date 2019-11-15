@@ -1,7 +1,7 @@
 #include "E1pch.h"
-#include "VertexArray.h"
+#include "Engine1/Renderer/VertexArray.h"
 
-#include "Renderer.h"
+#include "Engine1/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLVertexArray.h"
 
 namespace Engine1 {
@@ -13,7 +13,7 @@ namespace Engine1 {
 			return nullptr;
 
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLVertexArray>();
+			return createRef<OpenGLVertexArray>();
 
 		}
 

@@ -2,6 +2,7 @@
 
 //for use by Engine1 applications
 
+#include "Engine1/Core/Core.h"
 
 #include "Engine1/Core/Application.h"
 #include "Engine1/Core/Log.h"

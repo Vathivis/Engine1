@@ -1,7 +1,6 @@
 #pragma once
 
-
-#include "Event.h"
+#include "Engine1/Events/Event.h"
 
 namespace Engine1 {
 
@@ -9,7 +8,7 @@ namespace Engine1 {
 		zakaldni trida pro praci s klavesou
 		abstraktni trida
 	*/
-	class ENGINE1_API KeyEvent : public Event {
+	class KeyEvent : public Event {
 	protected:
 		KeyEvent(int keycode) : m_keyCode(keycode) {}
 
@@ -24,7 +23,7 @@ namespace Engine1 {
 	/*
 		trida pro zmacknuti klavesy a drzeni
 	*/
-	class ENGINE1_API KeyPressedEvent : public KeyEvent {
+	class KeyPressedEvent : public KeyEvent {
 	private:
 		int m_repeatCount;
 
@@ -43,7 +42,7 @@ namespace Engine1 {
 		EVENT_CLASS_TYPE(KeyPressed)
 	};
 
-	class ENGINE1_API KeyTypedEvent : public KeyEvent {
+	class KeyTypedEvent : public KeyEvent {
 	public:
 		KeyTypedEvent(int keycode) : KeyEvent(keycode) {}
 
@@ -60,7 +59,7 @@ namespace Engine1 {
 	/*
 		trida pro pusteni klavesy
 	*/
-	class ENGINE1_API KeyReleasedEvent : public KeyEvent {
+	class KeyReleasedEvent : public KeyEvent {
 	public:
 		KeyReleasedEvent(int keycode) : KeyEvent(keycode) {}
 

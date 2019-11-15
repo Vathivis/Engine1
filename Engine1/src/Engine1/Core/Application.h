@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Core.h"
+#include "Engine1/Core/Core.h"
 
-#include "Window.h"
+#include "Engine1/Core/Window.h"
+#include "Engine1/Core/LayerStack.h"
 #include "Engine1/Events/Event.h"
-#include "LayerStack.h"
 #include "Engine1/Events/ApplicationEvent.h"
 
 #include "Engine1/Core/Timestep.h"
@@ -27,7 +27,7 @@ namespace Engine1 {
 
 	public:
 		Application();
-		virtual ~Application() = default;
+		virtual ~Application();
 
 		void run();
 

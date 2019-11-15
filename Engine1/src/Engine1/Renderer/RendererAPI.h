@@ -1,6 +1,6 @@
 #pragma once
 
-#include "VertexArray.h"
+#include "Engine1/Renderer/VertexArray.h"
 
 #include "glm/glm.hpp"
 
@@ -27,6 +27,7 @@ namespace Engine1 {
 		//virtual void drawLine(const glm::vec2& src, const glm::vec2& dst) = 0;
 
 		inline static API getAPI() { return s_API; }
+		static scope<RendererAPI> create();
 	};
 
 }

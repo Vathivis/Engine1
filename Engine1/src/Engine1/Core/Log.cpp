@@ -1,11 +1,13 @@
 #include "E1pch.h"
-#include "Log.h"
+#include "Engine1/Core/Log.h"
+
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 namespace Engine1 {
 
 
-	std::shared_ptr<spdlog::logger> Log::s_coreLogger;
-	std::shared_ptr<spdlog::logger> Log::s_clientLogger;
+	ref<spdlog::logger> Log::s_coreLogger;
+	ref<spdlog::logger> Log::s_clientLogger;
 
 	void Log::init() {
 		//nastaveni barev pro druhy logu

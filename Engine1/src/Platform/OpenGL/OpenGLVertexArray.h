@@ -25,8 +25,6 @@ namespace Engine1 {
 		virtual const std::vector<ref<VertexBuffer>>& getVertexBuffers() const override { return m_vertexBuffers; }
 		virtual const ref<IndexBuffer>& getIndexBuffer() const override { return m_indexBuffer; }
 
-		static VertexBuffer* create();
-
 	};
 
 

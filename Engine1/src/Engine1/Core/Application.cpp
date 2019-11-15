@@ -1,8 +1,8 @@
 #include "E1pch.h"
 
-#include "Application.h"
+#include "Engine1/Core/Application.h"
 #include "Engine1/Core/Log.h"
-#include "Input.h"
+#include "Engine1/Core/Input.h"
 
 #include "Engine1/Renderer/Renderer.h"
 
@@ -11,17 +11,14 @@
 
 namespace Engine1 {
 
-	//makro na event bind na usetreni mista
-	#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
-
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application() {
 		E1_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
-		m_window = std::unique_ptr<Window>(Window::create());
-		m_window->setEventCallback(BIND_EVENT_FN(onEvent));
+		m_window = Window::create();
+		m_window->setEventCallback(E1_BIND_EVENT_FN(Application::onEvent));
 		m_window->setVSync(true);
 
 		Renderer::init();
@@ -31,6 +28,10 @@ namespace Engine1 {
 
 	}
 
+	Application::~Application()
+	{
+		Renderer::shutdown();
+	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	//hlavni loop programu /////////////////////////////////////////////////////////////////////////
@@ -60,8 +61,8 @@ namespace Engine1 {
 
 	void Application::onEvent(Event& e) {
 		EventDispatcher dispatcher(e);
-		dispatcher.dispatch<WindowCloseEvent>(BIND_EVENT_FN(onWindowClose));
-		dispatcher.dispatch<WindowResizeEvent>(BIND_EVENT_FN(onWindowResize));
+		dispatcher.dispatch<WindowCloseEvent>(E1_BIND_EVENT_FN(Application::onWindowClose));
+		dispatcher.dispatch<WindowResizeEvent>(E1_BIND_EVENT_FN(Application::onWindowResize));
 
 		//E1_CORE_INFO("{0}", e);
 

@@ -1,5 +1,5 @@
 #include "E1pch.h"
-#include "WindowsWindow.h"
+#include "Platform/Windows/WindowsWindow.h"
 
 #include "Engine1/Events/ApplicationEvent.h"
 #include "Engine1/Events/MouseEvent.h"
@@ -17,8 +17,8 @@ namespace Engine1 {
 		E1_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
 	}
 
-	Window* Window::create(const WindowProps& props) {
-		return new WindowsWindow(props);
+	scope<Window> Window::create(const WindowProps& props) {
+		return createScope<WindowsWindow>(props);
 	}
 
 	WindowsWindow::WindowsWindow(const WindowProps& props) {
@@ -50,7 +50,7 @@ namespace Engine1 {
 		m_window = glfwCreateWindow((int)props.width, (int)props.height, m_data.title.c_str(), nullptr, nullptr);
 		++s_GLFWWindowCount;
 
-		m_context = createScope<OpenGLContext>(m_window);
+		m_context = GraphicsContext::create(m_window);
 		m_context->init();
 
 		
@@ -147,9 +147,10 @@ namespace Engine1 {
 
 	void WindowsWindow::shutdown() {
 		glfwDestroyWindow(m_window);
+		--s_GLFWWindowCount;
 
-		if (--s_GLFWWindowCount == 0) {
-			E1_CORE_INFO("Terminating GLFW");
+		if (s_GLFWWindowCount == 0) {
+			E1_CORE_WARN("Terminating GLFW");
 			glfwTerminate();
 		}
 	}

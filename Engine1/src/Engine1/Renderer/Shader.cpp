@@ -1,7 +1,7 @@
 #include "E1pch.h"
-#include "Shader.h"
+#include "Engine1/Renderer/Shader.h"
 
-#include "Renderer.h"
+#include "Engine1/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Engine1 {
@@ -13,7 +13,7 @@ namespace Engine1 {
 			return nullptr;
 
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLShader>(filepath);
+			return createRef<OpenGLShader>(filepath);
 
 		}
 
@@ -29,7 +29,7 @@ namespace Engine1 {
 			return nullptr;
 
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLShader>(name, vertexSrc, fragmentSrc);
+			return createRef<OpenGLShader>(name, vertexSrc, fragmentSrc);
 
 		}
 

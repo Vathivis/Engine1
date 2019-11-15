@@ -1,29 +1,25 @@
 #pragma once
 
-#include "Core.h"
+#include "Engine1/Core/Core.h"
 
 #include "spdlog/spdlog.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/fmt/ostr.h"
 
 namespace Engine1 {
 	/*
 		trida pro logovani eventu, warning, info, error ...
 	*/
-	class ENGINE1_API Log {
+	class Log {
 	private:
-		static std::shared_ptr<spdlog::logger> s_coreLogger;
-		static std::shared_ptr<spdlog::logger> s_clientLogger;
+		static ref<spdlog::logger> s_coreLogger;
+		static ref<spdlog::logger> s_clientLogger;
 
 	public:
 
-		Log();
-		~Log();
-
 		static void init();
 
-		inline static std::shared_ptr<spdlog::logger>& getCoreLogger() { return s_coreLogger; }
-		inline static std::shared_ptr<spdlog::logger>& getClientLogger() { return s_clientLogger; }
+		inline static ref<spdlog::logger>& getCoreLogger() { return s_coreLogger; }
+		inline static ref<spdlog::logger>& getClientLogger() { return s_clientLogger; }
 
 	};
 

@@ -25,7 +25,7 @@ void Sandbox3D::onUpdate(Engine1::Timestep ts) {
 
 	Engine1::Renderer3D::beginScene();
 
-	Engine1::Renderer3D::drawCube({ 0.0f, 0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.8f, 0.7f, 0.3f, 1.0f });
+	Engine1::Renderer3D::drawCube({ 0.0f, 0.0f, 0.0f }, glm::vec3(0.5f), { 0.4f, 0.7f, 0.3f, 1.0f });
 
 
 	Engine1::Renderer3D::endScene();

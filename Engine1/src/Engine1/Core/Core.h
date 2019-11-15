@@ -43,21 +43,6 @@
 	#error "Unknown platform!"
 #endif // End of platform detection
 
-// DLL support
-#ifdef E1_PLATFORM_WINDOWS
-	#if E1_DYNAMIC_LINK
-		#ifdef E1_BUILD_DLL
-			#define ENGINE1_API __declspec(dllexport)
-		#else
-			#define ENGINE1_API __declspec(dllimport)
-		#endif
-	#else
-		#define ENGINE1_API
-	#endif
-#else
-	#error "Engine1 only supports Windows!"
-#endif // End of DLL support
-
 #ifdef E1_DEBUG
 	#define E1_ENABLE_ASSERTS
 #endif

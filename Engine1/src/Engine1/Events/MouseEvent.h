@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Event.h"
+#include "Engine1/Events/Event.h"
 
 namespace Engine1 {
 
@@ -58,7 +58,7 @@ namespace Engine1 {
 	/*
 		zakladni trida pro tlacitka mysi
 	*/
-	class ENGINE1_API MouseButtonEvent : public Event {
+	class MouseButtonEvent : public Event {
 	protected:
 		MouseButtonEvent(int button) : m_button(button) {}
 
@@ -71,7 +71,7 @@ namespace Engine1 {
 	};
 
 	//zmacknuti tlacitka
-	class ENGINE1_API MouseButtonPressedEvent : public MouseButtonEvent {
+	class MouseButtonPressedEvent : public MouseButtonEvent {
 	public:
 		MouseButtonPressedEvent(int button) : MouseButtonEvent(button) {}
 
@@ -86,7 +86,7 @@ namespace Engine1 {
 	};
 
 	//pusteni tlacitka
-	class ENGINE1_API MouseButtonReleasedEvent : public MouseButtonEvent {
+	class MouseButtonReleasedEvent : public MouseButtonEvent {
 	public:
 		MouseButtonReleasedEvent(int button) : MouseButtonEvent(button) {}
 

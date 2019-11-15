@@ -1,10 +1,10 @@
 #pragma once
 
-#include "RenderCommand.h"
+#include "Engine1/Renderer/RenderCommand.h"
 
-#include "OrthographicCamera.h"
-#include "Shader.h"
-#include "Texture.h"
+#include "Engine1/Renderer/OrthographicCamera.h"
+#include "Engine1/Renderer/Shader.h"
+#include "Engine1/Renderer/Texture.h"
 
 namespace Engine1 {
 
@@ -19,6 +19,7 @@ namespace Engine1 {
 	public:
 
 		static void init();
+		static void shutdown();
 
 		static void onWindowResize(uint32_t width, uint32_t height);
 
