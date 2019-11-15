@@ -10,10 +10,10 @@ jobs:
     steps:
     - name: wtf
       uses: actions/checkout@v1
-      with: 
-        submodules: true
     - name: configure
       run: |
+        git submodule sync --recursive
+        git submodule update --init --recursive
         dir
         cd scripts
         dir
