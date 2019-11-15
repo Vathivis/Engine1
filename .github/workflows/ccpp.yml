@@ -15,9 +15,6 @@ jobs:
     - name: configure
       run: |
         dir
-        cd vendor/bin/premake
+        cd scripts
         dir
-        ./premake5.exe
-        cd ../../..
-        dir
-        cd Engine1/vendor
+        ./Win-GenProjects.bat
