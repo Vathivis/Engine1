@@ -11,5 +11,5 @@ jobs:
     - name: configure
       run: |
         cd ..
-        cd vendor/bin/premake
+        dir
         echo hi   
