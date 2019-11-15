@@ -10,11 +10,13 @@ jobs:
     steps:
     - name: wtf
       uses: actions/checkout@v1
+    - name: Checkout submodules
+      uses: textbook/git-checkout-submodule-action@1.0.0
     - name: configure
       run: |
         dir
         cd vendor/bin/premake
         dir
-        ./premake5-linux
+        ./premake5.exe
         cd ../../..
         dir
