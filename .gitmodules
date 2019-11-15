@@ -5,7 +5,7 @@
 	branch = v1.x
 [submodule "Engine1/vendor/GLFW"]
 	path = Engine1/vendor/GLFW
-	url = https://github.com/TheCherno/glfw
+	url = https://github.com/vovojta/glfw
 	branch = master
 [submodule "Engine1/vendor/imgui"]
 	path = Engine1/vendor/imgui
