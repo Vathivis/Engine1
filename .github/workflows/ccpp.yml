@@ -11,4 +11,3 @@ jobs:
     - name: configure
       run: |
         dir
-        echo hi   
