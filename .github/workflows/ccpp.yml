@@ -10,4 +10,4 @@ jobs:
     steps:
     - name: Run premake5
       run: premake5.exe
-      working-directory: vendor/bin/premake      
+      working-directory: ./vendor/bin/premake      
