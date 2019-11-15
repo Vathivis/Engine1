@@ -14,3 +14,4 @@ jobs:
       run: |
         dir
         cd vendor/bin/premake
+        dir
