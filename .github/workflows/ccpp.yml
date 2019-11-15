@@ -13,3 +13,4 @@ jobs:
     - name: configure
       run: |
         dir
+        cd vendor/bin/premake
