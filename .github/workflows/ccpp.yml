@@ -15,4 +15,4 @@ jobs:
         dir
         cd vendor/bin/premake
         dir
-        premake5.exe
+        ./premake5.exe
