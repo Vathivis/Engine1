@@ -19,4 +19,4 @@ jobs:
         dir
         ./Win-GenProjects.bat
         dir
-        echo yeet
+        echo yeeet
