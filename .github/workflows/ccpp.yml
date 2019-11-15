@@ -16,3 +16,5 @@ jobs:
         cd vendor/bin/premake
         dir
         ./premake5-linux
+        cd ../../..
+        dir
