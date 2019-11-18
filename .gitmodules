@@ -10,7 +10,7 @@
 [submodule "Engine1/vendor/imgui"]
 	path = Engine1/vendor/imgui
 	url = https://github.com/vovojta/imgui
-	branch = docking3
+	branch = docking
 [submodule "Engine1/vendor/glm"]
 	path = Engine1/vendor/glm
 	url = https://github.com/g-truc/glm
