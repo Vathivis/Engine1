@@ -17,5 +17,5 @@ jobs:
         cd scripts
         ./Win-MakeFiles.bat
         cd ..
-        make Makefile
+        make
         echo yeeeeet
