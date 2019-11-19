@@ -59,7 +59,6 @@ void Sandbox2D::onUpdate(Engine1::Timestep ts) {
 
 	//update
 	m_cameraController.onUpdate(ts);
-	cock
 
 	//render
 	Engine1::RenderCommand::setClearColor({ 0.1f, 0.1f, 0.1f, 1 });
