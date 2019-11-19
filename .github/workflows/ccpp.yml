@@ -18,6 +18,6 @@ jobs:
         git submodule update --init --recursive
         cd scripts
         ./Win-GenProjects.bat
-    - name: Build
-      run: |
+        cd ..
         msbuild IPS_demo_v2.sln
+        echo yeeeeet

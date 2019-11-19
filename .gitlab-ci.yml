@@ -1,0 +1,15 @@
+stages:
+    - build
+    
+image: bincrafters/gcc8-x86
+    
+before_script:
+    # Install build dependencies
+    - apt-get update
+    - git submodule sync --recursive
+    - git submodule update --init --recursive
+    
+build:
+    stage: build
+    script:
+        - make
