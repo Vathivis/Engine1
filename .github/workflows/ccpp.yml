@@ -8,14 +8,16 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - name: wtf
+    - name: Project Download
       uses: actions/checkout@v1
-    - name: configure
+    - name: Setup MSBuild.exe
+      uses: warrenbuckley/Setup-MSBuild@v1
+    - name: Configure
       run: |
         git submodule sync --recursive
         git submodule update --init --recursive
         cd scripts
-        ./Win-MakeFiles.bat
+        ./Win-GenProjects.bat
         cd ..
-        make
+        msbuild IPS_demo_v2.sln
         echo yeeeeet
