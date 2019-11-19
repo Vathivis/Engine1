@@ -14,9 +14,8 @@ jobs:
       run: |
         git submodule sync --recursive
         git submodule update --init --recursive
-        dir
         cd scripts
-        dir
-        ./Win-GenProjects.bat
-        dir
+        ./Win-MakeFiles.bat
+        cd ..
+        make Makefile
         echo yeeeeet
