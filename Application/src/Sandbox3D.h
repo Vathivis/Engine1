@@ -5,6 +5,8 @@
 
 class Sandbox3D : public Engine1::Layer {
 private:
+	//camera
+	Engine1::OrthographicCameraController m_cameraController;
 
 	//temp
 	Engine1::ref<Engine1::VertexArray> m_cubeVA;

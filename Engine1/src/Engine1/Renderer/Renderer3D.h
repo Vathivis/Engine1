@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Engine1/Renderer/OrthographicCamera.h"
+
 #include "glm/glm.hpp"
 
 namespace Engine1 {
@@ -10,7 +12,7 @@ namespace Engine1 {
 		static void init();
 		static void shutdown();
 
-		static void beginScene();
+		static void beginScene(const OrthographicCamera& camera);
 		static void endScene();
 
 		//primitives
