@@ -33,6 +33,7 @@ namespace Engine1 {
 
 	void Renderer::submit(const ref<Shader>& shader, const ref<VertexArray>& vertexArray, /*const Texture& texture,*/ const glm::mat4& transform) {
 		shader->bind();
+		shader->setFloat4("u_color", glm::vec4(1.0f));
 		shader->setMat4("u_viewProjection", s_sceneData->viewProjectionMatrix);
 		shader->setMat4("u_transform", transform);
 		vertexArray->bind();
