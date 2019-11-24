@@ -36,8 +36,6 @@ public:
 		m_func({ m_name, duration });
 
 	}
-
-
 };
 #define PROFILE_SCOPE(name) Timer timer##__LINE__(name, [&](ProfileResult profileResult) { m_profileResults.push_back(profileResult); })
 

@@ -30,6 +30,8 @@
 #include <unordered_set>
 
 #include "Engine1/Core/Log.h"
+#include "Engine1/Debug/Instrumentor.h"
+
 #include "Engine1/Core/KeyCodes.h"
 #include "Engine1/Core/MouseButtonCodes.h"
 
