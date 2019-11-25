@@ -43,6 +43,7 @@ void Sandbox3D::onUpdate(Engine1::Timestep ts) {
 void Sandbox3D::onImGuiRender() {
 	ImGui::Begin("Settings");
 	ImGui::ColorEdit4("Cube Color", glm::value_ptr(m_cubeColor));
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
 }
 

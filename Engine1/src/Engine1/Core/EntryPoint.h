@@ -11,11 +11,18 @@ int main(int argc, char** argv) {
 
 	Engine1::Log::init();
 	E1_CORE_WARN("Initialized log");
-	//E1_INFO("yes");
 
+	E1_PROFILE_BEGIN_SESSION("Startup", "Engine1Profile-Startup.json");
 	auto app = Engine1::CreateApplication();
+	E1_PROFILE_END_SESSION();
+
+	E1_PROFILE_BEGIN_SESSION("Runtime", "Engine1Profile-Runtime.json");
 	app->run();
+	E1_PROFILE_END_SESSION();
+
+	E1_PROFILE_BEGIN_SESSION("Shutdown", "Engine1Profile-Shutdown.json");
 	delete app;
+	E1_PROFILE_END_SESSION();
 	
 
 }
