@@ -18,116 +18,115 @@
 
 #include <thread>
 
-namespace Engine1 {
+struct ProfileResult
+{
+	std::string Name;
+	long long Start, End;
+	uint32_t ThreadID;
+};
 
-	struct ProfileResult {
-		std::string name;
-		long long start, end;
-		uint32_t ThreadID;
-	};
+struct InstrumentationSession
+{
+	std::string Name;
+};
 
-	struct InstrumentationSession {
-		std::string name;
-	};
+class Instrumentor
+{
+private:
+	InstrumentationSession* m_CurrentSession;
+	std::ofstream m_OutputStream;
+	int m_ProfileCount;
+public:
+	Instrumentor()
+		: m_CurrentSession(nullptr), m_ProfileCount(0)
+	{
+	}
 
-	class Instrumentor {
-	private:
-		InstrumentationSession* m_currentSession;
-		std::ofstream m_outputStream;
-		int m_profileCount;
+	void BeginSession(const std::string& name, const std::string& filepath = "results.json")
+	{
+		m_OutputStream.open(filepath);
+		WriteHeader();
+		m_CurrentSession = new InstrumentationSession{ name };
+	}
 
-	public:
-		Instrumentor() : m_currentSession(nullptr), m_profileCount(0) {}
+	void EndSession()
+	{
+		WriteFooter();
+		m_OutputStream.close();
+		delete m_CurrentSession;
+		m_CurrentSession = nullptr;
+		m_ProfileCount = 0;
+	}
 
-		void beginSession(const std::string& name, const std::string& filepath = "results.json") {
-			m_outputStream.open(filepath);
-			writeHeader();
-			m_currentSession = new InstrumentationSession{ name };
-		}
+	void WriteProfile(const ProfileResult& result)
+	{
+		if (m_ProfileCount++ > 0)
+			m_OutputStream << ",";
 
-		void endSession() {
-			writeFooter();
-			m_outputStream.close();
-			delete m_currentSession;
-			m_currentSession = nullptr;
-			m_profileCount = 0;
-		}
+		std::string name = result.Name;
+		std::replace(name.begin(), name.end(), '"', '\'');
 
-		void writeProfile(const ProfileResult& result) {
-			if (m_profileCount++ > 0)
-				m_outputStream << ",";
+		m_OutputStream << "{";
+		m_OutputStream << "\"cat\":\"function\",";
+		m_OutputStream << "\"dur\":" << (result.End - result.Start) << ',';
+		m_OutputStream << "\"name\":\"" << name << "\",";
+		m_OutputStream << "\"ph\":\"X\",";
+		m_OutputStream << "\"pid\":0,";
+		m_OutputStream << "\"tid\":" << result.ThreadID << ",";
+		m_OutputStream << "\"ts\":" << result.Start;
+		m_OutputStream << "}";
 
-			std::string name = result.name;
-			std::replace(name.begin(), name.end(), '"', '\'');
+		m_OutputStream.flush();
+	}
 
-			m_outputStream << "{";
-			m_outputStream << "\"cat\":\"function\",";
-			m_outputStream << "\"dur\":" << (result.end - result.start) << ',';
-			m_outputStream << "\"name\":\"" << name << "\",";
-			m_outputStream << "\"ph\":\"X\",";
-			m_outputStream << "\"pid\":0,";
-			m_outputStream << "\"tid\":" << result.ThreadID << ",";
-			m_outputStream << "\"ts\":" << result.start;
-			m_outputStream << "}";
+	void WriteHeader()
+	{
+		m_OutputStream << "{\"otherData\": {},\"traceEvents\":[";
+		m_OutputStream.flush();
+	}
 
-			m_outputStream.flush();
-		}
+	void WriteFooter()
+	{
+		m_OutputStream << "]}";
+		m_OutputStream.flush();
+	}
 
-		void writeHeader() {
-			m_outputStream << "{\"otherData\": {},\"traceEvents\":[";
-			m_outputStream.flush();
-		}
+	static Instrumentor& Get()
+	{
+		static Instrumentor instance;
+		return instance;
+	}
+};
 
-		void writeFooter() {
-			m_outputStream << "]}";
-			m_outputStream.flush();
-		}
+class InstrumentationTimer
+{
+public:
+	InstrumentationTimer(const char* name)
+		: m_Name(name), m_Stopped(false)
+	{
+		m_StartTimepoint = std::chrono::high_resolution_clock::now();
+	}
 
-		static Instrumentor& get() {
-			static Instrumentor instance;
-			return instance;
-		}
-	};
+	~InstrumentationTimer()
+	{
+		if (!m_Stopped)
+			Stop();
+	}
 
-	class InstrumentationTimer {
-	private:
-		const char* m_name;
-		std::chrono::time_point<std::chrono::high_resolution_clock> m_startTimepoint;
-		bool m_stopped;
+	void Stop()
+	{
+		auto endTimepoint = std::chrono::high_resolution_clock::now();
 
-	public:
-		InstrumentationTimer(const char* name) : m_name(name), m_stopped(false) {
-			m_startTimepoint = std::chrono::high_resolution_clock::now();
-		}
+		long long start = std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTimepoint).time_since_epoch().count();
+		long long end = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch().count();
 
-		~InstrumentationTimer() {
-			if (!m_stopped)
-				stop();
-		}
+		uint32_t threadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
+		Instrumentor::Get().WriteProfile({ m_Name, start, end, threadID });
 
-		void stop() {
-			auto endTimepoint = std::chrono::high_resolution_clock::now();
-
-			long long start = std::chrono::time_point_cast<std::chrono::microseconds>(m_startTimepoint).time_since_epoch().count();
-			long long end = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch().count();
-
-			uint32_t threadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
-			Instrumentor::get().writeProfile({ m_name, start, end, threadID });
-
-			m_stopped = true;
-		}
-	};
-
-}
-#define E1_PROFILE 1
-#if E1_PROFILE
-	#define E1_PROFILE_BEGIN_SESSION(name, filepath)	::Engine1::Instrumentor::get().beginSession(name, filepath)
-	#define E1_PROFILE_END_SESSION()					::Engine1::Instrumentor::get().endSession()
-	#define E1_PROFILE_SCOPE(name)						::Engine1::InstrumentationTimer timer##__LINE__(name);
-	#define E1_PROFILE_FUNCTION()						E1_PROFILE_SCOPE(__FUNCSIG__)
-#else
-	#define E1_PROFILE_BEGIN_SESSION(name, filepath)
-	#define E1_PROFILE_END_SESSION()
-	#define E1_PROFILE_FUNCTION(name)
-	#define E1_PROFILE_SCOPE()
-#endif
+		m_Stopped = true;
+	}
+private:
+	const char* m_Name;
+	std::chrono::time_point<std::chrono::high_resolution_clock> m_StartTimepoint;
+	bool m_Stopped;
+};
