@@ -19,6 +19,7 @@ namespace Engine1 {
 	static Renderer3DStorage* s_data3D;
 
 	void Renderer3D::init() {
+		E1_PROFILE_FUNCTION();
 
 		s_data3D = new Renderer3DStorage;
 
@@ -75,6 +76,8 @@ namespace Engine1 {
 	}
 
 	void Renderer3D::beginScene(const OrthographicCamera& camera) {
+		E1_PROFILE_FUNCTION();
+
 		s_data3D->cubeShader->bind();
 		float angle = glfwGetTime() * 45;  // 45° per second
 		glm::vec3 axis_y(0, 1, 0);
@@ -87,10 +90,13 @@ namespace Engine1 {
 	}
 
 	void Renderer3D::endScene() {
+		E1_PROFILE_FUNCTION();
 
 	}
 
 	void Renderer3D::drawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color) {
+		E1_PROFILE_FUNCTION();
+
 		s_data3D->cubeShader->bind();
 		//s_data3D->cubeShader->setFloat4("u_color", color);
 

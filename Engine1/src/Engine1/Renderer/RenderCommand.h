@@ -11,6 +11,7 @@ namespace Engine1 {
 	public:
 
 		inline static void init() {
+			E1_PROFILE_FUNCTION();
 			s_rendererAPI->init();
 		}
 

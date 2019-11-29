@@ -22,14 +22,20 @@ namespace Engine1 {
 	}
 
 	WindowsWindow::WindowsWindow(const WindowProps& props) {
+		E1_PROFILE_FUNCTION();
+
 		init(props);
 	}
 
 	WindowsWindow::~WindowsWindow() {
+		E1_PROFILE_FUNCTION();
+
 		shutdown();
 	}
 
 	void WindowsWindow::init(const WindowProps& props) {
+		E1_PROFILE_FUNCTION();
+
 		m_data.title = props.title;
 		m_data.width = props.width;
 		m_data.height = props.height;
@@ -146,6 +152,8 @@ namespace Engine1 {
 	}
 
 	void WindowsWindow::shutdown() {
+		E1_PROFILE_FUNCTION();
+
 		glfwDestroyWindow(m_window);
 		--s_GLFWWindowCount;
 
@@ -155,13 +163,16 @@ namespace Engine1 {
 		}
 	}
 
-	void WindowsWindow::onUpdate()
-	{
+	void WindowsWindow::onUpdate() {
+		E1_PROFILE_FUNCTION();
+
 		glfwPollEvents();
 		m_context->swapBuffers();
 	}
 
 	void WindowsWindow::setVSync(bool enabled /*= false*/) {
+		E1_PROFILE_FUNCTION();
+
 		if (enabled)
 			glfwSwapInterval(1);
 		else

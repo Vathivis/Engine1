@@ -11,22 +11,21 @@ Sandbox2D::Sandbox2D() : Layer("Sandbox2D"), m_cameraController(1280.0f / 720.0f
 }
 
 void Sandbox2D::onAttach() {
+	E1_PROFILE_FUNCTION();
+
 	m_checkerboardTexture = Engine1::Texture2D::create("assets/textures/checkerboard.png");
 }
 
 void Sandbox2D::onDetach() {
+	E1_PROFILE_FUNCTION();
 
 }
 
 void Sandbox2D::onUpdate(Engine1::Timestep ts) {
 
-	E1_PROFILE_FUNCTION();
-
 	//update
-	{
-		E1_PROFILE_SCOPE("CameraController::update");
-		m_cameraController.onUpdate(ts);
-	}
+	m_cameraController.onUpdate(ts);
+	
 
 	//render
 	{

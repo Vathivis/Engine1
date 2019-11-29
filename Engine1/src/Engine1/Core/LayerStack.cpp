@@ -13,12 +13,10 @@ namespace Engine1 {
 	void LayerStack::pushLayer(Layer* layer) {
 		m_layers.emplace(m_layers.begin() + m_layerInsertIndex, layer);
 		m_layerInsertIndex++;
-		layer->onAttach();
 	}
 
 	void LayerStack::pushOverlay(Layer* overlay) {
 		m_layers.emplace_back(overlay);
-		overlay->onAttach();
 	}
 
 	void LayerStack::popLayer(Layer* layer) {
@@ -27,7 +25,7 @@ namespace Engine1 {
 		{
 			layer->onDetach();
 			m_layers.erase(it);
-			m_layerInsertIndex--;	
+			m_layerInsertIndex--;
 		}
 	}
 

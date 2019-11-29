@@ -11,6 +11,8 @@ namespace Engine1 {
 	}
 
 	void OrthographicCameraController::onUpdate(Timestep ts) {
+		E1_PROFILE_FUNCTION();
+
 		//else if to prevent cancelling each other
 		if (Input::isKeyPressed(E1_KEY_D)) {
 			m_cameraPosition.x += cos(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * ts;
@@ -50,6 +52,8 @@ namespace Engine1 {
 	}
 
 	void OrthographicCameraController::onEvent(Event& e) {
+		E1_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(e);
 
 		dispatcher.dispatch<MouseScrolledEvent>(E1_BIND_EVENT_FN(OrthographicCameraController::onMouseScrolled));
@@ -58,6 +62,8 @@ namespace Engine1 {
 	}
 
 	bool OrthographicCameraController::onMouseScrolled(MouseScrolledEvent& e) {
+		E1_PROFILE_FUNCTION();
+
 		m_zoomLevel -= e.getYOffset() * 0.25f;
 		m_zoomLevel = std::max(m_zoomLevel, 0.25f);
 		m_camera.setProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel);
@@ -67,6 +73,8 @@ namespace Engine1 {
 	}
 
 	bool OrthographicCameraController::onWindowResized(WindowResizeEvent& e) {
+		E1_PROFILE_FUNCTION();
+
 		m_aspectRatio = (float)e.getWidth() / (float)e.getHeight();
 		m_camera.setProjection(-m_aspectRatio * m_zoomLevel, m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel);
 

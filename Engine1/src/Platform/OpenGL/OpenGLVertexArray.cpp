@@ -27,6 +27,8 @@ namespace Engine1 {
 	}
 
 	OpenGLVertexArray::OpenGLVertexArray() {
+		E1_PROFILE_FUNCTION();
+
 		//OpenGL 4.5+
 		glCreateVertexArrays(1, &m_rendererID);
 
@@ -37,14 +39,20 @@ namespace Engine1 {
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray() {
+		E1_PROFILE_FUNCTION();
+
 		glDeleteVertexArrays(1, &m_rendererID);
 	}
 
 	void OpenGLVertexArray::bind() const {
+		E1_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_rendererID);
 	}
 
 	void OpenGLVertexArray::unbind() const {
+		E1_PROFILE_FUNCTION();
+
 		glBindVertexArray(0);
 	}
 

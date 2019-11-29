@@ -20,7 +20,6 @@ namespace Engine1 {
 
 		virtual void onAttach() override;
 		virtual void onDetach() override;
-		virtual void onImGuiRender() override;
 
 		void Begin();
 		void End();

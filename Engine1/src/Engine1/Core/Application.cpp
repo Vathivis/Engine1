@@ -14,6 +14,8 @@ namespace Engine1 {
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application() {
+		E1_PROFILE_FUNCTION();
+
 		E1_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
@@ -28,8 +30,9 @@ namespace Engine1 {
 
 	}
 
-	Application::~Application()
-	{
+	Application::~Application() {
+		E1_PROFILE_FUNCTION();
+
 		Renderer::shutdown();
 	}
 
@@ -38,21 +41,31 @@ namespace Engine1 {
 	////////////////////////////////////////////////////////////////////////////////////////////////
 
 	void Application::run() {
+		E1_PROFILE_FUNCTION();
+
 		while (m_running) {
+			E1_PROFILE_SCOPE("RunLoop");
 			
 			float time = glfwGetTime();		//Platform::getTime
 			Timestep timestep = time - m_lastFrameTime;
 			m_lastFrameTime = time;
 
 			if (!m_minimized) {
-				for (Layer* layer : m_layerStack)
-					layer->onUpdate(timestep);
+				{
+					E1_PROFILE_SCOPE("Layerstack - onUpdate");
+					for (Layer* layer : m_layerStack)
+						layer->onUpdate(timestep);
+				}
+
+				m_ImGuiLayer->Begin();
+				{
+					E1_PROFILE_SCOPE("Layerstack - onImGuiRender")
+					for (Layer* layer : m_layerStack)
+						layer->onImGuiRender();
+				}
+				m_ImGuiLayer->End();
 			}
 
-			m_ImGuiLayer->Begin();
-			for (Layer* layer : m_layerStack)
-				layer->onImGuiRender();
-			m_ImGuiLayer->End();
 
 			m_window->onUpdate();
 		}
@@ -60,6 +73,8 @@ namespace Engine1 {
 	//hlavni loop programu /////////////////////////////////////////////////////////////////////////
 
 	void Application::onEvent(Event& e) {
+		E1_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(e);
 		dispatcher.dispatch<WindowCloseEvent>(E1_BIND_EVENT_FN(Application::onWindowClose));
 		dispatcher.dispatch<WindowResizeEvent>(E1_BIND_EVENT_FN(Application::onWindowResize));
@@ -78,17 +93,22 @@ namespace Engine1 {
 
 	//pridani vrstvy mezi normalni vrstvy
 	void Application::pushLayer(Layer* layer) {
+		E1_PROFILE_FUNCTION();
+
 		m_layerStack.pushLayer(layer);
+		layer->onAttach();
 	}
 
 	//pridani vrstvy mezi overlay vrtvy
 	void Application::pushOverlay(Layer* layer) {
+		E1_PROFILE_FUNCTION();
+
 		m_layerStack.pushOverlay(layer);
+		layer->onAttach();
 	}
 
 	bool Application::onWindowClose(WindowCloseEvent& e) {
 		m_running = false;
-
 		return true;
 	}
 

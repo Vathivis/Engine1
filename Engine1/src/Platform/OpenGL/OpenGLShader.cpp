@@ -16,7 +16,9 @@ namespace Engine1 {
 		return 0;
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& filepath)  {	
+	OpenGLShader::OpenGLShader(const std::string& filepath) {
+		E1_PROFILE_FUNCTION();
+
 		std::string source = readFile(filepath);
 		auto shaderSources = preProcess(source);
 		compile(shaderSources);
@@ -31,6 +33,8 @@ namespace Engine1 {
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) : m_name(name) {
+		E1_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
 		sources[GL_FRAGMENT_SHADER] = fragmentSrc;
@@ -38,10 +42,14 @@ namespace Engine1 {
 	}
 
 	OpenGLShader::~OpenGLShader() {
+		E1_PROFILE_FUNCTION();
+
 		glDeleteProgram(m_rendererID);
 	}
 
 	std::string OpenGLShader::readFile(const std::string& filepath) {
+		E1_PROFILE_FUNCTION();
+
 		std::ifstream in(filepath, std::ios::in | std::ios::binary);
 		std::string result;
 
@@ -68,6 +76,8 @@ namespace Engine1 {
 	}
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::preProcess(const std::string& source) {
+		E1_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shaderSources;
 
 		const char* typeToken = "#type";
@@ -91,6 +101,8 @@ namespace Engine1 {
 	}
 
 	void OpenGLShader::compile(const std::unordered_map<GLenum, std::string>& shaderSources) {
+		E1_PROFILE_FUNCTION();
+
 		GLuint program = glCreateProgram();
 		//TODO: needs to be somewhat dynamic but on stack for speed, maybe not necessary on stack
 		E1_CORE_ASSERT(shaderSources.size() <= 2, "wrong number of shaders");
@@ -157,26 +169,38 @@ namespace Engine1 {
 	}
 
 	void OpenGLShader::bind() const {
+		E1_PROFILE_FUNCTION();
+
 		glUseProgram(m_rendererID);
 	}
 
 	void OpenGLShader::unbind() const {
+		E1_PROFILE_FUNCTION();
+
 		glUseProgram(0);
 	}
 
 	void OpenGLShader::setInt1(const std::string& name, int value) {
+		E1_PROFILE_FUNCTION();
+
 		uploadUniformInt1(name, value);
 	}
 
 	void OpenGLShader::setFloat3(const std::string& name, const glm::vec3& value) {
+		E1_PROFILE_FUNCTION();
+
 		uploadUniformFloat3(name, value);
 	}
 
 	void OpenGLShader::setFloat4(const std::string& name, const glm::vec4& value) {
+		E1_PROFILE_FUNCTION();
+
 		uploadUniformFloat4(name, value);
 	}
 
 	void OpenGLShader::setMat4(const std::string& name, const glm::mat4& value) {
+		E1_PROFILE_FUNCTION();
+
 		uploadUniformMat4(name, value);
 	}
 

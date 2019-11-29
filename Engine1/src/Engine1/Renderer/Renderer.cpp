@@ -9,6 +9,8 @@ namespace Engine1 {
 	scope<Renderer::sceneData> Renderer::s_sceneData = createScope<Renderer::sceneData>();
 
 	void Renderer::init() {
+		E1_PROFILE_FUNCTION();
+
 		RenderCommand::init();
 		Renderer2D::init();
 		Renderer3D::init();
